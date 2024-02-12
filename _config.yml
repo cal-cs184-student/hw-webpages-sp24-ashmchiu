@@ -1,0 +1,14 @@
+# Setup
+title:               'CS 184: Computer Graphics'
+tagline:             'Project Writeups'
+# baseurl:             ''
+paginate:            5
+permalink:           pretty
+
+# Gems
+plugins:
+  - jekyll-paginate
+
+# Custom vars
+version:             1.0
+google_analytics_id: #UA-XXXX-Y
