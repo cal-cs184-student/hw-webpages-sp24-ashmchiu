@@ -2,7 +2,7 @@
 title:               'CS 184: Computer Graphics'
 tagline:             'Project Writeups'
 # baseurl:             ''
-paginate:            5
+# paginate:            5
 permalink:           pretty
 
 # Gems
