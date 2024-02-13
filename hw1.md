@@ -31,7 +31,7 @@ was greater than or equal to 0. If so, then we would fill that pixel.
   <table style="width:100%">
     <tr>
       <td align="center">
-        <img src="/assets/hw1/task1.png" width="400px"/>
+        <img src="assets/hw1/task1.png" width="400px"/>
         <figcaption>Rasterizing basic/test4.svg with default viewing parameters</figcaption>
       </td>
     </tr>
@@ -48,17 +48,17 @@ TODO
   <table style="width:100%">
     <tr>
       <td align="center">
-        <img src="/assets/hw1/task2_1.png" width="400px"/>
+        <img src="assets/hw1/task2_1.png" width="400px"/>
         <figcaption>Rasterizing basic/test4.svg with sample rate of 1</figcaption>
       </td>
       <td align="center">
-        <img src="/assets/hw1/task2_2.png" width="400px"/>
+        <img src="assets/hw1/task2_2.png" width="400px"/>
         <figcaption>Rasterizing basic/test4.svg with sample rate of 4</figcaption>
       </td>
     </tr>
     <tr>
       <td colspan="2" align="center">
-        <img src="/assets/hw1/task2_3.png" width="400px"/>
+        <img src="assets/hw1/task2_3.png" width="400px"/>
         <figcaption>Rasterizing basic/test4.svg with sample rate of 16</figcaption>
       </td>
     </tr>
