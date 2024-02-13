@@ -27,17 +27,32 @@ Finally, for each point within the bounding box outlined above, we would check f
 {% endhighlight %}
 was greater than or equal to 0. If so, then we would fill that pixel.
 
-![basic/test4.svg]({{ "/assets/hw1/task1.png" | relative_url }})
+![basic/test4.svg]({{ "/assets/hw1/task1.png" | relative_url }}
+)
+
+{:.image-caption}
+*Rasterizing basic/test4.svg with default viewing parameters*
+
 Above, we've included a screenshot of `basic/test4.svg` with the default viewing parameters and the pixel inspector centered on an interesting part of the scene. Particularly, we can see the jaggies on this rasterized corner of the blue triangle.
 
 ## Task 2: Antialiasing by Supersampling
 TODO
 
 ### Impacts of Supersampling
-| ![basic/test4.svg sample rate 1]({{ "/assets/hw1/task2_1.png" | relative_url }}) | 
-|:--:| 
-| *Description* |
-![basic/test4.svg sample rate 1]({{ "/assets/hw1/task2_1.png" | relative_url }}) ![basic/test4.svg sample rate 2]({{ "/assets/hw1/task2_2.png" | relative_url }}) ![basic/test4.svg sample rate 3]({{ "/assets/hw1/task2_3.png" | relative_url }})
+![basic/test4.svg sample rate 1]({{ "/assets/hw1/task2_1.png" | relative_url }}) 
+
+{:.image-caption}
+*Rasterizing basic/test4.svg with sample rate of 1*
+
+![basic/test4.svg sample rate 4]({{ "/assets/hw1/task2_2.png" | relative_url }}) 
+
+{:.image-caption}
+*Rasterizing basic/test4.svg with sample rate of 4*
+
+![basic/test4.svg sample rate 16]({{ "/assets/hw1/task2_3.png" | relative_url }})
+
+{:.image-caption}
+*Rasterizing basic/test4.svg with sample rate of 16*
 
 ## Task 3: Transforms
 TODO
