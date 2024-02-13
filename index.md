@@ -13,7 +13,7 @@ GitHub repository for this website: [hw-webpages-sp24-ashmchiu](https://github.c
 - segfault
 
 🚧 In Progress:
-- [homework 1](/hw-webpages-sp24-ashmchiu/hw1)
+- [homework 1: rasterizer](/hw-webpages-sp24-ashmchiu/hw1)
 
 🔜 Upcoming:
 - [homework 2](/hw-webpages-sp24-ashmchiu/hw2)
