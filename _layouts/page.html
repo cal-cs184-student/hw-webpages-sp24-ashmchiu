@@ -4,5 +4,15 @@ layout: default
 
 <div class="page">
   <h1 class="page-title">{{ page.title }}</h1>
-  {{ content }}
+  {% if page.has_right_toc %}
+    <div class="content-wrapper">
+      <nav class="content-nav">
+        {% include toc.html html=content sanitize=true class="nav-list js-toc"
+        item_class="nav-list-item" anchor_class="nav-list-link" h_min=1 h_max=3 %}
+      </nav>
+      <div class="content-container">{{content}}</div>
+    </div>
+  {% else %} 
+    {{content}} 
+  {% endif %}
 </div>

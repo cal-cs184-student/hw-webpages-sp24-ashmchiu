@@ -41,6 +41,10 @@ body {
 }
 
 html {
+	scroll-behavior: smooth;
+}
+
+html {
   font-family: "DM Sans", sans-serif;
 }
 
@@ -82,7 +86,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 @media (min-width: 56em) {
   .container {
-    max-width: 38rem;
+    max-width: 48rem;
   }
 }
 
@@ -253,6 +257,15 @@ a.sidebar-nav-item:focus {
 @media print {
   .sidebar-toggle {
     display: none;
+  }
+
+  .content-nav {
+      display: none;
+  }
+
+  .container {
+    max-width: 100%;
+    margin: 0;
   }
 }
 
@@ -567,4 +580,90 @@ figcaption {
   text-align: center;
   font-size: .8rem;
   color: lightgrey;
+}
+
+.content-wrapper {
+  display: flex;
+  flex-direction: row;
+}
+
+.content-nav {
+  position: fixed;
+  top: 3rem;
+  right: 0;
+  bottom: 0;
+  width: 25%;
+  overflow-y: auto;
+  font-size: 0.9em;
+  line-height: 1.8;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+  font-size: 0.8em;
+}
+
+.content-nav a {
+  text-decoration: none;
+  display: block;
+  padding: .125rem 0;
+  color: #ccc;
+  transition: all 50ms ease-in-out;
+}
+
+.content-nav a:hover,
+.content-nav a:focus {
+  color: #666;
+}
+
+.content-container {
+  max-width: 100%;
+}
+
+@media (max-width: 500px) {
+  .content-nav {
+    flex: 0 0 100%;
+    max-width: 100%;
+    margin-right: 0;
+    margin-bottom: 2rem;
+  }
+
+  .content-container {
+    max-width: 100%;
+  }
+}
+
+.content-nav .nav-list-link {
+  text-decoration: none;
+  padding-right: 1em !important;
+  line-height: 1.4rem !important;
+}
+
+.content-nav .nav-list .nav-list-item .nav-list-link {
+  min-height: 1.8rem;
+}
+
+ol {
+  margin-top: 0;
+}
+
+ul {
+  margin: 0;
+  padding-left: 15px;
+  list-style: none;
+  list-style-type: none;
+
+  li::before {
+    display: none;
+  }
+
+  @media (max-width: 500px) {
+    display: block;
+
+    li {
+      float: none;
+    }
+  }
+
+  ul {
+    border-left: none;
+  }
 }
