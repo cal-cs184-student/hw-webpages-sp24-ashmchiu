@@ -9,6 +9,7 @@ This assignment has not been completed yet.
 site link: [https://cal-cs184-student.github.io/hw-webpages-sp24-ashmchiu/hw1/](https://cal-cs184-student.github.io/hw-webpages-sp24-ashmchiu/hw1/)
 
 ## Overview
+TODO
 
 ## Task 1: Drawing Single-Color Triangles
 Our process of rasterizing triangles involved (1) resolving winding order, (2) calculating minimum and maximum x and y values, (3) checking for each point within bounds whether it would be within the triangle or not.
@@ -30,14 +31,25 @@ was greater than or equal to 0. If so, then we would fill that pixel.
 Above, we've included a screenshot of `basic/test4.svg` with the default viewing parameters and the pixel inspector centered on an interesting part of the scene. Particularly, we can see the jaggies on this rasterized corner of the blue triangle.
 
 ## Task 2: Antialiasing by Supersampling
+TODO
+
+### Impacts of Supersampling
+| ![basic/test4.svg sample rate 1]({{ "/assets/hw1/task2_1.png" | relative_url }}) | 
+|:--:| 
+| *Description* |
+![basic/test4.svg sample rate 1]({{ "/assets/hw1/task2_1.png" | relative_url }}) ![basic/test4.svg sample rate 2]({{ "/assets/hw1/task2_2.png" | relative_url }}) ![basic/test4.svg sample rate 3]({{ "/assets/hw1/task2_3.png" | relative_url }})
 
 ## Task 3: Transforms
+TODO
 
 ## Task 4: Barycentric coordinates
+TODO
 
 ## Task 5: "Pixel sampling" for texture mapping
+TODO
 
 ## Task 6: "Level sampling" with mipmaps for texture mapping
+TODO
 
 ### Authors
 Angel Aldaco, Ashley Chiu
