@@ -562,3 +562,9 @@ a.pagination-item:hover {
   font-size: .8rem;
   color: lightgrey;
 }
+
+figcaption {
+  text-align: center;
+  font-size: .8rem;
+  color: lightgrey;
+}

@@ -27,11 +27,16 @@ Finally, for each point within the bounding box outlined above, we would check f
 {% endhighlight %}
 was greater than or equal to 0. If so, then we would fill that pixel.
 
-![basic/test4.svg]({{ "/assets/hw1/task1.png" | relative_url }}
-)
-
-{:.image-caption}
-*Rasterizing basic/test4.svg with default viewing parameters*
+<div align="center">
+  <table style="width:100%">
+    <tr>
+      <td align="center">
+        <img src="/assets/hw1/task1.png" width="400px"/>
+        <figcaption>Rasterizing basic/test4.svg with default viewing parameters</figcaption>
+      </td>
+    </tr>
+  </table>
+</div>
 
 Above, we've included a screenshot of `basic/test4.svg` with the default viewing parameters and the pixel inspector centered on an interesting part of the scene. Particularly, we can see the jaggies on this rasterized corner of the blue triangle.
 
@@ -39,20 +44,26 @@ Above, we've included a screenshot of `basic/test4.svg` with the default viewing
 TODO
 
 ### Impacts of Supersampling
-![basic/test4.svg sample rate 1]({{ "/assets/hw1/task2_1.png" | relative_url }}) 
-
-{:.image-caption}
-*Rasterizing basic/test4.svg with sample rate of 1*
-
-![basic/test4.svg sample rate 4]({{ "/assets/hw1/task2_2.png" | relative_url }}) 
-
-{:.image-caption}
-*Rasterizing basic/test4.svg with sample rate of 4*
-
-![basic/test4.svg sample rate 16]({{ "/assets/hw1/task2_3.png" | relative_url }})
-
-{:.image-caption}
-*Rasterizing basic/test4.svg with sample rate of 16*
+<div align="center">
+  <table style="width:100%">
+    <tr>
+      <td align="center">
+        <img src="/assets/hw1/task2_1.png" width="400px"/>
+        <figcaption>Rasterizing basic/test4.svg with sample rate of 1</figcaption>
+      </td>
+      <td align="center">
+        <img src="/assets/hw1/task2_2.png" width="400px"/>
+        <figcaption>Rasterizing basic/test4.svg with sample rate of 4</figcaption>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="2" align="center">
+        <img src="/assets/hw1/task2_3.png" width="400px"/>
+        <figcaption>Rasterizing basic/test4.svg with sample rate of 16</figcaption>
+      </td>
+    </tr>
+  </table>
+</div>
 
 ## Task 3: Transforms
 TODO
