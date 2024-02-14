@@ -645,7 +645,7 @@ ol {
   margin-top: 0;
 }
 
-ul {
+ul.nav-list {
   margin: 0;
   padding-left: 15px;
   list-style: none;

@@ -114,7 +114,24 @@ We can see here through the images that as the sample rate increases, the right 
 Instead of only sampling once per pixel, by supersampling, we don't have a binary flip of whether a pixel is inside the triangle or not, but rather a gradient. For instance, for a sample rate of 4, the blur means that we could represent pixels with only 3 sample points within the triangle as lighter (3/4) than those which were fully within the triangle (all 4 sample points were within the triangle). This blurs edges and when zoomed out, ensures that images actually look cleaner (antialiasing the triangles). As such, supersampling is useful because as we can see in the image itself, the triangle corner is cleaner (there are no staircase patterns) as the sampling rate increases. 
 
 ## Task 3: Transforms
-TODO
+
+<div align="center">
+  <table style="width:100%">
+    <tr>
+      <td align="center">
+        <img src="../assets/hw1/task3.png" width="400px"/>
+        <figcaption>Rasterizing transforms/my_robot.svg with default viewing parameters</figcaption>
+      </td>
+    </tr>
+  </table>
+</div>
+
+Here, we implemented the `translate`, `scale`, and `rotate` methods with matrices that held homogenous coordinates. We included our rendition of `my_robot.svg` above, performing extra rotations and transforms.
+Particularly,
+- the legs included rotations and translations to move them into a bent, sitting down formation
+- the arms included rotations and translations to move them into an arms up stance.
+
+Cubeman is happily resting (meditating, yet joyful), hoping that you are also happy and getting good rest as well!
 
 ## Task 4: Barycentric coordinates
 TODO
@@ -124,11 +141,11 @@ TODO
     <tr>
       <td align="center">
         <img src="../assets/hw1/task4_1.png" width="400px"/>
-        <figcaption>REDO</figcaption>
+        <figcaption>basic/triangle.svg</figcaption>
       </td>
       <td align="center">
         <img src="../assets/hw1/task4_2.png" width="400px"/>
-        <figcaption>REDO</figcaption>
+        <figcaption>basic/test7.svg</figcaption>
       </td>
     </tr>
   </table>
