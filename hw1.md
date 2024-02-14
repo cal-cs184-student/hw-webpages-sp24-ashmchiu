@@ -290,7 +290,7 @@ The following images all use a sample rate of 1 per pixel.
       </td>
       <td align="center">
         <img src="../assets/hw1/task6_8.png" width="400px"/>
-        <figcaption><Rasterizing texmap/seattle.svg, code class="language-plaintext highlighter-rouge">L_NEAREST</code> and <code class="language-plaintext highlighter-rouge">P_LINEAR</code></figcaption>
+        <figcaption>Rasterizing texmap/seattle.svg, <code class="language-plaintext highlighter-rouge">L_NEAREST</code> and <code class="language-plaintext highlighter-rouge">P_LINEAR</code></figcaption>
       </td>
     </tr>
   </table>

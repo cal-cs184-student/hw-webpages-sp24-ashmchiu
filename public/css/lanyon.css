@@ -91,6 +91,8 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 
+
+
 /*
  * Masthead
  *
@@ -194,7 +196,7 @@ a.sidebar-nav-item:focus {
   border-color: transparent;
 }
 
-@media (min-width: 48em) {
+@media (min-width: 767px) {
   .sidebar-item {
     padding: 1.5rem;
   }
@@ -615,7 +617,17 @@ figcaption {
   max-width: 100%;
 }
 
-@media (max-width: 500px) {
+@media (max-width: 767px) {
+  .content-nav {
+    display: none;
+  }
+
+  .content-container {
+    max-width: 100%;
+  }
+}
+
+@media (min-width: 767px) {
   .content-nav {
     flex: 0 0 100%;
     max-width: 100%;
