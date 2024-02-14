@@ -141,22 +141,22 @@ The purpose of barycentric coordinates is to interpolate across vertices. Namely
     <tr>
       <td align="center">
         <img src="../assets/hw1/task4_1.png" width="400px"/>
-        <figcaption>basic/test7.svg</figcaption>
+        <figcaption>Rasterizing basic/test7.svg with default viewing parameters, sample rate 1</figcaption>
       </td>
       <td align="center">
         <img src="../assets/hw1/task4_2.png" width="400px"/>
-        <figcaption>basic/triangle.svg</figcaption>
+        <figcaption>Rasterizing basic/triangle.svg with default viewing parameters, sample rate 1</figcaption>
       </td>
     </tr>
   </table>
 </div>
 
-We can use the image above on the right (`basic/triangle.svg`) as an example. We can see that its bottom left corner is red, its top is green, and its bottom right is blue. In the actual implementation of barycentric coordinates, we know that we still perform the sampling of the previous tasks (namely, task 1-2) where we must sample to see whether points are within a triangle using the three line test. Then, we calculate, for each point within the triangle, its corresponding $\alpha$, $\beta$, and $\gamma$ values based on the calculations given during lecture. As such, we then put into the `sample_buffer` the value
+We can use the image above on the right (`basic/triangle.svg`) as an example. We can see that its bottom left corner is red, its top is green, and its bottom right is blue. In the actual implementation of barycentric coordinates, we know that we still perform the sampling of the previous tasks (namely, task 1-2) where we must sample to see whether points are within a triangle using the three line test. Then, we calculate, for each point within the triangle, its corresponding $$\alpha$$, $$\beta$$, and $$\gamma$$ values based on the calculations given during lecture. As such, we then put into the `sample_buffer` the value
 {% highlight js %}
-$\alpha$ * c0 + $\beta$ * c1 + $\gamma$ * c2
+alpha * c0 + beta * c1 + gamma * c2
 {% endhighlight %}
 
-where `c0`, `c1`, and `c2` are the corresponding colors at the vertices `(x0, y0)`, `(x1, y1)`, and `(x2, y2)`. 
+where `c0`, `c1`, and `c2` are the corresponding colors at the vertices `(x0, y0)`, `(x1, y1)`, and `(x2, y2)`. This is the final color that will be used at that specific pixel. If supersampling is used, we expand again, like in Task 2, to allow further gradients.
 
 On a high level, with a sample rate of 1, we use the vertices as references, and within the triangle, we calculate the proportional distances at each pixel from each vertex. Then, we interpolate, noting that those proportions are what determine how much of each vertex's color is used to render each pixel at. We can see this also in the image `basic/test7.svg`, with many triangles rendering with a color one end and a dark blacker version on the opposing corner and using barycentric coordinates to interpolate and mix the colors of pixels in between.
 
