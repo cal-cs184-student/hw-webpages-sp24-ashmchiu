@@ -10,10 +10,10 @@ Explore our 184 writeups!
 GitHub repository for this website: [hw-webpages-sp24-ashmchiu](https://github.com/cal-cs184-student/hw-webpages-sp24-ashmchiu)
 
 ✅ Completed:
-- segfault
+- [homework 1: rasterizer](/hw-webpages-sp24-ashmchiu/hw1)
 
 🚧 In Progress:
-- [homework 1: rasterizer](/hw-webpages-sp24-ashmchiu/hw1)
+- [segfault]
 
 🔜 Upcoming:
 - [homework 2](/hw-webpages-sp24-ashmchiu/hw2)

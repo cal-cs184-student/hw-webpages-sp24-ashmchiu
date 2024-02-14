@@ -3,14 +3,17 @@ layout: page
 title: 'Homework 1: Rasterizer'
 has_right_toc: true
 ---
-<p class="warning-message">
-This assignment has not been completed yet.
-</p>
 
 site: [https://cal-cs184-student.github.io/hw-webpages-sp24-ashmchiu/hw1/](https://cal-cs184-student.github.io/hw-webpages-sp24-ashmchiu/hw1/)
 
 ## Overview
-TODO
+Starting off by rasterizing single-color triangles, this homework developed into a deeper conversation regarding supersampling and aliasing and sampling techniques when it comes to texture mapping. Texture mapping was an interesting development in understanding how we could modify not only the number of samples we take per pixel to render (mapping surface space to texture space), but also at what depth we render each pixel, choosing locations to render with lower detail to antialias. With a focus on different strategies to reduce aliasing, we learned of different strategies, using barycentric coordinates and linear interpolation to further smooth out jaggies in the resulting graphics. Not only this, we also were tasked with understanding how using these different tools that modify the rasterization pipeline affected speed and memory usage. Finally, we also were tasked to transform a simple, but humble cubeman using matrix trasnformations and homogenous coordinates into someone completely new (slay cubeman)!
+
+Some interesting things we learned when completing this homework were:
+- Rasterization as a whole involves a lot more than just pixel manipulation: throughout the project, understanding how surface space mapped to texture space and back was an intriguing process to go through.
+- Seeing the comparisons of combinations of different pixel and level sampling techniques was cool to see. The idea of mipmaps is still a fun concept to wrap our heads around in the ways that it can target different aspects of images in different ways (in order to avoid aliasing). 
+- How to work with `.svg` files, namely how to read their values and modify them. Understanding how to manipulate file types was something we've never attempted before, so that was definitely a learning curve!
+
 
 ## Task 1: Drawing Single-Color Triangles
 Our process of rasterizing triangles involved 
@@ -208,11 +211,11 @@ However, it is important to note the benefits of using nearest neighbor sampling
 </div>
 
 ## Task 6: "Level sampling" with mipmaps for texture mapping
-Finally, our last task was to perform level sampling: utilizing the mipmap mentioned in the last task! Our level sampling built off [Task 5](/hw1#task-5-pixel-sampling-for-texture-mapping)'s pixel sampling, with some modifications.
+Finally, our last task was to perform level sampling: utilizing the mipmap mentioned in the last task! Our level sampling built off [Task 5](/hw1.md#task-5-pixel-sampling-for-texture-mapping)'s pixel sampling, with some modifications.
 
 First though, let's discuss what level sampling is and how we implemented it. Conceptually, level sampling allows us to use a mipmap, which dictates at what level we sample, where higher levels signify less detail while lower levels signify more detail (with the most detailed being the base level 0). Level sampling is useful however, since we note that although we are essentially decreasing the detail in higher level sampled areas, we are smoothing out those values and able to address and target aliasing. Specifically, an example of the useful in level sampling is if we have high-contrasting areas that are far away--since that area is smaller and has high contrasting pixel values, there may be a lot of aliasing if we just sampled everything at level 0. Moving that to a higher level allows us to smooth over the high contrast, anti-aliasing it: and it's totally worth it! For something that is meant to be far away, it makes sense for it to have less detail.
 
-However, since high level resolutions would be blurry, we want a method that allows us to interweave high and low level mip maps to textures so the image looks seamless regardless of whether the texture is close or far away. For actual implementation, what we did was build off the work from [Task 5](/hw1#task-5-pixel-sampling-for-texture-mapping), and now instead of just calculating the barycentric coordinates for `(x, y)`, we also calculated the barycentric coordinates for `(x + 1, y)` and `(x, y + 1)`, passing those as parameters into our sampling methods. There are three different types of level sampling we implemented: zero level, nearest level, and interpolation (a continuous mipamp). In order to calculate levels for nearest level and interpolation (a continuous mipmap), we wrote a helper function `get_level`, which calculates the difference vectors from the point to the chosen texel, and uses the formula
+However, since high level resolutions would be blurry, we want a method that allows us to interweave high and low level mip maps to textures so the image looks seamless regardless of whether the texture is close or far away. For actual implementation, what we did was build off the work from [Task 5](/hw1.md#task-5-pixel-sampling-for-texture-mapping), and now instead of just calculating the barycentric coordinates for `(x, y)`, we also calculated the barycentric coordinates for `(x + 1, y)` and `(x, y + 1)`, passing those as parameters into our sampling methods. There are three different types of level sampling we implemented: zero level, nearest level, and interpolation (a continuous mipamp). In order to calculate levels for nearest level and interpolation (a continuous mipmap), we wrote a helper function `get_level`, which calculates the difference vectors from the point to the chosen texel, and uses the formula
 {% highlight js %}
 log2(max(sqrt(dudx^2 + dvdx^2), sqrt(dudy^2 + dvdy^2)))
 {% endhighlight %}
@@ -223,7 +226,7 @@ to calculate the level.
 When we use the zero level of the mipmap, we're essentially always using level 0 (hardcoded), which represents the original texture. This means we perform no smoothing and was the base that we started off with.
 
 ### Nearest Level
-When we use the nearest level of the mipmap, for each pixel, we use the helper `get_level` function defined above, clamping the returned level, and then calling the pixel sampling methods defined from [Task 5](/hw1#task-5-pixel-sampling-for-texture-mapping), passing in the level we got from `get_level`.
+When we use the nearest level of the mipmap, for each pixel, we use the helper `get_level` function defined above, clamping the returned level, and then calling the pixel sampling methods defined from [Task 5](/hw1.md#task-5-pixel-sampling-for-texture-mapping), passing in the level we got from `get_level`.
 
 ### Interpolation (A Continuous Mipmap)
 When we use interpolation (a continuous mipmap), this means that for each pixel, after calling the helper `get_level`, we determine the level above and below and sample at the level above and below, then perform linear interpolation between the two.
@@ -237,7 +240,7 @@ Let's discuss the tradeoffs between speed, memory usage, and antialiasing power 
 - Antialiasing Power: Finally, antialiasing power seems to be slightly difficult to analyze. The simpler case is for supersampling, which is the best for antialiasing since increasing the sample rate and then downsampling with gradients allows us to decrease aliasing. In fact, from the Nyquist Theorem, we know there will be no aliasing if all frequencies are less than the Nyquist frequency, so increasing the sampling rate to twice that of the highest frequency means that there will be no aliasing. On the other hand, pixel sampling's antialiasing power lies in which type of pixel sampling we use: particuarly, bilinear sampling will definitely be better at anti-aliasing than nearest neighbor due to the fact that it samples from four textels instead of one. Level sampling is more likely to help with antialiasing than pixel sampling as it builds off of pixel sampling to help decrease aliasing depending on the depth of the part of an image. Particularly, the interpolating level sampling means that in certain parts of the images, details get blurry, but its due to this blur that we are able to antialias.
 
 ### Space Needle
-We use these following images to demonstrate the differences in output when pairing different pixel sampling strategies with different level sampling stratgies. Namely, we're testing [nearest neighbor](/hw1#nearest-neighbor-sampling) and [bilinear](/hw1#bilinear-sampling) pixel sampling and pairing that with [zero](/hw1#zero-level) and [nearest](/hw1#nearest-level) level sampling.
+We use these following images to demonstrate the differences in output when pairing different pixel sampling strategies with different level sampling stratgies. Namely, we're testing [nearest neighbor](/hw1.md#nearest-neighbor-sampling) and [bilinear](/hw1.md#bilinear-sampling) pixel sampling and pairing that with [zero](/hw1.md#zero-level) and [nearest](/hw1.md#nearest-level) level sampling.
 
 The following images all use a sample rate of 1 per pixel.
 <div align="center">
