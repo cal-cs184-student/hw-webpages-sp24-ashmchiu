@@ -151,7 +151,7 @@ The purpose of barycentric coordinates is to interpolate across vertices. Namely
   </table>
 </div>
 
-We can use the image above on the right (`basic/triangle.svg`) as an example. We can see that its bottom left corner is red, its top is green, and its bottom right is blue. In the actual implementation of barycentric coordinates, we know that we still perform the sampling of the previous tasks (namely, task 1-2) where we must sample to see whether points are within a triangle using the three line test. Then, we calculate, for each point within the triangle, its corresponding $$\alpha$$, $$\beta$$, and $$\gamma$$ values based on the calculations given during lecture. As such, we then put into the `sample_buffer` the value
+We can use the image above on the right (`basic/triangle.svg`) as an example. We can see that its bottom left corner is red, its top is green, and its bottom right is blue. In the actual implementation of barycentric coordinates, we know that we still perform the sampling of the previous tasks (namely, task 1-2) where we must sample to see whether points are within a triangle using the three line test. Then, we calculate, for each point within the triangle, its corresponding alpha, beta, and gamma values based on the calculations given during lecture. As such, we then put into the `sample_buffer` the value
 {% highlight js %}
 alpha * c0 + beta * c1 + gamma * c2
 {% endhighlight %}
