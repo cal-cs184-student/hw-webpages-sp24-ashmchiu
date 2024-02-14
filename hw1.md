@@ -46,14 +46,12 @@ Above, we've included a screenshot of `basic/test4.svg` with the default viewing
 
 ## Task 2: Antialiasing by Supersampling
 Building off our work in Task 1, we'll walk through how we updated `rasterize_triangle` to supersample. The intention here to supersample is to increase the sampling rate within one pixel (as Task 1 sampled once per pixel) and this serves to decrease aliasing/moire and blend images to be smoother. Our methodology for antialiasing by supersampling involved
-1. resizing the sample buffer to account for "over" sampling (sampling multiple times per pixel),
-2. perform the three line test for each individual sample similarly to Task 1, and then,
+1. resizing the sample buffer to account for "over" sampling (sampling multiple times per pixel) and performomg the three line test for each individual sample similarly to Task 1, and then,
 3. downsample the `sample_buffer`.
 
 ### Resizing the Sample Buffer
 Because we want to store more data than there are pixels (since we're sampling multiple times per pixel), we resize the data structure `sample_buffer`. Namely, we know the size of `sample_buffer` begins as `width * height`, so in `set_sample_rate` and `set_framebuffer_target`, we update this value to be `width * height * floor(sqrt(sample_rate)) * floor(sqrt(sample_rate))` in order to store for each individual sample we're taking now, there is an index for it in the `sample_buffer`.
 
-### Three Line Test
 Then, using work from Task 1 as a baseline, we kept the double while loop to traverse through each pixel within the bounding box of the triangle. However, for each individual pixel, we mark that we will sample points `1 / sqrt(sample_rate)` spaced apart. Something that we also had to account for here, was ensuring that the first sampled point was actually `0.5 / (sample_rate)` away from the edge so we're sampling the center of each mini pixel we're essenitally creating. Thus, within each individual pixel that we were sampling from Task 1, we now sampling `sqrt(sample_rate)` times in the `x` direction per `sqrt(sample_rate)` times in the `y` direction. Then, we sample each of these points, running the three line test on them, and add them to the resized sample buffer if they lie within the triangle.
 
 Note here, we had to perform calculations to index the `sample_buffer`. The index of a sampled point `x, y` within the sample buffer would be
@@ -192,7 +190,7 @@ We do note that increasing the sample rate increases the quality (reduces aliasi
 
 In general, we see that bilinear sampling does a better job at smoothing out the images (in both cases, the bilinear sampling image does have less jaggies and aliasing, and is smoother overall).
 
-However, it is important to note the benefits of using nearest neighbor sampling as well, over bilinear sampling. Particularly, since bilinear sampling averages across four different values while nearest neighbor sampling only needs one, the computation power needed for nearest neighbor sampling is definitely lower. There will be a large difference between the two methods therefore, in computation power of large images due to the need of performing more than 4 times the computation (not only 4 samples over 1, but also 3 linear interpolations). In regards to the output, we've seen when bilinear sampling would win over nearest neighbor sampling (namely by decreasing aliasing), but due to the fact that bilinear sampling mixes 4 values, there's also a possibility that it may overmix and blend out an image too much. This may cause images to soften (smooth out), but also dull an image. For example, below, we can see that the white on this parrot is dulled out (and although that might be beneficial in blending), some art styles may not prefer that the colors in some high contrast/sharply contrasting areas are sometimes dulled out.
+However, it is important to note the benefits of using nearest neighbor sampling as well, over bilinear sampling. Particularly, since bilinear sampling averages across four different values while nearest neighbor sampling only needs one, the computation power needed for nearest neighbor sampling is definitely lower. There will be a large difference between the two methods therefore, in computation power of large images due to the need of performing more than 4 times the computation (not only 4 samples over 1, but also 3 linear interpolations). In regards to the output, we've seen when bilinear sampling would win over nearest neighbor sampling (namely by decreasing aliasing), but due to the fact that bilinear sampling mixes 4 values, there's also a possibility that it may overmix and blend out an image too much. This may cause images to soften (smooth out), but also dull an image. For example, below, we can see that the white on this parrot is dulled out (and although that might be beneficial in blending), some art styles may not prefer that the colors in some high contrast/sharply contrasting areas are sometimes dulled out. The two sampling methods would most likely perform similarly in areas with low contrast (view wise) or few details.
 
 <div align="center">
   <table style="width:100%">
@@ -210,29 +208,58 @@ However, it is important to note the benefits of using nearest neighbor sampling
 </div>
 
 ## Task 6: "Level sampling" with mipmaps for texture mapping
-TODO
+Finally, our last task was to perform level sampling: utilizing the mipmap mentioned in the last task! Our level sampling built off [Task 5](/hw1#task-5-pixel-sampling-for-texture-mapping)'s pixel sampling, with some modifications.
+
+First though, let's discuss what level sampling is and how we implemented it. Conceptually, level sampling allows us to use a mipmap, which dictates at what level we sample, where higher levels signify less detail while lower levels signify more detail (with the most detailed being the base level 0). Level sampling is useful however, since we note that although we are essentially decreasing the detail in higher level sampled areas, we are smoothing out those values and able to address and target aliasing. Specifically, an example of the useful in level sampling is if we have high-contrasting areas that are far away--since that area is smaller and has high contrasting pixel values, there may be a lot of aliasing if we just sampled everything at level 0. Moving that to a higher level allows us to smooth over the high contrast, anti-aliasing it: and it's totally worth it! For something that is meant to be far away, it makes sense for it to have less detail.
+
+However, since high level resolutions would be blurry, we want a method that allows us to interweave high and low level mip maps to textures so the image looks seamless regardless of whether the texture is close or far away. For actual implementation, what we did was build off the work from [Task 5](/hw1#task-5-pixel-sampling-for-texture-mapping), and now instead of just calculating the barycentric coordinates for `(x, y)`, we also calculated the barycentric coordinates for `(x + 1, y)` and `(x, y + 1)`, passing those as parameters into our sampling methods. There are three different types of level sampling we implemented: zero level, nearest level, and interpolation (a continuous mipamp). In order to calculate levels for nearest level and interpolation (a continuous mipmap), we wrote a helper function `get_level`, which calculates the difference vectors from the point to the chosen texel, and uses the formula
+{% highlight js %}
+log2(max(sqrt(dudx^2 + dvdx^2), sqrt(dudy^2 + dvdy^2)))
+{% endhighlight %}
+
+to calculate the level.
+
+### Zero Level
+When we use the zero level of the mipmap, we're essentially always using level 0 (hardcoded), which represents the original texture. This means we perform no smoothing and was the base that we started off with.
+
+### Nearest Level
+When we use the nearest level of the mipmap, for each pixel, we use the helper `get_level` function defined above, clamping the returned level, and then calling the pixel sampling methods defined from [Task 5](/hw1#task-5-pixel-sampling-for-texture-mapping), passing in the level we got from `get_level`.
+
+### Interpolation (A Continuous Mipmap)
+When we use interpolation (a continuous mipmap), this means that for each pixel, after calling the helper `get_level`, we determine the level above and below and sample at the level above and below, then perform linear interpolation between the two.
+
+### Tradeoffs
+We now have the ability to adjust the sampling technique by selecting pixel sampling (nearest neighbor or bilinear), level sampling (zero, nearest, or interpolating), or the number of samples per pixel (1, 4, 9, 16). With these options, we're given a grand total of 24 total different ways to produce a resulting image.
+
+Let's discuss the tradeoffs between speed, memory usage, and antialiasing power between these three techniques.
+- Speed: The fastest of the three would most likely be pixel sampling since all we're doing is sampling nearby pixels (at worst) and computing barycentric coordinates. Level sampling can be slower than pixel sampling because even though mipmaps can be precomputed, the actual effort of determining what mipmap level to use (and potentially even interpolating two), will slow down the rendering process. Both pixel sampling and level sampling need to covert data from surface space to texture space. However, these are constant sized increases in operations, summing up to linear in the number of pixels, whereas supersampling would be multiplicative. We see that increasing the number of samples per pixel is definitely slower than pixel sampling since we now have to do extra computations per pixel, namely by sampling it multiple times across the pixel--this is multiplicative in nature and adds up.
+- Memory Usage: Pixel sampling shouldn't inherently change the memory usage because we're just converting surface space to texture space, but not requiring extra data structures to do so. Level sampling can take up more memory particularly since we now may need to store more than just one mipmap. However, if these values are precomputed and stored somewhere on disk, this wouldn't require more memory usage than pixel sampling. Increasing the number of samples is the one that increases memory usage the most as we had to resize the `sample_buffer` from its original size to one that houses enough for all the super sampled values within each pixel, again, this is again, multiplicative with respect to an increase in the sampling rate.
+- Antialiasing Power: Finally, antialiasing power seems to be slightly difficult to analyze. The simpler case is for supersampling, which is the best for antialiasing since increasing the sample rate and then downsampling with gradients allows us to decrease aliasing. In fact, from the Nyquist Theorem, we know there will be no aliasing if all frequencies are less than the Nyquist frequency, so increasing the sampling rate to twice that of the highest frequency means that there will be no aliasing. On the other hand, pixel sampling's antialiasing power lies in which type of pixel sampling we use: particuarly, bilinear sampling will definitely be better at anti-aliasing than nearest neighbor due to the fact that it samples from four textels instead of one. Level sampling is more likely to help with antialiasing than pixel sampling as it builds off of pixel sampling to help decrease aliasing depending on the depth of the part of an image. Particularly, the interpolating level sampling means that in certain parts of the images, details get blurry, but its due to this blur that we are able to antialias.
 
 ### Space Needle
+We use these following images to demonstrate the differences in output when pairing different pixel sampling strategies with different level sampling stratgies. Namely, we're testing [nearest neighbor](/hw1#nearest-neighbor-sampling) and [bilinear](/hw1#bilinear-sampling) pixel sampling and pairing that with [zero](/hw1#zero-level) and [nearest](/hw1#nearest-level) level sampling.
+
+The following images all use a sample rate of 1 per pixel.
 <div align="center">
   <table style="width:100%">
     <tr>
       <td align="center">
         <img src="../assets/hw1/task6_1.png" width="400px"/>
-        <figcaption><code class="language-plaintext highlighter-rouge">L_ZERO</code> and <code class="language-plaintext highlighter-rouge">P_NEAREST</code></figcaption>
+        <figcaption>Rasterizing texmap/seattle.svg, <code class="language-plaintext highlighter-rouge">L_ZERO</code> and <code class="language-plaintext highlighter-rouge">P_NEAREST</code></figcaption>
       </td>
       <td align="center">
         <img src="../assets/hw1/task6_2.png" width="400px"/>
-        <figcaption><code class="language-plaintext highlighter-rouge">L_ZERO</code> and <code class="language-plaintext highlighter-rouge">P_LINEAR</code></figcaption>
+        <figcaption>Rasterizing texmap/seattle.svg, <code class="language-plaintext highlighter-rouge">L_ZERO</code> and <code class="language-plaintext highlighter-rouge">P_LINEAR</code></figcaption>
       </td>
     </tr>
       <tr>
       <td align="center">
         <img src="../assets/hw1/task6_3.png" width="400px"/>
-        <figcaption><code class="language-plaintext highlighter-rouge">L_NEAREST</code> and <code class="language-plaintext highlighter-rouge">P_NEAREST</code></figcaption>
+        <figcaption>Rasterizing texmap/seattle.svg, <code class="language-plaintext highlighter-rouge">L_NEAREST</code> and <code class="language-plaintext highlighter-rouge">P_NEAREST</code></figcaption>
       </td>
       <td align="center">
         <img src="../assets/hw1/task6_4.png" width="400px"/>
-        <figcaption><code class="language-plaintext highlighter-rouge">L_NEAREST</code> and <code class="language-plaintext highlighter-rouge">P_LINEAR</code></figcaption>
+        <figcaption>Rasterizing texmap/seattle.svg, <code class="language-plaintext highlighter-rouge">L_NEAREST</code> and <code class="language-plaintext highlighter-rouge">P_LINEAR</code></figcaption>
       </td>
     </tr>
   </table>
@@ -240,26 +267,27 @@ TODO
 
 From the above four images, we can see from comparing the top row to the second row, utilizing `L_NEAREST` over `L_ZERO` creates a smoother image and comparing the first column to the second column, we can see that using `P_LINEAR` over `P_NEAREST` creates a smoother image as well. Therefore, the best one is `L_NEAREST` adn `P_LINEAR`. Particularly, we compare the jagged edge of the top circular part of the space needle and see that the straight lines are smoother.
 
+The following images all use a sample rate of 1 per pixel.
 <div align="center">
   <table style="width:100%">
     <tr>
       <td align="center">
         <img src="../assets/hw1/task6_5.png" width="400px"/>
-        <figcaption><code class="language-plaintext highlighter-rouge">L_ZERO</code> and <code class="language-plaintext highlighter-rouge">P_NEAREST</code></figcaption>
+        <figcaption>Rasterizing texmap/seattle.svg, <code class="language-plaintext highlighter-rouge">L_ZERO</code> and <code class="language-plaintext highlighter-rouge">P_NEAREST</code></figcaption>
       </td>
       <td align="center">
         <img src="../assets/hw1/task6_6.png" width="400px"/>
-        <figcaption><code class="language-plaintext highlighter-rouge">L_ZERO</code> and <code class="language-plaintext highlighter-rouge">P_LINEAR</code></figcaption>
+        <figcaption>Rasterizing texmap/seattle.svg, <code class="language-plaintext highlighter-rouge">L_ZERO</code> and <code class="language-plaintext highlighter-rouge">P_LINEAR</code></figcaption>
       </td>
     </tr>
       <tr>
       <td align="center">
         <img src="../assets/hw1/task6_7.png" width="400px"/>
-        <figcaption><code class="language-plaintext highlighter-rouge">L_NEAREST</code> and <code class="language-plaintext highlighter-rouge">P_NEAREST</code></figcaption>
+        <figcaption>Rasterizing texmap/seattle.svg, <code class="language-plaintext highlighter-rouge">L_NEAREST</code> and <code class="language-plaintext highlighter-rouge">P_NEAREST</code></figcaption>
       </td>
       <td align="center">
         <img src="../assets/hw1/task6_8.png" width="400px"/>
-        <figcaption><code class="language-plaintext highlighter-rouge">L_NEAREST</code> and <code class="language-plaintext highlighter-rouge">P_LINEAR</code></figcaption>
+        <figcaption><Rasterizing texmap/seattle.svg, code class="language-plaintext highlighter-rouge">L_NEAREST</code> and <code class="language-plaintext highlighter-rouge">P_LINEAR</code></figcaption>
       </td>
     </tr>
   </table>
