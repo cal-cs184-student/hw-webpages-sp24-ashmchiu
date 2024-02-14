@@ -597,7 +597,6 @@ figcaption {
   font-size: 0.9em;
   line-height: 1.8;
   padding-top: 1rem;
-  padding-bottom: 1rem;
   font-size: 0.8em;
 }
 
@@ -623,7 +622,6 @@ figcaption {
     flex: 0 0 100%;
     max-width: 100%;
     margin-right: 0;
-    margin-bottom: 2rem;
   }
 
   .content-container {
