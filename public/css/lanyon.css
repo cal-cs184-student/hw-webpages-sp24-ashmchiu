@@ -667,3 +667,27 @@ ul.nav-list {
     border-left: none;
   }
 }
+
+li.nav-list-item {
+  margin: 0;
+  padding-left: 0px;
+  list-style: none;
+  list-style-type: none;
+
+  li::before {
+    display: none;
+  }
+
+  @media (max-width: 500px) {
+    display: block;
+
+    li {
+      float: none;
+    }
+  }
+
+  ul {
+    border-left: none;
+  }
+}
+
