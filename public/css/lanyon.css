@@ -589,6 +589,15 @@ figcaption {
   flex-direction: row;
 }
 
+@media (max-width: 767px) {
+  .container {
+    margin-left: 10%;
+    max-width: 100%;
+    padding-right: 0;
+    margin-right: 10%
+  }
+}
+
 .content-nav {
   position: fixed;
   top: 3rem;
