@@ -85,11 +85,39 @@ site: [https://cal-cs184-student.github.io/hw-webpages-sp24-ashmchiu/hw2/](https
 </div>
 
 ## Task 2: Bezier surfaces with separable 1D de Casteljau
+<div align="center">
+  <table style="width:100%">
+    <tr>
+      <td align="center">
+        <img src="../assets/hw2/task2.png" width="400px"/>
+        <figcaption>bez/teapot.bez evaluated by de Casteljau</figcaption>
+      </td>
+    </tr>
+  </table>
+</div>
 
 ## Task 3: Area-weighted vertex normals
+
+<div align="center">
+  <table style="width:100%">
+    <tr>
+      <td align="center">
+        <img src="../assets/hw2/task3_1.png" width="400px"/>
+        <figcaption>dae/teapot.dae with default flat shading</figcaption>
+      </td>
+      <td align="center">
+        <img src="../assets/hw2/task3_2.png" width="400px"/>
+        <figcaption>dae/teapot.dae with Phong shading, vertex normals</figcaption>
+      </td>
+    </tr>
+  </table>
+</div>
 
 ## Task 4: Edge flip
 
 ## Task 5: Edge split
 
 ## Task 6: Loop subdivision for mesh upsampling
+
+## Contributors
+Ashley Chiu, Angel Aldaco
