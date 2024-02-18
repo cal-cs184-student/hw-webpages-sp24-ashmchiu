@@ -117,7 +117,104 @@ site: [https://cal-cs184-student.github.io/hw-webpages-sp24-ashmchiu/hw2/](https
 
 ## Task 5: Edge split
 
+### Extra Credit (Beep beep!)
+<div align="center">
+  <table style="width:100%">
+    <tr>
+      <td align="center">
+        <img src="../assets/hw2/task5_extracredit1.png" width="400px"/>
+        <figcaption>dae/beetle.dae, highlighting a boundary edge</figcaption>
+      </td>
+    </tr>
+  </table>
+</div>
+
+<div align="center">
+  <table style="width:100%">
+    <tr>
+      <td align="center">
+        <img src="../assets/hw2/task5_extracredit2.png" width="400px"/>
+        <figcaption>dae/beetle.dae, splitting a boundary edge with default flat shading</figcaption>
+      </td>
+      <td align="center">
+        <img src="../assets/hw2/task5_extracredit3.png" width="350px"/>
+        <figcaption>dae/beetle.dae, splitting a boundary edge with Phong shading, vertex normals</figcaption>
+      </td>
+    </tr>
+  </table>
+</div>
+
 ## Task 6: Loop subdivision for mesh upsampling
+
+<div align="center">
+  <table style="width:100%">
+    <tr>
+      <td align="center">
+        <img src="../assets/hw2/task6_1.png" width="400px"/>
+        <figcaption>dae/cube.dae, loaded</figcaption>
+      </td>
+      <td align="center">
+        <img src="../assets/hw2/task6_2.png" width="400px"/>
+        <figcaption>dae/cube.dae, loop subdivision step 1</figcaption>
+      </td>
+    </tr>
+    <tr>
+      <td align="center">
+        <img src="../assets/hw2/task6_3.png" width="400px"/>
+        <figcaption>dae/cube.dae, loop subdivision step 2</figcaption>
+      </td>
+      <td align="center">
+        <img src="../assets/hw2/task6_4.png" width="400px"/>
+        <figcaption>dae/cube.dae, loop subdivision step 3</figcaption>
+      </td>
+    </tr>
+    <tr>
+      <td align="center">
+        <img src="../assets/hw2/task6_5.png" width="400px"/>
+        <figcaption>dae/cube.dae, loop subdivision step 4</figcaption>
+      </td>
+      <td align="center">
+        <img src="../assets/hw2/task6_6.png" width="400px"/>
+        <figcaption>dae/cube.dae, loop subdivision step 5</figcaption>
+      </td>
+    </tr>
+  </table>
+</div>
+
+<div align="center">
+  <table style="width:100%">
+    <tr>
+      <td align="center">
+        <img src="../assets/hw2/task6_7.png" width="400px"/>
+        <figcaption>dae/cube.dae, loaded, pre-processed with one split on each diagonal edge on each face</figcaption>
+      </td>
+      <td align="center">
+        <img src="../assets/hw2/task6_8.png" width="400px"/>
+        <figcaption>dae/cube.dae, loop subdivision step 1, after pre-processing</figcaption>
+      </td>
+    </tr>
+    <tr>
+      <td align="center">
+        <img src="../assets/hw2/task6_9.png" width="400px"/>
+        <figcaption>dae/cube.dae, loop subdivision step 2, after pre-processing</figcaption>
+      </td>
+      <td align="center">
+        <img src="../assets/hw2/task6_10.png" width="400px"/>
+        <figcaption>dae/cube.dae, loop subdivision step 3, after pre-processing</figcaption>
+      </td>
+    </tr>
+    <tr>
+      <td align="center">
+        <img src="../assets/hw2/task6_11.png" width="400px"/>
+        <figcaption>dae/cube.dae, loop subdivision step 4, after pre-processing</figcaption>
+      </td>
+      <td align="center">
+        <img src="../assets/hw2/task6_12.png" width="400px"/>
+        <figcaption>dae/cube.dae, loop subdivision step 5, after pre-processing</figcaption>
+      </td>
+    </tr>
+  </table>
+</div>
 
 ## Contributors
 Ashley Chiu, Angel Aldaco
