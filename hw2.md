@@ -17,31 +17,31 @@ site: [https://cal-cs184-student.github.io/hw-webpages-sp24-ashmchiu/hw2/](https
     <tr>
       <td align="center">
         <img src="../assets/hw2/task1_1.png" width="400px"/>
-        <figcaption>Step/Level 1</figcaption>
+        <figcaption>Original control points</figcaption>
       </td>
       <td align="center">
         <img src="../assets/hw2/task1_2.png" width="400px"/>
-        <figcaption>Step/Level 2</figcaption>
+        <figcaption>Step 1</figcaption>
       </td>
     </tr>
       <tr>
       <td align="center">
         <img src="../assets/hw2/task1_3.png" width="400px"/>
-        <figcaption>Step/Level 3</figcaption>
+        <figcaption>Step 2</figcaption>
       </td>
       <td align="center">
         <img src="../assets/hw2/task1_4.png" width="400px"/>
-        <figcaption>Step/Level 4</figcaption>
+        <figcaption>Step 3</figcaption>
       </td>
     </tr>
     <tr>
       <td align="center">
         <img src="../assets/hw2/task1_5.png" width="400px"/>
-        <figcaption>Step/Level 5</figcaption>
+        <figcaption>Step 4</figcaption>
       </td>
       <td align="center">
         <img src="../assets/hw2/task1_6.png" width="400px"/>
-        <figcaption>Step/Level 6</figcaption>
+        <figcaption>Step 5</figcaption>
       </td>
     </tr>
   </table>
