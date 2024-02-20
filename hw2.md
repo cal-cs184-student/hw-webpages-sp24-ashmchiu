@@ -156,6 +156,27 @@ We can see in the image below that the shading becomes a lot smoother, and we've
 
 ## Task 4: Edge flip
 
+Utilizing this diagram, we mapped out the pointer changes for edge flips. 
+
+<div align="center">
+  <table style="width:100%">
+    <tr>
+      <td align="center">
+        <img src="../assets/hw2/task4_diagram.png" width="600px"/>
+        <figcaption>bez/teapot.bez evaluated by de Casteljau</figcaption>
+      </td>
+    </tr>
+  </table>
+</div>
+
+Our main implementation strategy was first checking whether the edge to flip was a boundary, and if so, returning. THen, we stored all the current elements as diagrammed above (with the same naming conventions). Then, we <code class="language-plaintext highlighter-rouge">setNeighbors</code> for all the halfedges, ensuring that their <code class="language-plaintext highlighter-rouge">next</code>, <code class="language-plaintext highlighter-rouge">twin</code>, <code class="language-plaintext highlighter-rouge">vertex</code>, <code class="language-plaintext highlighter-rouge">edge</code>, and <code class="language-plaintext highlighter-rouge">face</code> matched that of the diagram we've shown above. Following that, we set each of the vertice's halfedges arbitrarily (so long as it was an outgoing halfedge). Then, we set each edge's halfedge and set each face's halfedge.
+
+The main debugging trick we came up with was drawing out this diagram to ensure that we knew where everything was following the flip. This was also a great check to make sure we weren't deleting or adding any edges, halfedges, faces, or vertices.
+
+One debugging error that we ran into was that certain mesh objects wouldn't change (for instance, the outer edges and halfedges didn't move annd the vertices stayed put) and we didn't originally update them. However, once we updated these values, it worked as expected.
+
+Below are images of dae/teapot.dae before and after edge flips, with default flat and Phong shading.
+
 <div align="center">
   <table style="width:100%">
     <tr>
@@ -182,6 +203,19 @@ We can see in the image below that the shading becomes a lot smoother, and we've
 </div>
 
 ## Task 5: Edge split
+
+Utilizing this diagram, we mapped out the pointer changes for edge splits. 
+
+<div align="center">
+  <table style="width:100%">
+    <tr>
+      <td align="center">
+        <img src="../assets/hw2/task5_diagram.png" width="600px"/>
+        <figcaption>bez/teapot.bez evaluated by de Casteljau</figcaption>
+      </td>
+    </tr>
+  </table>
+</div>
 
 <div align="center">
   <table style="width:100%">
