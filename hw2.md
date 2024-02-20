@@ -171,7 +171,7 @@ Utilizing this diagram, we mapped out the pointer changes for edge flips.
 
 Our main implementation strategy was first checking whether the edge to flip was a boundary, and if so, returning. Then, we stored all the current elements as diagrammed above (with the same naming conventions). Then, we <code class="language-plaintext highlighter-rouge">setNeighbors</code> for all the halfedges, ensuring that their <code class="language-plaintext highlighter-rouge">next</code>, <code class="language-plaintext highlighter-rouge">twin</code>, <code class="language-plaintext highlighter-rouge">vertex</code>, <code class="language-plaintext highlighter-rouge">edge</code>, and <code class="language-plaintext highlighter-rouge">face</code> matched that of the diagram we've shown above. Following that, we set each of the vertice's halfedges arbitrarily (so long as it was an outgoing halfedge). Then, we set each edge's halfedge and set each face's halfedge.
 
-The main debugging trick we came up with was drawing out this diagram to ensure that we knew where everything was following the flip. This was also a great check to make sure we weren't deleting or adding any edges, halfedges, faces, or vertices.
+The main debugging trick we came up with was drawing out this diagram to ensure that we knew where everything was following the flip. This was also a great check to make sure we weren't deleting or adding any edges, halfedges, faces, or vertices. We were lucky to not have a tumultuous debugging journey.
 
 One debugging error that we ran into was that certain mesh objects wouldn't change (for instance, the outer edges and halfedges didn't move annd the vertices stayed put) and we didn't originally update them. However, once we updated these values, it worked as expected.
 
@@ -223,7 +223,7 @@ Our new vertex was set as the direct midpoint of the edge we were splitting (cal
 
 Then, we <code class="language-plaintext highlighter-rouge">setNeighbors</code> for all the halfedges, ensuring that their <code class="language-plaintext highlighter-rouge">next</code>, <code class="language-plaintext highlighter-rouge">twin</code>, <code class="language-plaintext highlighter-rouge">vertex</code>, <code class="language-plaintext highlighter-rouge">edge</code>, and <code class="language-plaintext highlighter-rouge">face</code> matched that of the diagram we've shown above. Following that, we set each of the vertice's halfedges arbitrarily (so long as it was an outgoing halfedge). Then, we set each edge's halfedge and set each face's halfedge.
 
-The main debugging trick we came up with was drawing out this diagram to ensure that we knew where everything was following the flip. This was also a great check to make sure we weren't deleting or adding any edges, halfedges, faces, or vertices. Following [Task 4](/hw2.md#task-4-edge-flip), we were a lot more careful in our diagram construction, and this meant we didn't actually have any difficult debugging.
+The main debugging trick we came up with was drawing out this diagram to ensure that we knew where everything was following the split. This was also a great check to make sure we weren't deleting or adding any edges, halfedges, faces, or vertices. Following [Task 4](/hw2.md#task-4-edge-flip), we were a lot more careful in our diagram construction, and this meant we didn't actually have any difficult debugging.
 
 Below are images of dae/teapot.dae before and after edge flips and splits, as captioned, with default flat and Phong shading.
 
