@@ -25,31 +25,31 @@ Below, we show screenshots of each step of the evaluation from the original cont
   <table style="width:100%">
     <tr>
       <td align="center">
-        <img src="../assets/hw2/task1_1.png" width="100%"/>
+        <img src="../assets/hw2/task1/task1_1.png" width="100%"/>
         <figcaption>Original control points</figcaption>
       </td>
       <td align="center">
-        <img src="../assets/hw2/task1_2.png" width="100%"/>
+        <img src="../assets/hw2/task1/task1_2.png" width="100%"/>
         <figcaption>Step 1</figcaption>
       </td>
     </tr>
       <tr>
       <td align="center">
-        <img src="../assets/hw2/task1_3.png" width="100%"/>
+        <img src="../assets/hw2/task1/task1_3.png" width="100%"/>
         <figcaption>Step 2</figcaption>
       </td>
       <td align="center">
-        <img src="../assets/hw2/task1_4.png" width="100%"/>
+        <img src="../assets/hw2/task1/task1_4.png" width="100%"/>
         <figcaption>Step 3</figcaption>
       </td>
     </tr>
     <tr>
       <td align="center">
-        <img src="../assets/hw2/task1_5.png" width="100%"/>
+        <img src="../assets/hw2/task1/task1_5.png" width="100%"/>
         <figcaption>Step 4</figcaption>
       </td>
       <td align="center">
-        <img src="../assets/hw2/task1_6.png" width="100%"/>
+        <img src="../assets/hw2/task1/task1_6.png" width="100%"/>
         <figcaption>Step 5</figcaption>
       </td>
     </tr>
@@ -62,7 +62,7 @@ Here's the completed Bezier curve constructed from running de Casteljau's algori
   <table style="width:100%">
     <tr>
       <td align="center">
-        <img src="../assets/hw2/task1_7.png" width="400px"/>
+        <img src="../assets/hw2/task1/task1_7.png" width="400px"/>
         <figcaption>Completed Bezier curve</figcaption>
       </td>
     </tr>
@@ -75,7 +75,7 @@ We can also drag and move the original control points that we've shown above to 
   <table style="width:100%">
     <tr>
       <td align="center">
-        <img src="../assets/hw2/task1_8.png" width="400px"/>
+        <img src="../assets/hw2/task1/task1_8.png" width="400px"/>
         <figcaption>Moving original points to create a slightly different Bezier curve</figcaption>
       </td>
     </tr>
@@ -88,11 +88,11 @@ and here we show how we can modify the parameter <code class="language-plaintext
   <table style="width:100%">
     <tr>
       <td align="center">
-        <img src="../assets/hw2/task1_9.png" width="100%"/>
+        <img src="../assets/hw2/task1/task1_9.png" width="100%"/>
         <figcaption>Decreasing <code class="language-plaintext highlighter-rouge">t</code></figcaption>
       </td>
       <td align="center">
-        <img src="../assets/hw2/task1_10.png" width="100%"/>
+        <img src="../assets/hw2/task1/task1_10.png" width="100%"/>
         <figcaption>Increasing <code class="language-plaintext highlighter-rouge">t</code></figcaption>
       </td>
     </tr>
@@ -120,7 +120,7 @@ In conjunction, the three methods abstract away what the previous did: evaluatin
   <table style="width:100%">
     <tr>
       <td align="center">
-        <img src="../assets/hw2/task2.png" width="400px"/>
+        <img src="../assets/hw2/task2/task2.png" width="400px"/>
         <figcaption>bez/teapot.bez evaluated by de Casteljau</figcaption>
       </td>
     </tr>
@@ -143,11 +143,11 @@ We can see in the image below that the shading becomes a lot smoother, and we've
   <table style="width:100%">
     <tr>
       <td align="center">
-        <img src="../assets/hw2/task3_1.png" width="100%"/>
+        <img src="../assets/hw2/task3/task3_1.png" width="100%"/>
         <figcaption>dae/teapot.dae with default flat shading</figcaption>
       </td>
       <td align="center">
-        <img src="../assets/hw2/task3_2.png" width="100%"/>
+        <img src="../assets/hw2/task3/task3_2.png" width="100%"/>
         <figcaption>dae/teapot.dae with Phong shading</figcaption>
       </td>
     </tr>
@@ -162,7 +162,7 @@ Utilizing this diagram, we mapped out the pointer changes for edge flips.
   <table style="width:100%">
     <tr>
       <td align="center">
-        <img src="../assets/hw2/task4_diagram.png" width="600px"/>
+        <img src="../assets/hw2/task4/task4_diagram.png" width="600px"/>
         <figcaption>bez/teapot.bez evaluated by de Casteljau</figcaption>
       </td>
     </tr>
@@ -181,21 +181,21 @@ Below are images of dae/teapot.dae before and after edge flips, with default fla
   <table style="width:100%">
     <tr>
       <td align="center">
-        <img src="../assets/hw2/task4_1.png" width="100%"/>
+        <img src="../assets/hw2/task4/task4_1.png" width="100%"/>
         <figcaption>dae/teapot.dae, no edge flips with default flat shading</figcaption>
       </td>
       <td align="center">
-        <img src="../assets/hw2/task4_2.png" width="100%"/>
+        <img src="../assets/hw2/task4/task4_2.png" width="100%"/>
         <figcaption>dae/teapot.dae, no edge flips with Phong shading</figcaption>
       </td>
     </tr>
     <tr>
       <td align="center">
-        <img src="../assets/hw2/task4_3.png" width="100%"/>
+        <img src="../assets/hw2/task4/task4_3.png" width="100%"/>
         <figcaption>dae/teapot.dae, edge flips with default flat shading</figcaption>
       </td>
       <td align="center">
-        <img src="../assets/hw2/task4_4.png" width="100%"/>
+        <img src="../assets/hw2/task4/task4_4.png" width="100%"/>
         <figcaption>dae/teapot.dae, edge flips with Phong shading</figcaption>
       </td>
     </tr>
@@ -210,7 +210,7 @@ Utilizing this diagram, we mapped out the pointer changes for edge splits.
   <table style="width:100%">
     <tr>
       <td align="center">
-        <img src="../assets/hw2/task5_diagram.png" width="600px"/>
+        <img src="../assets/hw2/task5/task5_diagram.png" width="600px"/>
         <figcaption>bez/teapot.bez evaluated by de Casteljau</figcaption>
       </td>
     </tr>
@@ -231,41 +231,41 @@ Below are images of dae/teapot.dae before and after edge flips and splits, as ca
   <table style="width:100%">
     <tr>
       <td align="center">
-        <img src="../assets/hw2/task4_1.png" width="100%"/>
+        <img src="../assets/hw2/task4/task4_1.png" width="100%"/>
         <figcaption>dae/teapot.dae, no edge splits with default flat shading</figcaption>
       </td>
       <td align="center">
-        <img src="../assets/hw2/task4_2.png" width="100%"/>
+        <img src="../assets/hw2/task4/task4_2.png" width="100%"/>
         <figcaption>dae/teapot.dae, no edge splits with Phong shading</figcaption>
       </td>
     </tr>
     <tr>
       <td align="center">
-        <img src="../assets/hw2/task5_1.png" width="100%"/>
+        <img src="../assets/hw2/task5/task5_1.png" width="100%"/>
         <figcaption>dae/teapot.dae, edge splits with default flat shading</figcaption>
       </td>
       <td align="center">
-        <img src="../assets/hw2/task5_2.png" width="100%"/>
+        <img src="../assets/hw2/task5/task5_2.png" width="100%"/>
         <figcaption>dae/teapot.dae, edge splits with Phong shading</figcaption>
       </td>
     </tr>
      <tr>
       <td align="center">
-        <img src="../assets/hw2/task5_3.png" width="100%"/>
+        <img src="../assets/hw2/task5/task5_3.png" width="100%"/>
         <figcaption>dae/teapot.dae, edge splits and flips with default flat shading</figcaption>
       </td>
       <td align="center">
-        <img src="../assets/hw2/task5_4.png" width="100%"/>
+        <img src="../assets/hw2/task5/task5_4.png" width="100%"/>
         <figcaption>dae/teapot.dae, edge splits and flips with Phong shading</figcaption>
       </td>
     </tr>
     <tr>
       <td align="center">
-        <img src="../assets/hw2/task5_5.png" width="100%"/>
+        <img src="../assets/hw2/task5/task5_5.png" width="100%"/>
         <figcaption>dae/teapot.dae, even more edge splits and flips with default flat shading</figcaption>
       </td>
       <td align="center">
-        <img src="../assets/hw2/task5_6.png" width="100%"/>
+        <img src="../assets/hw2/task5/task5_6.png" width="100%"/>
         <figcaption>dae/teapot.dae, even more edge splits and flips with Phong shading</figcaption>
       </td>
     </tr>
@@ -284,7 +284,7 @@ Here is a diagram of dae/beetle.dae before any boundary edge splitting. Notice t
   <table style="width:100%">
     <tr>
       <td align="center">
-        <img src="../assets/hw2/task5_extracredit1.png" width="400px"/>
+        <img src="../assets/hw2/task5/task5_extracredit1.png" width="400px"/>
         <figcaption>dae/beetle.dae, highlighting a boundary edge</figcaption>
       </td>
     </tr>
@@ -297,11 +297,11 @@ Here are images of dae/beetle.dae after splitting the edges around the nearest w
   <table style="width:100%">
     <tr>
       <td align="center">
-        <img src="../assets/hw2/task5_extracredit2.png" width="100%"/>
+        <img src="../assets/hw2/task5/task5_extracredit2.png" width="100%"/>
         <figcaption>dae/beetle.dae, splitting a boundary edge with default flat shading</figcaption>
       </td>
       <td align="center">
-        <img src="../assets/hw2/task5_extracredit3.png" width="100%"/>
+        <img src="../assets/hw2/task5/task5_extracredit3.png" width="100%"/>
         <figcaption>dae/beetle.dae, splitting a boundary edge with Phong shading</figcaption>
       </td>
     </tr>
@@ -314,31 +314,31 @@ Here are images of dae/beetle.dae after splitting the edges around the nearest w
   <table style="width:100%">
     <tr>
       <td align="center">
-        <img src="../assets/hw2/task6_1.png" width="100%"/>
+        <img src="../assets/hw2/task6/task6_1.png" width="100%"/>
         <figcaption>dae/cube.dae, loaded</figcaption>
       </td>
       <td align="center">
-        <img src="../assets/hw2/task6_2.png" width="100%"/>
+        <img src="../assets/hw2/task6/task6_2.png" width="100%"/>
         <figcaption>dae/cube.dae, loop subdivision step 1</figcaption>
       </td>
     </tr>
     <tr>
       <td align="center">
-        <img src="../assets/hw2/task6_3.png" width="100%"/>
+        <img src="../assets/hw2/task6/task6_3.png" width="100%"/>
         <figcaption>dae/cube.dae, loop subdivision step 2</figcaption>
       </td>
       <td align="center">
-        <img src="../assets/hw2/task6_4.png" width="100%"/>
+        <img src="../assets/hw2/task6/task6_4.png" width="100%"/>
         <figcaption>dae/cube.dae, loop subdivision step 3</figcaption>
       </td>
     </tr>
     <tr>
       <td align="center">
-        <img src="../assets/hw2/task6_5.png" width="100%"/>
+        <img src="../assets/hw2/task6/task6_5.png" width="100%"/>
         <figcaption>dae/cube.dae, loop subdivision step 4</figcaption>
       </td>
       <td align="center">
-        <img src="../assets/hw2/task6_6.png" width="100%"/>
+        <img src="../assets/hw2/task6/task6_6.png" width="100%"/>
         <figcaption>dae/cube.dae, loop subdivision step 5</figcaption>
       </td>
     </tr>
@@ -349,31 +349,31 @@ Here are images of dae/beetle.dae after splitting the edges around the nearest w
   <table style="width:100%">
     <tr>
       <td align="center">
-        <img src="../assets/hw2/task6_7.png" width="100%"/>
+        <img src="../assets/hw2/task6/task6_7.png" width="100%"/>
         <figcaption>dae/cube.dae, loaded, pre-processed with one split on each diagonal edge on each face</figcaption>
       </td>
       <td align="center">
-        <img src="../assets/hw2/task6_8.png" width="100%"/>
+        <img src="../assets/hw2/task6/task6_8.png" width="100%"/>
         <figcaption>dae/cube.dae, loop subdivision step 1, after pre-processing</figcaption>
       </td>
     </tr>
     <tr>
       <td align="center">
-        <img src="../assets/hw2/task6_9.png" width="100%"/>
+        <img src="../assets/hw2/task6/task6_9.png" width="100%"/>
         <figcaption>dae/cube.dae, loop subdivision step 2, after pre-processing</figcaption>
       </td>
       <td align="center">
-        <img src="../assets/hw2/task6_10.png" width="100%"/>
+        <img src="../assets/hw2/task6/task6_10.png" width="100%"/>
         <figcaption>dae/cube.dae, loop subdivision step 3, after pre-processing</figcaption>
       </td>
     </tr>
     <tr>
       <td align="center">
-        <img src="../assets/hw2/task6_11.png" width="100%"/>
+        <img src="../assets/hw2/task6/task6_11.png" width="100%"/>
         <figcaption>dae/cube.dae, loop subdivision step 4, after pre-processing</figcaption>
       </td>
       <td align="center">
-        <img src="../assets/hw2/task6_12.png" width="100%"/>
+        <img src="../assets/hw2/task6/task6_12.png" width="100%"/>
         <figcaption>dae/cube.dae, loop subdivision step 5, after pre-processing</figcaption>
       </td>
     </tr>
@@ -385,11 +385,11 @@ comparing with no pre-processing
   <table style="width:100%">
     <tr>
       <td align="center">
-        <img src="../assets/hw2/task6_6.png" width="100%"/>
+        <img src="../assets/hw2/task6/task6_6.png" width="100%"/>
         <figcaption>dae/cube.dae, loop subdivision step 5, no pre-processing</figcaption>
       </td>
       <td align="center">
-        <img src="../assets/hw2/task6_12.png" width="100%"/>
+        <img src="../assets/hw2/task6/task6_12.png" width="100%"/>
         <figcaption>dae/cube.dae, loop subdivision step 5, after pre-processing</figcaption>
       </td>
     </tr>

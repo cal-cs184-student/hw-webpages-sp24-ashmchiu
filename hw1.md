@@ -38,7 +38,7 @@ was greater than or equal to 0. If so, then we would fill that pixel.
   <table style="width:100%">
     <tr>
       <td align="center">
-        <img src="../assets/hw1/task1.png" width="400px"/>
+        <img src="../assets/hw1/task1/task1.png" width="400px"/>
         <figcaption>Rasterizing basic/test4.svg with default viewing parameters</figcaption>
       </td>
     </tr>
@@ -77,17 +77,17 @@ Finally, since we sampled `sqrt(sample_rate) * sqrt(sample_rate)` times per pixe
   <table style="width:100%">
     <tr>
       <td align="center">
-        <img src="../assets/hw1/task2_1.png" width="400px"/>
+        <img src="../assets/hw1/task2/task2_1.png" width="400px"/>
         <figcaption>Rasterizing basic/test4.svg with sample rate of 1</figcaption>
       </td>
       <td align="center">
-        <img src="../assets/hw1/task2_2.png" width="400px"/>
+        <img src="../assets/hw1/task2/task2_2.png" width="400px"/>
         <figcaption>Rasterizing basic/test4.svg with sample rate of 4</figcaption>
       </td>
     </tr>
     <tr>
       <td colspan="2" align="center">
-        <img src="../assets/hw1/task2_3.png" width="400px"/>
+        <img src="../assets/hw1/task2/task2_3.png" width="400px"/>
         <figcaption>Rasterizing basic/test4.svg with sample rate of 16</figcaption>
       </td>
     </tr>
@@ -104,7 +104,7 @@ Instead of only sampling once per pixel, by supersampling, we don't have a binar
   <table style="width:100%">
     <tr>
       <td align="center">
-        <img src="../assets/hw1/task3.png" width="400px"/>
+        <img src="../assets/hw1/task3/task3.png" width="400px"/>
         <figcaption>Rasterizing transforms/my_robot.svg with default viewing parameters</figcaption>
       </td>
     </tr>
@@ -125,11 +125,11 @@ The purpose of barycentric coordinates is to interpolate across vertices. Namely
   <table style="width:100%">
     <tr>
       <td align="center">
-        <img src="../assets/hw1/task4_1.png" width="400px"/>
+        <img src="../assets/hw1/task4/task4_1.png" width="400px"/>
         <figcaption>Rasterizing basic/test7.svg with default viewing parameters, sample rate 1</figcaption>
       </td>
       <td align="center">
-        <img src="../assets/hw1/task4_2.png" width="400px"/>
+        <img src="../assets/hw1/task4/task4_2.png" width="400px"/>
         <figcaption>Rasterizing basic/triangle.svg with default viewing parameters, sample rate 1</figcaption>
       </td>
     </tr>
@@ -166,21 +166,21 @@ For bilinear sampling, we instead rely not only on the nearest texture pixel, bu
   <table style="width:100%">
     <tr>
       <td align="center">
-        <img src="../assets/hw1/task5_1.png" width="400px"/>
+        <img src="../assets/hw1/task5/task5_1.png" width="400px"/>
         <figcaption>Rasterizing texmap/test6.svg, sample rate 1, nearest sampling</figcaption>
       </td>
       <td align="center">
-        <img src="../assets/hw1/task5_2.png" width="400px"/>
+        <img src="../assets/hw1/task5/task5_2.png" width="400px"/>
         <figcaption>Rasterizing texmap/test6.svg, sample rate 1, bilinear sampling</figcaption>
       </td>
     </tr>
       <tr>
       <td align="center">
-        <img src="../assets/hw1/task5_3.png" width="400px"/>
+        <img src="../assets/hw1/task5/task5_3.png" width="400px"/>
         <figcaption>Rasterizing texmap/test6.svg, sample rate 16, nearest sampling</figcaption>
       </td>
       <td align="center">
-        <img src="../assets/hw1/task5_4.png" width="400px"/>
+        <img src="../assets/hw1/task5/task5_4.png" width="400px"/>
         <figcaption>Rasterizing texmap/test6.svg, sample rate 16, bilinear sampling</figcaption>
       </td>
     </tr>
@@ -199,11 +199,11 @@ However, it is important to note the benefits of using nearest neighbor sampling
   <table style="width:100%">
     <tr>
       <td align="center">
-        <img src="../assets/hw1/task5_5.png" width="400px"/>
+        <img src="../assets/hw1/task5/task5_5.png" width="400px"/>
         <figcaption>Rasterizing texmap/test4.svg, sample rate 16, nearest sampling</figcaption>
       </td>
       <td align="center">
-        <img src="../assets/hw1/task5_6.png" width="400px"/>
+        <img src="../assets/hw1/task5/task5_6.png" width="400px"/>
         <figcaption>Rasterizing texmap/test4.svg, sample rate 16, bilinear sampling</figcaption>
       </td>
     </tr>
@@ -247,21 +247,21 @@ The following images all use a sample rate of 1 per pixel.
   <table style="width:100%">
     <tr>
       <td align="center">
-        <img src="../assets/hw1/task6_1.png" width="400px"/>
+        <img src="../assets/hw1/task6/task6_1.png" width="400px"/>
         <figcaption>Rasterizing texmap/seattle.svg, <code class="language-plaintext highlighter-rouge">L_ZERO</code> and <code class="language-plaintext highlighter-rouge">P_NEAREST</code></figcaption>
       </td>
       <td align="center">
-        <img src="../assets/hw1/task6_2.png" width="400px"/>
+        <img src="../assets/hw1/task6/task6_2.png" width="400px"/>
         <figcaption>Rasterizing texmap/seattle.svg, <code class="language-plaintext highlighter-rouge">L_ZERO</code> and <code class="language-plaintext highlighter-rouge">P_LINEAR</code></figcaption>
       </td>
     </tr>
       <tr>
       <td align="center">
-        <img src="../assets/hw1/task6_3.png" width="400px"/>
+        <img src="../assets/hw1/task6/task6_3.png" width="400px"/>
         <figcaption>Rasterizing texmap/seattle.svg, <code class="language-plaintext highlighter-rouge">L_NEAREST</code> and <code class="language-plaintext highlighter-rouge">P_NEAREST</code></figcaption>
       </td>
       <td align="center">
-        <img src="../assets/hw1/task6_4.png" width="400px"/>
+        <img src="../assets/hw1/task6/task6_4.png" width="400px"/>
         <figcaption>Rasterizing texmap/seattle.svg, <code class="language-plaintext highlighter-rouge">L_NEAREST</code> and <code class="language-plaintext highlighter-rouge">P_LINEAR</code></figcaption>
       </td>
     </tr>
@@ -275,21 +275,21 @@ The following images all use a sample rate of 1 per pixel.
   <table style="width:100%">
     <tr>
       <td align="center">
-        <img src="../assets/hw1/task6_5.png" width="400px"/>
+        <img src="../assets/hw1/task6/task6_5.png" width="400px"/>
         <figcaption>Rasterizing texmap/seattle.svg, <code class="language-plaintext highlighter-rouge">L_ZERO</code> and <code class="language-plaintext highlighter-rouge">P_NEAREST</code></figcaption>
       </td>
       <td align="center">
-        <img src="../assets/hw1/task6_6.png" width="400px"/>
+        <img src="../assets/hw1/task6/task6_6.png" width="400px"/>
         <figcaption>Rasterizing texmap/seattle.svg, <code class="language-plaintext highlighter-rouge">L_ZERO</code> and <code class="language-plaintext highlighter-rouge">P_LINEAR</code></figcaption>
       </td>
     </tr>
       <tr>
       <td align="center">
-        <img src="../assets/hw1/task6_7.png" width="400px"/>
+        <img src="../assets/hw1/task6/task6_7.png" width="400px"/>
         <figcaption>Rasterizing texmap/seattle.svg, <code class="language-plaintext highlighter-rouge">L_NEAREST</code> and <code class="language-plaintext highlighter-rouge">P_NEAREST</code></figcaption>
       </td>
       <td align="center">
-        <img src="../assets/hw1/task6_8.png" width="400px"/>
+        <img src="../assets/hw1/task6/task6_8.png" width="400px"/>
         <figcaption>Rasterizing texmap/seattle.svg, <code class="language-plaintext highlighter-rouge">L_NEAREST</code> and <code class="language-plaintext highlighter-rouge">P_LINEAR</code></figcaption>
       </td>
     </tr>
