@@ -116,7 +116,7 @@ h1, h2, h3, h4, h5, h6 {
 .masthead-title small {
   font-size: 75%;
   font-weight: 400;
-  color: #c0c0c0;
+  color: #9b9b9b;
   letter-spacing: 0;
 }
 
@@ -379,7 +379,7 @@ a.sidebar-nav-item:focus {
   margin-left: -1rem;
   margin-right: -1rem;
   font-family: "DM Sans", sans-serif;
-  color: #ccc;
+  color: #9b9b9b;
   text-align: center;
 }
 
@@ -575,13 +575,13 @@ a.pagination-item:hover {
 .image-caption {
   text-align: center;
   font-size: .8rem;
-  color: lightgrey;
+  color: #9b9b9b;
 }
 
 figcaption {
   text-align: center;
   font-size: .8rem;
-  color: lightgrey;
+  color: #9b9b9b;
 }
 
 .content-wrapper {
@@ -613,7 +613,7 @@ figcaption {
 .content-nav a {
   text-decoration: none;
   display: block;
-  color: #ccc;
+  color: #9b9b9b;
   transition: all 50ms ease-in-out;
 }
 

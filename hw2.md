@@ -12,6 +12,15 @@ site: [https://cal-cs184-student.github.io/hw-webpages-sp24-ashmchiu/hw2/](https
 ## Overview
 
 ## Task 1: Bezier curves with 1D de Casteljau subdivision
+
+The de Casteljau algorithm takes in a set of control points and recursively finds intermediate points until its stopping condition (when there remains 1 point), when we hit this case, this one point will exist on the Bezier curve generated from the original control points.
+
+In depth, de Casteljau takes in <code class="language-plaintext highlighter-rouge">n</code> initial control point and a parameter <code class="language-plaintext highlighter-rouge">t</code> between 0 and 1 (shifting <code class="language-plaintext highlighter-rouge">t</code> ultimately gives you all the points that lie on the Bezier curve). The algorithm in return, in one step, returns <code class="language-plaintext highlighter-rouge">n - 1</code> intermediate points, and recursively applying the algorithm gets us from <code class="language-plaintext highlighter-rouge">n</code> points down to <code class="language-plaintext highlighter-rouge">1</code> in <code class="language-plaintext highlighter-rouge">n - 1</code> steps.
+
+Here, in <code class="language-plaintext highlighter-rouge">BezierCurve::evaluateStep</code>, we have implemented the method to get from <code class="language-plaintext highlighter-rouge">n</code> points to <code class="language-plaintext highlighter-rouge">n - 1</code> intermediary points, effectively executing one step of de Casteljau's. At each step, given the points <code class="language-plaintext highlighter-rouge">p1</code> to <code class="language-plaintext highlighter-rouge">pk</code>, for each <code class="language-plaintext highlighter-rouge">pi'</code>, we linearly interpolate <code class="language-plaintext highlighter-rouge">(1 - t) * p_i + t * p_{i + 1}</code>.
+
+Below, we show screenshots of each step of the evaluation from the original control points down to the final evaluated point.
+
 <div align="center">
   <table style="width:100%">
     <tr>
@@ -47,6 +56,8 @@ site: [https://cal-cs184-student.github.io/hw-webpages-sp24-ashmchiu/hw2/](https
   </table>
 </div>
 
+Here's the completed Bezier curve constructed from running de Casteljau's algorithm visually above.
+
 <div align="center">
   <table style="width:100%">
     <tr>
@@ -58,6 +69,8 @@ site: [https://cal-cs184-student.github.io/hw-webpages-sp24-ashmchiu/hw2/](https
   </table>
 </div>
 
+We can also drag and move the original control points that we've shown above to show a slightly different Bezier curve. Here, we show the curve
+
 <div align="center">
   <table style="width:100%">
     <tr>
@@ -68,6 +81,8 @@ site: [https://cal-cs184-student.github.io/hw-webpages-sp24-ashmchiu/hw2/](https
     </tr>
   </table>
 </div>
+
+and here we show how we can modify the parameter <code class="language-plaintext highlighter-rouge">t</code> as this shows us other points that will lie along the green Bezier curve.
 
 <div align="center">
   <table style="width:100%">
@@ -187,7 +202,7 @@ site: [https://cal-cs184-student.github.io/hw-webpages-sp24-ashmchiu/hw2/](https
   </table>
 </div>
 
-### Extra Credit (Beep beep!)
+### Extra Credit (beep beep!)
 <div align="center">
   <table style="width:100%">
     <tr>
