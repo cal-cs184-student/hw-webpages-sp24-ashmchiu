@@ -196,13 +196,12 @@ a.sidebar-nav-item:focus {
   border-color: transparent;
 }
 
-@media (min-width: 767px) {
+@media (min-width: 1200px) {
   .sidebar-item {
     padding: 1.5rem;
   }
   .sidebar-nav-item {
     padding-left:  1.5rem;
-    padding-right: 1.5rem;
   }
 }
 
@@ -589,14 +588,14 @@ figcaption {
   flex-direction: row;
 }
 
-@media (max-width: 767px) {
-  .container {
-    margin-left: 10%;
-    max-width: 100%;
-    padding-right: 0;
-    margin-right: 10%
-  }
+/* Makes the content container the max width */
+.container {
+  margin-left: 10%;
+  max-width: 100%;
+  padding-right: 0;
+  margin-right: 10%
 }
+
 
 .content-nav {
   position: fixed;
@@ -626,7 +625,7 @@ figcaption {
   max-width: 100%;
 }
 
-@media (max-width: 767px) {
+@media (max-width: 1200px) {
   .content-nav {
     display: none;
   }
@@ -636,15 +635,17 @@ figcaption {
   }
 }
 
-@media (min-width: 767px) {
+@media (min-width: 1200px) {
   .content-nav {
     flex: 0 0 100%;
-    max-width: 100%;
     margin-right: 0;
+    width: 400px;
   }
+  
 
   .content-container {
-    max-width: 100%;
+    margin-right: 5%;
+    max-width: calc(100% - 400px);;
   }
 }
 
