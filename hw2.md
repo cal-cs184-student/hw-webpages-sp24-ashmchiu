@@ -163,7 +163,7 @@ Utilizing this diagram, we mapped out the pointer changes for edge flips.
     <tr>
       <td align="center">
         <img src="../assets/hw2/task4/task4_diagram.png" width="600px"/>
-        <figcaption>bez/teapot.bez evaluated by de Casteljau</figcaption>
+        <figcaption>Demonstrating vertices, edges, halfedges, and faces before and after an edge flip.</figcaption>
       </td>
     </tr>
   </table>
@@ -211,7 +211,7 @@ Utilizing this diagram, we mapped out the pointer changes for edge splits.
     <tr>
       <td align="center">
         <img src="../assets/hw2/task5/task5_diagram.png" width="600px"/>
-        <figcaption>bez/teapot.bez evaluated by de Casteljau</figcaption>
+        <figcaption>Demonstrating vertices, edges, halfedges, and faces before and after an edge split.</figcaption>
       </td>
     </tr>
   </table>
@@ -259,6 +259,13 @@ Below are images of dae/teapot.dae before and after edge flips and splits, as ca
         <figcaption>dae/teapot.dae, edge splits and flips with Phong shading</figcaption>
       </td>
     </tr>
+  </table>
+</div>
+
+Below, we constructed on the ending image and added more edge splits on the already split and flipped dae/teapot.dae to make an interesting pattern. Enjoy!
+
+<div>
+    <table>
     <tr>
       <td align="center">
         <img src="../assets/hw2/task5/task5_5.png" width="100%"/>
@@ -269,14 +276,32 @@ Below are images of dae/teapot.dae before and after edge flips and splits, as ca
         <figcaption>dae/teapot.dae, even more edge splits and flips with Phong shading</figcaption>
       </td>
     </tr>
-  </table>
+</table>
 </div>
 
 ### Extra Credit (beep beep!)
 
-Handling boundary splits was difficult in understanding how to navigate the halfedges that lined the the central two edges. However, when we realized that the halfedges didn't need to form triangles, this solved our problems, as we could have, for instance, halfedge <code class="language-plaintext highlighter-rouge">h_4</code>'s <code class="language-plaintext highlighter-rouge">next</code> point to halfedge <code class="language-plaintext highlighter-rouge">h_10</code> if we were not creating the <code class="language-plaintext highlighter-rouge">e_5</code> edge.
+
+Utilizing this diagram, we mapped out the pointer changes for edge splits on boundaries (if there is a left boundary). 
+
+<div align="center">
+  <table style="width:100%">
+    <tr>
+      <td align="center">
+        <img src="../assets/hw2/task5/task5_extracredit_diagram.png" width="600px"/>
+        <figcaption>Demonstrating vertices, edges, halfedges, and faces before and after an edge split on a boundary.</figcaption>
+      </td>
+    </tr>
+  </table>
+</div>
+
+Handling boundary splits was difficult in understanding how to navigate the halfedges that lined the the central two edges. However, when we realized that the halfedges didn't need to form triangles, this solved our problems, as we could have, for instance, halfedge <code class="language-plaintext highlighter-rouge">h_9</code>'s <code class="language-plaintext highlighter-rouge">next</code> point to halfedge <code class="language-plaintext highlighter-rouge">h_1</code> if we were not creating the <code class="language-plaintext highlighter-rouge">e_7</code> edge as diagrammed above.
+
+We struggled in the beginning, first only creating one halfedge on the side that wasn't split. However, this caused problems in identifying <code class="language-plaintext highlighter-rouge">twin</code>s of halfedges and as such, we modified to this approach of allowing for a quadrilateral to show up in the mesh.
 
 For implementation, we checked whether we would need to create a left boundary or a right boundary, and based on that, we changed the vertices, edges, halfedges, and faces for that. For instance, if we had a left boundary, this means that we wouldn't want to be constructing <code class="language-plaintext highlighter-rouge">e_5</code>, which meant that in our construction, we wouldn't need <code class="language-plaintext highlighter-rouge">h_7</code> or <code class="language-plaintext highlighter-rouge">h_8</code>, nor <code class="language-plaintext highlighter-rouge">f_2</code> (since we could use <code class="language-plaintext highlighter-rouge">f_0</code> for the entire left side). Then, we'd <code class="language-plaintext highlighter-rouge">setNeighbors</code> of halfedges and set halfedges of other mesh objects as coordinating to the diagram.
+
+Doing this, we would need to create 4 new halfedges, 2 new edges, 1 new vertex, and 1 new face.
 
 Here is a diagram of dae/beetle.dae before any boundary edge splitting. Notice that for the highlighted white edge, its <code class="language-plaintext highlighter-rouge">isBoundary()</code> is <code class="language-plaintext highlighter-rouge">1</code>, which means this is a boundary edge. This makes sense since we've hit the edge of a surface (the window!).
 
