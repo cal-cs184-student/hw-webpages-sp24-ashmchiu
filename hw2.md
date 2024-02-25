@@ -3,10 +3,6 @@ layout: page
 title: 'Homework 2: MeshEdit'
 has_right_toc: true
 ---
-<p class="warning-message">
-This assignment has not been completed yet.
-</p>
-
 site: [https://cal-cs184-student.github.io/hw-webpages-sp24-ashmchiu/hw2/](https://cal-cs184-student.github.io/hw-webpages-sp24-ashmchiu/hw2/)
 
 ## Overview
