@@ -102,7 +102,7 @@ To extend de Casteljau's algorithm to Bezier surfaces, conceptually, instead of 
 To implement this, we modified three functions: <code class="language-plaintext highlighter-rouge">BezierPatch::evaluateStep</code>, <code class="language-plaintext highlighter-rouge">BezierPatch::evaluate1D</code>, and <code class="language-plaintext highlighter-rouge">BezierPatch::evaluate</code>.
 
 ### <code class="language-plaintext highlighter-rouge">BezierPatch::evaluateStep</code>
-An extension of our previous  <code class="language-plaintext highlighter-rouge">BezierCurve::evaluateStep</code>, the code is essentially teh same except we now have  <code class="language-plaintext highlighter-rouge">Vector3D</code>s instead of  <code class="language-plaintext highlighter-rouge">Vector2D</code>s.
+An extension of our previous  <code class="language-plaintext highlighter-rouge">BezierCurve::evaluateStep</code>, the code is essentially the same except we now have  <code class="language-plaintext highlighter-rouge">Vector3D</code>s instead of  <code class="language-plaintext highlighter-rouge">Vector2D</code>s.
 
 ### <code class="language-plaintext highlighter-rouge">BezierPatch::evaluate1D</code>
 Calling <code class="language-plaintext highlighter-rouge">BezierPatch::evaluateStep</code> <code class="language-plaintext highlighter-rouge">n - 1</code> times, the purpose of this function is to fully evaluate de Casteljau's algorithm for one set of points. This takes in <code class="language-plaintext highlighter-rouge">n</code> points and actually only outputs 1 (in comparison to our two <code class="language-plaintext highlighter-rouge">evaluateStep</code> functions that output <code class="language-plaintext highlighter-rouge">n - 1</code> points).
