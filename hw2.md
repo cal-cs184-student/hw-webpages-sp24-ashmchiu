@@ -6,6 +6,11 @@ has_right_toc: true
 site: [https://cal-cs184-student.github.io/hw-webpages-sp24-ashmchiu/hw2/](https://cal-cs184-student.github.io/hw-webpages-sp24-ashmchiu/hw2/)
 
 ## Overview
+Starting off by performing de Casteljau's algorithm, we calculated and generated points on Bezier curves and surfaces. This allows us to render smooth curves and surfaces. Then, we implemented area-weighted vertex normals for Phong shading, which then had the ability to smoothly shade our models. Finally, in an effort to allow for loop subdivision to upsample a mesh, we implemented edge flipping and splitting.
+
+In the process of implementing, we also worked on boundary edge splitting, which was interesting in showing us that we could render meshes that could be built off of triangles and potentially quadrilaterals.
+
+We found it interesting how this homework built off the last one, with both allowing upsampling, whether that be of textures and rasterization from the first homework to smoothing out meshes here. What we learned throughout the process was the complexity it takes to move from a 2-dimensional to 3-dimensional space in rendering. Namely, we had to utilize a new class, namely the Halfedge class, understanding how halfedges relate to vertices, faces, and edges. 
 
 ## Task 1: Bezier curves with 1D de Casteljau subdivision
 
