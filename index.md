@@ -11,10 +11,10 @@ GitHub repository for this website: [hw-webpages-sp24-ashmchiu](https://github.c
 
 ✅ Completed:
 - [homework 1: rasterizer](/hw-webpages-sp24-ashmchiu/hw1)
-
-🚧 In Progress:
 - [homework 2: meshedit](/hw-webpages-sp24-ashmchiu/hw2)
 
+🚧 In Progress:
+- [homework 3: pathtracer](/hw-webpages-sp24-ashmchiu/hw3)
+
 🔜 Upcoming:
-- [homework 3](/hw-webpages-sp24-ashmchiu/hw3)
 - [homework 4](/hw-webpages-sp24-ashmchiu/hw4)
