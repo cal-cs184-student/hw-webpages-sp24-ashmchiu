@@ -99,10 +99,47 @@ After completing Task 4, our output for <code class="language-plaintext highligh
 </div>
 
 ## Part 2: Bounding Volume Hierarchy
+In this part of the homework, we want to implement bounding volume hierarchy (BVH) such that we can speed up the rendering of our path tracer.
 
-### Task 0: Timing Experiment
+We will utilize [Task 1](/hw3.md#task-1-constructing-the-bvh), [Task 2](/hw3.md#task-2-intersecting-the-bounding-box), and [Task 3](/hw3.md#task-3-intersecting-the-bvh) to demonstrate our BVH construction algorithm. Within [Task 1](/hw3.md#task-1-constructing-the-bvh), we will explain the heuristic you choose for picking the splitting point.
 
 ### Task 1: Constructing the BVH
+In <code class="language-plaintext highlighter-rouge">BVHAccel::construct_bvh</code>, we first generate the outermost bounding box. We iterate through the primitives passed in, and expand (union) that bounding box with our current one. 
+
+If the number of primitives is less than or equal to the <code class="language-plaintext highlighter-rouge">max_leaf_size</code>, we create a new <code class="language-plaintext highlighter-rouge">BVHNode</code>, initializing its <code class="language-plaintext highlighter-rouge">start</code> and <code class="language-plaintext highlighter-rouge">end</code> to be the start and end of the primitives and return.
+
+If not, we need to recurse. In doing so, we will need to first determine the split point and axis selection to split up our bounding volume hierarchy spatially. In reading [this paper](https://pbr-book.org/3ed-2018/Primitives_and_Intersection_Acceleration/Bounding_Volume_Hierarchies), we decided to first compute the average centroid across all the primitives. Then, we take the extent of the resulting <code class="language-plaintext highlighter-rouge">bbox</code>, which is a vector from opposing vertices of the box (creating a diagonal across the interior of the box). We determine which axis has the longest extent and use that as the axis to split on. 
+
+Then, knowing our <code class="language-plaintext highlighter-rouge">avg_centroid</code>, we take the x, y, or z point given the axis that we chose to split on. Then, we call <code class="language-plaintext highlighter-rouge">std:stable_partition</code> on the primitives given in, checking whether that primitive's <code class="language-plaintext highlighter-rouge">centroid</code> value at the chosen axis, and checking whether that is less than the averaged centroid across the entire bounding box (for this level) at the chosen axis. If it was less than, we partitioned it in the first set and if greater than or equal two, in the second partition.
+
+Finally, we checked that this start of the second partition was not equal to the original <code class="language-plaintext highlighter-rouge">start</code> or <code class="language-plaintext highlighter-rouge">end</code> (so one of the partitions wasn't empty), and if so, we assigned <code class="language-plaintext highlighter-rouge">node->l</code> and <code class="language-plaintext highlighter-rouge">node->r</code> to be recursive calls to <code class="language-plaintext highlighter-rouge">construct_bvh</code> given our two partitions so our <code class="language-plaintext highlighter-rouge">l</code> attribute was the first partition and the <code class="language-plaintext highlighter-rouge">r</code> attribute was the second partition.
+
+We can see running <code class="language-plaintext highlighter-rouge">./pathtracer -t 8 -r 800 600 ../dae/meshedit/cow.dae</code> and then clicking the right arrow consecutively is
+
+<div align="center">
+  <table style="width:100%">
+    <tr>
+      <td align="center">
+        <img src="../assets/hw3/part2/part2_task1_1.png" width="100%"/>
+        <figcaption>../dae/meshedit/cow.dae, base rendering</figcaption>
+      </td>
+      <td align="center">
+        <img src="../assets/hw3/part2/part2_task1_2.png" width="100%"/>
+        <figcaption>../dae/meshedit/cow.dae, descending once to right child</figcaption>
+      </td>
+    </tr>
+    <tr>
+      <td align="center">
+        <img src="../assets/hw3/part2/part2_task1_3.png" width="100%"/>
+        <figcaption>../dae/meshedit/cow.dae, descending twice to right child</figcaption>
+      </td>
+      <td align="center">
+        <img src="../assets/hw3/part2/part2_task1_4.png" width="100%"/>
+        <figcaption>../dae/meshedit/cow.dae, descending thrice to right child</figcaption>
+      </td>
+    </tr>
+  </table>
+</div>
 
 ### Task 2: Intersecting the Bounding Box
 
