@@ -13,6 +13,12 @@ site: [https://cal-cs184-student.github.io/hw-webpages-sp24-ashmchiu/hw3/](https
 
 ## Overview
 
+TEST TEST TEST $a^2 + b^2 = c^2$
+
+$$
+x = \frac{-b \pm \sqrt{b^2 - 4ac}}{2a}
+$$
+
 ## Part 1: Ray Generation and Scene Intersection
 Let's utilize [Task 1](/hw3.md#task-1-generating-camera-rays) and [Task 2](/hw3.md#task-2-generation-pixel-samples) to discuss the ray generation and primitive intersection parts of the rendering pipeline. We will also explain primitive intersections and sphere intersections in [Task 4](/hw3.md#task-4-ray-sphere-intersection).
 
