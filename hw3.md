@@ -2,6 +2,7 @@
 layout: page
 title: 'Homework 3: Pathtracer'
 has_right_toc: true
+usemathjax: true
 ---
 
 <p class="warning-message">
@@ -18,26 +19,26 @@ Let's utilize [Task 1](/hw3.md#task-1-generating-camera-rays) and [Task 2](/hw3.
 Then, we'll continue onto [Task 3](/hw3.md#task-3-ray-triangle-intersection) to explain the triangle intersection algorithm.
 
 ### Task 1: Generating Camera Rays
-We first want to transform the image coordinates <code class="language-plaintext highlighter-rouge">(x, y)</code> to camera space by interpolating. Knowing that we're using an axis-aligned rectangular virtual camera sensor on the <code class="language-plaintext highlighter-rouge">Z = -1</code> plane, given our <code class="language-plaintext highlighter-rouge">hFov</code> and <code class="language-plaintext highlighter-rouge">vFov</code> field of view angles along the <code class="language-plaintext highlighter-rouge">X</code> and <code class="language-plaintext highlighter-rouge">Y</code> axis.
+We first want to transform the image coordinates <code class="language-plaintext highlighter-rouge">(x, y)</code> to camera space by interpolating. Knowing that we're using an axis-aligned rectangular virtual camera sensor on the <code class="language-plaintext highlighter-rouge">Z = -1</code> plane, we use <code class="language-plaintext highlighter-rouge">hFov</code> and <code class="language-plaintext highlighter-rouge">vFov</code> field of view angles along the <code class="language-plaintext highlighter-rouge">X</code> and <code class="language-plaintext highlighter-rouge">Y</code> axis to transform into camera space.
 
-Now, in 3-dimensional camera coordinations, we have the vector containing <code class="language-plaintext highlighter-rouge">x_camera</code>, <code class="language-plaintext highlighter-rouge">y_camera</code>, and <code class="language-plaintext highlighter-rouge">1</code>, where the <code class="language-plaintext highlighter-rouge">*_camera</code> represents the respective point in camera space. From here, we transform the camera space ray to world space using the camera-to-world,<code class="language-plaintext highlighter-rouge">c2w_pos</code>, matrix given in lecture, normalizing it in the process. Note specifically that since we placed the camera at <code class="language-plaintext highlighter-rouge">pos</code> (in world space), we utilize this as column 4.
+Now, in 3-dimensional camera coordinations, we have the vector containing <code class="language-plaintext highlighter-rouge">x_camera</code>, <code class="language-plaintext highlighter-rouge">y_camera</code>, and <code class="language-plaintext highlighter-rouge">-1</code>, where the <code class="language-plaintext highlighter-rouge">*_camera</code> represents the respective point in camera space. From here, we transform the camera space ray to world space using the camera-to-world,<code class="language-plaintext highlighter-rouge">c2w_pos</code>, which is a 4x4 homogeneous coordinate system transform matrix given in lecture. We also make sure to normalize the ray's direction after the transform. Note specifically that since we placed the camera at <code class="language-plaintext highlighter-rouge">pos</code> (in world space), we utilize this as column 4.
 
 Then, to set our range for the clipping planes, we utilized <code class="language-plaintext highlighter-rouge">nClip</code> and <code class="language-plaintext highlighter-rouge">fClip</code> as provided for <code class="language-plaintext highlighter-rouge">min_t</code> and <code class="language-plaintext highlighter-rouge">max_t</code> as directed.
 
 ### Task 2: Generation Pixel Samples
 Then, now that we've generated our camera rays in world space, we now need to generate pixel samples!
 
-We generate <code class="language-plaintext highlighter-rouge">ns_aa</code> random samples, ensuring to normalize these coordinates. Then, we call <code class="language-plaintext highlighter-rouge">camera->generate_ray</code>, passing in these normalized <code class="language-plaintext highlighter-rouge">(x, y)</code> coordinates, and then estimate the radiance by calling <code class="language-plaintext highlighter-rouge">est_radiance_global_illumination</code>. Finally, once we've generated these <code class="language-plaintext highlighter-rouge">ns_aa</code> samples, we can average out the pixel color, and then call <code class="language-plaintext highlighter-rouge">update_pixel</code> with that color in our <code class="language-plaintext highlighter-rouge">sampleBuffer</code>.
+We generate <code class="language-plaintext highlighter-rouge">ns_aa</code> random samples within the pixel, ensuring to normalize these coordinates. Then, we call <code class="language-plaintext highlighter-rouge">camera->generate_ray</code>, passing in these normalized <code class="language-plaintext highlighter-rouge">(x, y)</code> coordinates, and then estimate the radiance by calling <code class="language-plaintext highlighter-rouge">est_radiance_global_illumination</code>. Finally, once we've generated these <code class="language-plaintext highlighter-rouge">ns_aa</code> samples, we can average out the pixel color, and then update the <code class="language-plaintext highlighter-rouge">sampleBuffer</code> by calling <code class="language-plaintext highlighter-rouge">update_pixel</code> with that color.
 
 
 ### Task 3: Ray-Triangle Intersection
-In order to implement our ray-triangle intersection algorithm, we had to modify the <code class="language-plaintext highlighter-rouge">Triangle::has_intersection</code> and <code class="language-plaintext highlighter-rouge">Triangle::intersect</code> methods (and inadvertently, <code class="language-plaintext highlighter-rouge">Triangle::test</code>). Our overall strategy was to use the Möller-Trumbore intersection algorithm depicted in lecture.
+In order to implement our ray-triangle intersection algorithm, we had to modify the <code class="language-plaintext highlighter-rouge">Triangle::has_intersection</code> and <code class="language-plaintext highlighter-rouge">Triangle::intersect</code> methods. We created a helper function, <code class="language-plaintext highlighter-rouge">Triangle::test</code>, to match the code structure of the ray-sphere intersection, as well as to avoid rewriting code. Our overall strategy was to use the Möller-Trumbore intersection algorithm depicted in lecture.
 
 Our <code class="language-plaintext highlighter-rouge">Triangle::has_intersection</code> method allows us to <code class="language-plaintext highlighter-rouge">test</code> whether a given ray <code class="language-plaintext highlighter-rouge">r</code> intersects a triangle and if so, updates the <code class="language-plaintext highlighter-rouge">t</code>, <code class="language-plaintext highlighter-rouge">u</code>, and <code class="language-plaintext highlighter-rouge">v</code> passed in.
 
 To do so, we first check whether the ray and the plane the triangle lies on is parallel by determining whether the dot product between the two gives 0. If so, we return false (since a parallel ray and plane will never intersect). Then, we calculate <code class="language-plaintext highlighter-rouge">t</code>, <code class="language-plaintext highlighter-rouge">u</code>, and <code class="language-plaintext highlighter-rouge">v</code>. We calculate 
 1. the cross product between the direction of the ray and <code class="language-plaintext highlighter-rouge">p_3 - p_1</code>
-2. the cross product between the difference between the origin of the ray and the difference between <code class="language-plaintext highlighter-rouge">p_2 - p_1</code>
+2. the cross product between the difference between the origin of the ray and <code class="language-plaintext highlighter-rouge">p_1</code>, and the difference between <code class="language-plaintext highlighter-rouge">p_2 - p_1</code>
 
 From here, we get 
 - <code class="language-plaintext highlighter-rouge">t</code> is the dot product between (2) and <code class="language-plaintext highlighter-rouge">p_3 - p_1</code>,
@@ -69,7 +70,7 @@ Like with [ray-triangle intersection](/hw3.md#task-3-ray-triangle-intersection),
 
 Like in our <code class="language-plaintext highlighter-rouge">Triangle</code> class, we use <code class="language-plaintext highlighter-rouge">Sphere::has_intersection</code> and <code class="language-plaintext highlighter-rouge">Sphere::intersect</code> as a way to call into our <code class="language-plaintext highlighter-rouge">Sphere::test</code>. 
 
-Namely, within the <code class="language-plaintext highlighter-rouge">Sphere::test</code> function, we check whether the determinant is less than 0, noting that if so, this meant that the ray missed the sphere, and as such, we could immediately return false. We calculate the determinant by determining
+Namely, within the <code class="language-plaintext highlighter-rouge">Sphere::test</code> function, we reduce the intersection points to the roots of a quadratic equation. We check whether the determinant is less than 0, noting that if so, this meant that the ray missed the sphere, and as such, we could immediately return false. We calculate the determinant by determining
 1. the difference between the ray's origin and the origin of the sphere
 2. the dot product between the ray's direction with itself
 3. two times the dot product of the difference between the ray's origin and the origin of the sphere with the direction of the ray
