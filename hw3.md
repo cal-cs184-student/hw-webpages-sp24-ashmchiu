@@ -53,7 +53,7 @@ From here, we get
 
 Finally, we check to ensure that
 - the intersection point is within the triangle
-- <code class="language-plaintext highlighter-rouge">0 <= min_t <= t <= max_t</code>
+- <code class="language-plaintext highlighter-rouge">0</code> $\leq$ <code class="language-plaintext highlighter-rouge">min_t</code> $\leq$ <code class="language-plaintext highlighter-rouge">t</code> $\leq$ <code class="language-plaintext highlighter-rouge">max_t</code>
 
 and then finally update <code class="language-plaintext highlighter-rouge">max_t</code> to complete our intersection.
 
@@ -89,7 +89,7 @@ From here, we calculate the determinant by taking
 
 If we reached this step, we know that the ray and the sphere do intersect. Now, we take the square root of the determinant and select the closest <code class="language-plaintext highlighter-rouge">t</code> that still lies between <code class="language-plaintext highlighter-rouge">min_t</code> and <code class="language-plaintext highlighter-rouge">max_t</code>, using the quadratic formula to determine the candidate's time of intersection.
 
-After calculating and ensuring that the minimally valid <code class="language-plaintext highlighter-rouge">t</code> candidate was selected (by ensuring that only intersections of <code class="language-plaintext highlighter-rouge">0 <= min_t <= t <= max_t</code> are valid), we update <code class="language-plaintext highlighter-rouge">max_t</code> like desired to be the chosen candidate.
+After calculating and ensuring that the minimally valid <code class="language-plaintext highlighter-rouge">t</code> candidate was selected (by ensuring that only intersections of <code class="language-plaintext highlighter-rouge">0</code> $\leq$ <code class="language-plaintext highlighter-rouge">min_t</code> $\leq$ <code class="language-plaintext highlighter-rouge">t</code> $\leq$ <code class="language-plaintext highlighter-rouge">max_t</code> are valid), we update <code class="language-plaintext highlighter-rouge">max_t</code> like desired to be the chosen candidate.
 
 Then, if an intersection occured, we populated <code class="language-plaintext highlighter-rouge">isect</code> as desired, filling in the surface normal, primitive, and bsdf.
 
@@ -148,9 +148,130 @@ We can see running <code class="language-plaintext highlighter-rouge">./pathtrac
   </table>
 </div>
 
+You can see that as we descend into right children in the bounding volume hierarchy, we are always splitting on the longest axis of the extent. For instance, for the first descent, we take the length of the cow, since that is the longest axis. Then, on the second descent, we take the height of the cow, since at that point, the height axis is longer than both the length and width axes. Finally, on the third descent, we split on the width axis of the cow, for the same reason.
+
 ### Task 2: Intersecting the Bounding Box
+Now that we've constructed our bounding volume heirarchy, we want to check whether a ray intersects a giving bounding box. Implementing <code class="language-plaintext highlighter-rouge">BBox::intersect</code>, we utilize the given ray and axis-aligned plane intersection and ray and axis-aligned box intersection equations given in lecture.
+
+Namely, since we want to represent time as $t = \frac{p_x' - o_x}{d_x}$, calculating perpendicular to x-axis, we calculate a <code class="language-plaintext highlighter-rouge">min_t</code> and a <code class="language-plaintext highlighter-rouge">max_t</code>. Then from here, we ensure that for all axes, <code class="language-plaintext highlighter-rouge">min_t[axis] < max_t[axis]</code>, swapping if that was not the case.
+
+Finally, we calculate the interval of intersecting as the maximum of all the <code class="language-plaintext highlighter-rouge">min_t</code> axes and the minimum of all the <code class="language-plaintext highlighter-rouge">max_t</code> axes since we want to create the tighest bound. If the maximum <code class="language-plaintext highlighter-rouge">min_t</code> is greater than the minimum <code class="language-plaintext highlighter-rouge">max_t</code>, then we return false (there is no intersection since the ray missed the box), otherwise we set <code class="language-plaintext highlighter-rouge">t_0</code> and <code class="language-plaintext highlighter-rouge">t_1</code> accordingly and return true.
 
 ### Task 3: Intersecting the BVH
+
+The following data was collected by calling <code class="language-plaintext highlighter-rouge">./pathtracer -t 8 -r 800 600 -f {filename}.png ../dae/{path to file}.dae</code>.
+<table class="with-internal-border">
+  <colgroup>
+    <col width="20%" />
+    <col width="35%" />
+    <col width="35%" />
+  </colgroup>
+  <thead>
+    <tr class="header">
+    <th>Filename</th>
+    <th>Rendering Time without BVH Acceleration</th>
+    <th>Rendering Time with BVH Acceleration</th>
+  </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td markdown="span">../dae/meshedit/maxplanck.dae</td>
+      <td markdown="span">47.1526s</td>
+      <td markdown="span">0.0583s</td>
+    </tr>
+    <tr>
+      <td markdown="span">../dae/sky/dragon.dae</td>
+      <td markdown="span">113.4021s</td>
+      <td markdown="span">0.0462s</td>
+    </tr>
+    <tr>
+      <td markdown="span">../dae/sky/CBlucy.dae</td>
+      <td markdown="span">168.5018s</td>
+      <td markdown="span">0.0566s</td>
+    </tr>
+    <tr>
+      <td markdown="span">../dae/sky/wall-e.dae</td>
+      <td markdown="span">414.7519s</td>
+      <td markdown="span">0.0576s</td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="with-internal-border">
+  <colgroup>
+    <col width="20%" />
+    <col width="35%" />
+    <col width="35%" />
+  </colgroup>
+  <thead>
+    <tr class="header">
+    <th>Filename</th>
+    <th>Rendering Avg Speed Per Second without BVH Acceleration</th>
+    <th>Rendering Avg Speed Per Second BVH Acceleration</th>
+  </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td markdown="span">../dae/meshedit/maxplanck.dae</td>
+      <td markdown="span">0.0097 million rays/second</td>
+      <td markdown="span">2.8513 million rays/second</td>
+    </tr>
+    <tr>
+      <td markdown="span">../dae/sky/dragon.dae</td>
+      <td markdown="span">0.0031 million rays/second</td>
+      <td markdown="span">3.6082 million rays/second</td>
+    </tr>
+    <tr>
+      <td markdown="span">../dae/sky/CBlucy.dae</td>
+      <td markdown="span">0.0021 million rays/second</td>
+      <td markdown="span">3.8665 million rays/second</td>
+    </tr>
+    <tr>
+      <td markdown="span">../dae/sky/wall-e.dae</td>
+      <td markdown="span">0.0009 million rays/second</td>
+      <td markdown="span">2.5576 million rays/second</td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="with-internal-border">
+  <colgroup>
+    <col width="20%" />
+    <col width="35%" />
+    <col width="35%" />
+  </colgroup>
+  <thead>
+    <tr class="header">
+    <th>Filename</th>
+    <th>Avg Intersection Tests Per Ray without BVH Acceleration</th>
+    <th>Avg Intersection Tests Per Ray with BVH Acceleration</th>
+  </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td markdown="span">../dae/meshedit/maxplanck.dae</td>
+      <td markdown="span">10501.9555582 tests/ray</td>
+      <td markdown="span">6.901601 tests/ray</td>
+    </tr>
+    <tr>
+      <td markdown="span">../dae/sky/dragon.dae</td>
+      <td markdown="span">24087.831808 tests/ray</td>
+      <td markdown="span">4.790797 tests/ray</td>
+    </tr>
+    <tr>
+      <td markdown="span">../dae/sky/CBlucy.dae</td>
+      <td markdown="span">34545.920619 tests/ray</td>
+      <td markdown="span">3.804057 tests/ray</td>
+    </tr>
+    <tr>
+      <td markdown="span">../dae/sky/wall-e.dae</td>
+      <td markdown="span">62418.197373 tests/ray</td>
+      <td markdown="span">7.574583 tests/ray</td>
+    </tr>
+  </tbody>
+</table>
+
+### BVH Acceleration Analysis
 
 ## Part 3: Direct Illumination
 

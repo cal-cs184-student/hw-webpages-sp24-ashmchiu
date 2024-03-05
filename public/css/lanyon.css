@@ -709,3 +709,13 @@ li.nav-list-item {
   }
 }
 
+table.with-internal-border {
+  border-collapse: collapse;
+}
+
+table.with-internal-border th,
+table.with-internal-border td {
+  border: 1px solid black;
+  padding: 8px;
+}
+
