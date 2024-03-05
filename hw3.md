@@ -159,119 +159,155 @@ Finally, we calculate the interval of intersecting as the maximum of all the <co
 
 ### Task 3: Intersecting the BVH
 
-The following data was collected by calling <code class="language-plaintext highlighter-rouge">./pathtracer -t 8 -r 800 600 -f {filename}.png ../dae/{path to file}.dae</code>.
-<table class="with-internal-border">
-  <colgroup>
-    <col width="20%" />
-    <col width="35%" />
-    <col width="35%" />
-  </colgroup>
-  <thead>
-    <tr class="header">
-    <th>Filename</th>
-    <th>Rendering Time without BVH Acceleration</th>
-    <th>Rendering Time with BVH Acceleration</th>
-  </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td markdown="span">../dae/meshedit/maxplanck.dae</td>
-      <td markdown="span">47.1526s</td>
-      <td markdown="span">0.0583s</td>
-    </tr>
-    <tr>
-      <td markdown="span">../dae/sky/dragon.dae</td>
-      <td markdown="span">113.4021s</td>
-      <td markdown="span">0.0462s</td>
-    </tr>
-    <tr>
-      <td markdown="span">../dae/sky/CBlucy.dae</td>
-      <td markdown="span">168.5018s</td>
-      <td markdown="span">0.0566s</td>
-    </tr>
-    <tr>
-      <td markdown="span">../dae/sky/wall-e.dae</td>
-      <td markdown="span">414.7519s</td>
-      <td markdown="span">0.0576s</td>
-    </tr>
-  </tbody>
-</table>
-
-<table class="with-internal-border">
-  <colgroup>
-    <col width="20%" />
-    <col width="35%" />
-    <col width="35%" />
-  </colgroup>
-  <thead>
-    <tr class="header">
-    <th>Filename</th>
-    <th>Rendering Avg Speed Per Second without BVH Acceleration</th>
-    <th>Rendering Avg Speed Per Second BVH Acceleration</th>
-  </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td markdown="span">../dae/meshedit/maxplanck.dae</td>
-      <td markdown="span">0.0097 million rays/second</td>
-      <td markdown="span">2.8513 million rays/second</td>
-    </tr>
-    <tr>
-      <td markdown="span">../dae/sky/dragon.dae</td>
-      <td markdown="span">0.0031 million rays/second</td>
-      <td markdown="span">3.6082 million rays/second</td>
-    </tr>
-    <tr>
-      <td markdown="span">../dae/sky/CBlucy.dae</td>
-      <td markdown="span">0.0021 million rays/second</td>
-      <td markdown="span">3.8665 million rays/second</td>
-    </tr>
-    <tr>
-      <td markdown="span">../dae/sky/wall-e.dae</td>
-      <td markdown="span">0.0009 million rays/second</td>
-      <td markdown="span">2.5576 million rays/second</td>
-    </tr>
-  </tbody>
-</table>
-
-<table class="with-internal-border">
-  <colgroup>
-    <col width="20%" />
-    <col width="35%" />
-    <col width="35%" />
-  </colgroup>
-  <thead>
-    <tr class="header">
-    <th>Filename</th>
-    <th>Avg Intersection Tests Per Ray without BVH Acceleration</th>
-    <th>Avg Intersection Tests Per Ray with BVH Acceleration</th>
-  </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td markdown="span">../dae/meshedit/maxplanck.dae</td>
-      <td markdown="span">10501.9555582 tests/ray</td>
-      <td markdown="span">6.901601 tests/ray</td>
-    </tr>
-    <tr>
-      <td markdown="span">../dae/sky/dragon.dae</td>
-      <td markdown="span">24087.831808 tests/ray</td>
-      <td markdown="span">4.790797 tests/ray</td>
-    </tr>
-    <tr>
-      <td markdown="span">../dae/sky/CBlucy.dae</td>
-      <td markdown="span">34545.920619 tests/ray</td>
-      <td markdown="span">3.804057 tests/ray</td>
-    </tr>
-    <tr>
-      <td markdown="span">../dae/sky/wall-e.dae</td>
-      <td markdown="span">62418.197373 tests/ray</td>
-      <td markdown="span">7.574583 tests/ray</td>
-    </tr>
-  </tbody>
-</table>
 
 ### BVH Acceleration Analysis
+Following the completion of [Part 2](/hw3.md#part-3-direct-illumination), here are how multiple different files render. Without BVH acceleration, these files took much longer to render (as we'll discuss in the analysis below).
+<div align="center">
+  <table style="width:100%">
+  <colgroup>
+      <col width="50%" />
+      <col width="50%" />
+  </colgroup>
+  <tr>
+    <td align="center">
+      <img src="../assets/hw3/part2/part2_maxplanck.png" width="100%"/>
+      <figcaption>../dae/meshedit/maxplanck.dae, rendered after BVH acceleration</figcaption>
+    </td>
+    <td align="center">
+      <img src="../assets/hw3/part2/part2_cblucy.png" width="100%"/>
+      <figcaption>../dae/sky/CBlucy.dae, rendered after BVH acceleration</figcaption>
+    </td>
+  </tr>
+  <tr>
+    <td align="center">
+      <img src="../assets/hw3/part2/part2_dragon.png" width="100%"/>
+      <figcaption>../dae/sky/dragon.dae, rendered after BVH acceleration</figcaption>
+    </td>
+    <td align="center">
+      <img src="../assets/hw3/part2/part2_wall-e.png" width="100%"/>
+      <figcaption>../dae/sky/wall-e.dae, rendered after BVH acceleration</figcaption>
+    </td>
+  </tr>
+  </table>
+</div>
+
+The following data was collected by calling <code class="language-plaintext highlighter-rouge">./pathtracer -t 8 -r 800 600 -f {filename}.png ../dae/{path to file}.dae</code>.
+<div align="center">
+  <table class="with-internal-border">
+    <colgroup>
+      <col width="20%" />
+      <col width="35%" />
+      <col width="35%" />
+    </colgroup>
+    <thead>
+      <tr class="header">
+      <th>Filename</th>
+      <th>Rendering Time without BVH Acceleration</th>
+      <th>Rendering Time with BVH Acceleration</th>
+    </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td markdown="span">../dae/meshedit/maxplanck.dae</td>
+        <td markdown="span">47.1526s</td>
+        <td markdown="span">0.0583s</td>
+      </tr>
+      <tr>
+        <td markdown="span">../dae/sky/dragon.dae</td>
+        <td markdown="span">113.4021s</td>
+        <td markdown="span">0.0462s</td>
+      </tr>
+      <tr>
+        <td markdown="span">../dae/sky/CBlucy.dae</td>
+        <td markdown="span">168.5018s</td>
+        <td markdown="span">0.0566s</td>
+      </tr>
+      <tr>
+        <td markdown="span">../dae/sky/wall-e.dae</td>
+        <td markdown="span">414.7519s</td>
+        <td markdown="span">0.0576s</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<div align="center">
+  <table class="with-internal-border">
+    <colgroup>
+      <col width="20%" />
+      <col width="35%" />
+      <col width="35%" />
+    </colgroup>
+    <thead>
+      <tr class="header">
+      <th>Filename</th>
+      <th>Rendering Avg Speed Per Second without BVH Acceleration</th>
+      <th>Rendering Avg Speed Per Second BVH Acceleration</th>
+    </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td markdown="span">../dae/meshedit/maxplanck.dae</td>
+        <td markdown="span">0.0097 million rays/second</td>
+        <td markdown="span">2.8513 million rays/second</td>
+      </tr>
+      <tr>
+        <td markdown="span">../dae/sky/dragon.dae</td>
+        <td markdown="span">0.0031 million rays/second</td>
+        <td markdown="span">3.6082 million rays/second</td>
+      </tr>
+      <tr>
+        <td markdown="span">../dae/sky/CBlucy.dae</td>
+        <td markdown="span">0.0021 million rays/second</td>
+        <td markdown="span">3.8665 million rays/second</td>
+      </tr>
+      <tr>
+        <td markdown="span">../dae/sky/wall-e.dae</td>
+        <td markdown="span">0.0009 million rays/second</td>
+        <td markdown="span">2.5576 million rays/second</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<div align="center">
+  <table class="with-internal-border">
+    <colgroup>
+      <col width="20%" />
+      <col width="35%" />
+      <col width="35%" />
+    </colgroup>
+    <thead>
+      <tr class="header">
+      <th>Filename</th>
+      <th>Avg Intersection Tests Per Ray without BVH Acceleration</th>
+      <th>Avg Intersection Tests Per Ray with BVH Acceleration</th>
+    </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td markdown="span">../dae/meshedit/maxplanck.dae</td>
+        <td markdown="span">10501.9555582 tests/ray</td>
+        <td markdown="span">6.901601 tests/ray</td>
+      </tr>
+      <tr>
+        <td markdown="span">../dae/sky/dragon.dae</td>
+        <td markdown="span">24087.831808 tests/ray</td>
+        <td markdown="span">4.790797 tests/ray</td>
+      </tr>
+      <tr>
+        <td markdown="span">../dae/sky/CBlucy.dae</td>
+        <td markdown="span">34545.920619 tests/ray</td>
+        <td markdown="span">3.804057 tests/ray</td>
+      </tr>
+      <tr>
+        <td markdown="span">../dae/sky/wall-e.dae</td>
+        <td markdown="span">62418.197373 tests/ray</td>
+        <td markdown="span">7.574583 tests/ray</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
 
 ## Part 3: Direct Illumination
 
