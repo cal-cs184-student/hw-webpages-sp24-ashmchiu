@@ -324,8 +324,75 @@ We can see that from these data points, that the rendering speeds up from 800 to
 ### Task 2: Zero-bounce Illumination
 
 ### Task 3: Direct Lighting with Uniform Hemisphere Sampling
+Running <code class="language-plaintext highlighter-rouge">./pathtracer -t 8 -s 64 -l 32 -m 6 -H -f {filename}.png -r 480 360 ../dae/sky/{filename}.dae</code> for importance sampling lights gave these three renders.
+<div align="center">
+  <table style="width:100%">
+    <tr>
+      <td align="center">
+        <img src="../assets/hw3/part3/part3_task3_1.png" width="400px"/>
+        <figcaption>../dae/sky/CBbunny.dae</figcaption>
+      </td>
+      <td align="center">
+        <img src="../assets/hw3/part3/part3_task3_2.png" width="400px"/>
+        <figcaption>../dae/sky/CBspheres_lambertian.dae</figcaption>
+      </td>
+    </tr>
+  </table>
+</div>
 
 ### Task 4: Direct Lighting by Importance Sampling Lights
+
+Running <code class="language-plaintext highlighter-rouge">./pathtracer -t 8 -s 64 -l 32 -m 6 -f {filename}.png -r 480 360 ../dae/sky/{filename}.dae</code> for importance sampling lights gave these three renders.
+<div align="center">
+  <table style="width:100%">
+    <tr>
+      <td align="center">
+        <img src="../assets/hw3/part3/part3_task4_1.png" width="400px"/>
+        <figcaption>../dae/sky/CBbunny.dae</figcaption>
+      </td>
+      <td align="center">
+        <img src="../assets/hw3/part3/part3_task4_2.png" width="400px"/>
+        <figcaption>../dae/sky/CBspheres_lambertian.dae</figcaption>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="2" align="center">
+        <img src="../assets/hw3/part3/part3_task4_3.png" width="400px"/>
+        <figcaption>../dae/sky/dragon.dae</figcaption>
+      </td>
+    </tr>
+  </table>
+</div>
+
+### Uniform Hemisphere Sampling v. Lighting Sampling
+<div align="center">
+  <table style="width:100%">
+  <colgroup>
+      <col width="50%" />
+      <col width="50%" />
+  </colgroup>
+  <tr>
+    <td align="center">
+      <img src="../assets/hw3/part3/part3_task3_1.png" width="100%"/>
+      <figcaption>../dae/sky/CBbunny.dae<br>uniform hemisphere sampling</figcaption>
+    </td>
+    <td align="center">
+      <img src="../assets/hw3/part3/part3_task4_1.png" width="100%"/>
+      <figcaption>../dae/sky/CBbunny.dae<br>lighting sampling</figcaption>
+    </td>
+  </tr>
+  <tr>
+    <td align="center">
+      <img src="../assets/hw3/part3/part3_task3_2.png" width="100%"/>
+      <figcaption>../dae/sky/CBspheres_lambertian.dae<br>uniform hemisphere sampling</figcaption>
+    </td>
+    <td align="center">
+      <img src="../assets/hw3/part3/part3_task4_2.png" width="100%"/>
+      <figcaption>../dae/sky/CBspheres_lambertian.dae<br>lighting sampling</figcaption>
+    </td>
+  </tr>
+  </table>
+</div>
 
 ## Part 4: Global Illumination
 
