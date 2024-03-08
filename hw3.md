@@ -319,8 +319,10 @@ We can see that from these data points, that the rendering speeds up from 800 to
 
 ## Part 3: Direct Illumination
 
+We will separately walk through the implementations of [uniform hemisphere sampling](/hw3.md#task-3-direct-lighting-with-uniform-hemisphere-sampling) and [importance sampling lights](/hw3.md#task-4-direct-lighting-by-importance-sampling-lights). First, though, we'll describe how to implement the [f and sample_f functions](/hw3.md#task-1-diffuse-bsdf) and [zero-bounce illumination](/hw3.md#task-2-zero-bounce-illumination).
+
 ### Task 1: Diffuse BSDF
-In this task, we needed to implement <code class="language-plaintext highlighter-rouge">DiffuseBSDF::f</code> to return the evaluation of the BSDF, or reflectance in the given directions. We originally returned the <code class="language-plaintext highlighter-rouge">reflectance</code> of the <code class="language-plaintext highlighter-rouge">DiffuseBSDF</code>, but noticed this was too bright. Then, we divided this <code class="language-plaintext highlighter-rouge">reflectance</code> by $$2 * \pi$$ since the surface area of a unit hemisphere is $$2 * \pi$$, however this was too dark. We then chose to just divide <code class="language-plaintext highlighter-rouge">reflectance</code> by $$\pi$$ and this seemed to match the output as expected (we tested this while working on [Task 3](/hw3.md#task-3-direct-lighting-with-uniform-hemisphere-sampling)). Below we've attached the output of running <code class="language-plaintext highlighter-rouge">./pathtracer -t 8 -s 16 -l 8 -m 6 -H -r 480 360 ../dae/sky/CBbunny.dae</code>
+In this task, we needed to implement <code class="language-plaintext highlighter-rouge">DiffuseBSDF::f</code> to return the evaluation of the BSDF, or reflectance in the given directions. We originally returned the <code class="language-plaintext highlighter-rouge">reflectance</code> of the <code class="language-plaintext highlighter-rouge">DiffuseBSDF</code>, but noticed this was too bright. Then, we divided this <code class="language-plaintext highlighter-rouge">reflectance</code> by $$2 * \pi$$ since the surface area of a unit hemisphere is $$2 * \pi$$, however this was too dark. We then chose to just divide <code class="language-plaintext highlighter-rouge">reflectance</code> by $$\pi$$ and this seemed to match the output as expected (we tested this while working on [Task 3](/hw3.md#task-3-direct-lighting-with-uniform-hemisphere-sampling)). Below we've attached the output of running <code class="language-plaintext highlighter-rouge">./pathtracer -t 8 -s 16 -l 8 -m 6 -H -r 480 360 ../dae/sky/CBbunny.dae</code>.
 
 <div align="center">
   <table style="width:100%">
@@ -349,6 +351,20 @@ We also needed to implement <code class="language-plaintext highlighter-rouge">D
 
 
 ### Task 2: Zero-bounce Illumination
+To implement zero-bounce illumination, we took the given <code class="language-plaintext highlighter-rouge">Intersection</code> object, and accessed its <code class="language-plaintext highlighter-rouge">bsdf</code> attribute and called <code class="language-plaintext highlighter-rouge">get_emission()</code> to return the light that results from no bounces of light (the raw emission).
+
+We then updated <code class="language-plaintext highlighter-rouge">est_radiance_global_illumination</code> to call <code class="language-plaintext highlighter-rouge">zero_bounce_radiance</code>, gaining the following output as expected for running <code class="language-plaintext highlighter-rouge">./pathtracer -t 8 -s 16 -l 8 -m 6 -H -f CBbunny_16_8.png -r 480 360 ../dae/sky/CBbunny.dae</code>.
+
+<div align="center">
+  <table style="width:100%">
+    <tr>
+      <td align="center">
+        <img src="../assets/hw3/part3/part3_task2.png" width="400px"/>
+        <figcaption>../dae/sky/CBbunny.dae, zero-bounce illumination</figcaption>
+      </td>
+    </tr>
+  </table>
+</div>
 
 ### Task 3: Direct Lighting with Uniform Hemisphere Sampling
 Running <code class="language-plaintext highlighter-rouge">./pathtracer -t 8 -s 64 -l 32 -m 6 -H -f {filename}.png -r 480 360 ../dae/sky/{filename}.dae</code> for importance sampling lights gave these three renders.
