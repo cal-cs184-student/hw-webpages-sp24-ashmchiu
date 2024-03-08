@@ -320,6 +320,33 @@ We can see that from these data points, that the rendering speeds up from 800 to
 ## Part 3: Direct Illumination
 
 ### Task 1: Diffuse BSDF
+In this task, we needed to implement <code class="language-plaintext highlighter-rouge">DiffuseBSDF::f</code> to return the evaluation of the BSDF, or reflectance in the given directions. We originally returned the <code class="language-plaintext highlighter-rouge">reflectance</code> of the <code class="language-plaintext highlighter-rouge">DiffuseBSDF</code>, but noticed this was too bright. Then, we divided this <code class="language-plaintext highlighter-rouge">reflectance</code> by $$2 * \pi$$ since the surface area of a unit hemisphere is $$2 * \pi$$, however this was too dark. We then chose to just divide <code class="language-plaintext highlighter-rouge">reflectance</code> by $$\pi$$ and this seemed to match the output as expected (we tested this while working on [Task 3](/hw3.md#task-3-direct-lighting-with-uniform-hemisphere-sampling)). Below we've attached the output of running <code class="language-plaintext highlighter-rouge">./pathtracer -t 8 -s 16 -l 8 -m 6 -H -r 480 360 ../dae/sky/CBbunny.dae</code>
+
+<div align="center">
+  <table style="width:100%">
+    <tr>
+      <td align="center">
+        <img src="../assets/hw3/part3/part3_task1_refl.png" width="400px"/>
+        <figcaption>../dae/sky/CBbunny.dae,<br> using <code class="language-plaintext highlighter-rouge">f</code> = reflectance</figcaption>
+      </td>
+      <td align="center">
+        <img src="../assets/hw3/part3/part3_task1_2pi.png" width="400px"/>
+        <figcaption>../dae/sky/CBbunny.dae,<br> using <code class="language-plaintext highlighter-rouge">f</code>= reflectance / (2 * PI)</figcaption>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="2" align="center">
+        <img src="../assets/hw3/part3/part3_task1_pi.png" width="400px"/>
+        <figcaption>../dae/sky/CBbunny.dae,<br> using <code class="language-plaintext highlighter-rouge">f</code> = reflectance / PI</figcaption>
+      </td>
+    </tr>
+  </table>
+</div>
+
+We see that using <code class="language-plaintext highlighter-rouge">reflectance</code> $$/ \pi$$ gave the brightness that best matched the desired output.
+
+We also needed to implement <code class="language-plaintext highlighter-rouge">DiffuseBSDF::sample_f</code>, in which we sample a value based on the given <code class="language-plaintext highlighter-rouge">pdf</code> for <code class="language-plaintext highlighter-rouge">wi</code>, and then return <code class="language-plaintext highlighter-rouge">DiffuseBSDF::f</code> called with the passed in <code class="language-plaintext highlighter-rouge">wo</code> and our sampled <code class="language-plaintext highlighter-rouge">wi</code>.
+
 
 ### Task 2: Zero-bounce Illumination
 
@@ -341,6 +368,18 @@ Running <code class="language-plaintext highlighter-rouge">./pathtracer -t 8 -s 
 </div>
 
 ### Task 4: Direct Lighting by Importance Sampling Lights
+
+While working on this task, we ran into an interesting debugging problem
+<div align="center">
+  <table style="width:100%">
+    <tr>
+      <td align="center">
+        <img src="../assets/hw3/part3/part3_task4_shadow.png" width="400px"/>
+        <figcaption>../dae/sky/CBbunny.dae with weird shadows</figcaption>
+      </td>
+    </tr>
+  </table>
+</div>
 
 Running <code class="language-plaintext highlighter-rouge">./pathtracer -t 8 -s 64 -l 32 -m 6 -f {filename}.png -r 480 360 ../dae/sky/{filename}.dae</code> for importance sampling lights gave these three renders.
 <div align="center">
