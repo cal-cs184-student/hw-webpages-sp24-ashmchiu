@@ -13,7 +13,7 @@ site: [https://cal-cs184-student.github.io/hw-webpages-sp24-ashmchiu/hw3/](https
 
 ## Overview
 
-TEST TEST TEST $a^2 + b^2 = c^2$
+TODO: TEST TEST TEST $a^2 + b^2 = c^2$
 
 $$
 x = \frac{-b \pm \sqrt{b^2 - 4ac}}{2a}
@@ -64,7 +64,7 @@ After completing Task 3, our output for <code class="language-plaintext highligh
   <table style="width:100%">
     <tr>
       <td align="center">
-        <img src="../assets/hw3/part1/part1_task3_1.png" width="400px"/>
+        <img src="../assets/hw3/part1/task3_1.png" width="400px"/>
         <figcaption>sky/CBempty.dae with normal shading</figcaption>
       </td>
     </tr>
@@ -98,7 +98,7 @@ After completing Task 4, our output for <code class="language-plaintext highligh
   <table style="width:100%">
     <tr>
       <td align="center">
-        <img src="../assets/hw3/part1/part1_task4_1.png" width="400px"/>
+        <img src="../assets/hw3/part1/task4_1.png" width="400px"/>
         <figcaption>sky/CBspheres_lambertian.dae with normal shading</figcaption>
       </td>
     </tr>
@@ -127,21 +127,21 @@ We can see running <code class="language-plaintext highlighter-rouge">./pathtrac
   <table style="width:100%">
     <tr>
       <td align="center">
-        <img src="../assets/hw3/part2/part2_task1_1.png" width="100%"/>
+        <img src="../assets/hw3/part2/task1_1.png" width="100%"/>
         <figcaption>../dae/meshedit/cow.dae, base rendering</figcaption>
       </td>
       <td align="center">
-        <img src="../assets/hw3/part2/part2_task1_2.png" width="100%"/>
+        <img src="../assets/hw3/part2/task1_2.png" width="100%"/>
         <figcaption>../dae/meshedit/cow.dae, descending once to right child</figcaption>
       </td>
     </tr>
     <tr>
       <td align="center">
-        <img src="../assets/hw3/part2/part2_task1_3.png" width="100%"/>
+        <img src="../assets/hw3/part2/task1_3.png" width="100%"/>
         <figcaption>../dae/meshedit/cow.dae, descending twice to right child</figcaption>
       </td>
       <td align="center">
-        <img src="../assets/hw3/part2/part2_task1_4.png" width="100%"/>
+        <img src="../assets/hw3/part2/task1_4.png" width="100%"/>
         <figcaption>../dae/meshedit/cow.dae, descending thrice to right child</figcaption>
       </td>
     </tr>
@@ -176,21 +176,21 @@ Following the completion of [Part 2](/hw3.md#part-2-bounding-volume-hierarchy), 
   </colgroup>
   <tr>
     <td align="center">
-      <img src="../assets/hw3/part2/part2_maxplanck.png" width="100%"/>
+      <img src="../assets/hw3/part2/maxplanck.png" width="100%"/>
       <figcaption>../dae/meshedit/maxplanck.dae, rendered after BVH acceleration</figcaption>
     </td>
     <td align="center">
-      <img src="../assets/hw3/part2/part2_cblucy.png" width="100%"/>
+      <img src="../assets/hw3/part2/cblucy.png" width="100%"/>
       <figcaption>../dae/sky/CBlucy.dae, rendered after BVH acceleration</figcaption>
     </td>
   </tr>
   <tr>
     <td align="center">
-      <img src="../assets/hw3/part2/part2_dragon.png" width="100%"/>
+      <img src="../assets/hw3/part2/dragon.png" width="100%"/>
       <figcaption>../dae/sky/dragon.dae, rendered after BVH acceleration</figcaption>
     </td>
     <td align="center">
-      <img src="../assets/hw3/part2/part2_wall-e.png" width="100%"/>
+      <img src="../assets/hw3/part2/wall-e.png" width="100%"/>
       <figcaption>../dae/sky/wall-e.dae, rendered after BVH acceleration</figcaption>
     </td>
   </tr>
@@ -328,17 +328,17 @@ In this task, we needed to implement <code class="language-plaintext highlighter
   <table style="width:100%">
     <tr>
       <td align="center">
-        <img src="../assets/hw3/part3/part3_task1_refl.png" width="400px"/>
+        <img src="../assets/hw3/part3/task1_refl.png" width="400px"/>
         <figcaption>../dae/sky/CBbunny.dae,<br> using <code class="language-plaintext highlighter-rouge">f</code> = reflectance</figcaption>
       </td>
       <td align="center">
-        <img src="../assets/hw3/part3/part3_task1_2pi.png" width="400px"/>
+        <img src="../assets/hw3/part3/task1_2pi.png" width="400px"/>
         <figcaption>../dae/sky/CBbunny.dae,<br> using <code class="language-plaintext highlighter-rouge">f</code>= reflectance / (2 * PI)</figcaption>
       </td>
     </tr>
     <tr>
       <td colspan="2" align="center">
-        <img src="../assets/hw3/part3/part3_task1_pi.png" width="400px"/>
+        <img src="../assets/hw3/part3/task1_pi.png" width="400px"/>
         <figcaption>../dae/sky/CBbunny.dae,<br> using <code class="language-plaintext highlighter-rouge">f</code> = reflectance / PI</figcaption>
       </td>
     </tr>
@@ -359,7 +359,7 @@ We then updated <code class="language-plaintext highlighter-rouge">est_radiance_
   <table style="width:100%">
     <tr>
       <td align="center">
-        <img src="../assets/hw3/part3/part3_task2.png" width="400px"/>
+        <img src="../assets/hw3/part3/task2.png" width="400px"/>
         <figcaption>../dae/sky/CBbunny.dae, zero-bounce illumination</figcaption>
       </td>
     </tr>
@@ -367,16 +367,16 @@ We then updated <code class="language-plaintext highlighter-rouge">est_radiance_
 </div>
 
 ### Task 3: Direct Lighting with Uniform Hemisphere Sampling
-Running <code class="language-plaintext highlighter-rouge">./pathtracer -t 8 -s 64 -l 32 -m 6 -H -f {filename}.png -r 480 360 ../dae/sky/{filename}.dae</code> for importance sampling lights gave these three renders.
+Running <code class="language-plaintext highlighter-rouge">./pathtracer -t 8 -s 64 -l 32 -m 6 -H -f {filename}.png -r 480 360 ../dae/sky/{filename}.dae</code> for uniform hemisphere sampling gave these two renders.
 <div align="center">
   <table style="width:100%">
     <tr>
       <td align="center">
-        <img src="../assets/hw3/part3/part3_task3_1.png" width="400px"/>
+        <img src="../assets/hw3/part3/task3_1.png" width="400px"/>
         <figcaption>../dae/sky/CBbunny.dae</figcaption>
       </td>
       <td align="center">
-        <img src="../assets/hw3/part3/part3_task3_2.png" width="400px"/>
+        <img src="../assets/hw3/part3/task3_2.png" width="400px"/>
         <figcaption>../dae/sky/CBspheres_lambertian.dae</figcaption>
       </td>
     </tr>
@@ -390,8 +390,8 @@ While working on this task, we ran into an interesting debugging problem
   <table style="width:100%">
     <tr>
       <td align="center">
-        <img src="../assets/hw3/part3/part3_task4_shadow.png" width="400px"/>
-        <figcaption>../dae/sky/CBbunny.dae with weird shadows</figcaption>
+        <img src="../assets/hw3/part3/task4_shadow.png" width="400px"/>
+        <figcaption>../dae/sky/CBbunny.dae with inverted shadows</figcaption>
       </td>
     </tr>
   </table>
@@ -402,22 +402,54 @@ Running <code class="language-plaintext highlighter-rouge">./pathtracer -t 8 -s 
   <table style="width:100%">
     <tr>
       <td align="center">
-        <img src="../assets/hw3/part3/part3_task4_1.png" width="400px"/>
+        <img src="../assets/hw3/part3/task4_1.png" width="400px"/>
         <figcaption>../dae/sky/CBbunny.dae</figcaption>
       </td>
       <td align="center">
-        <img src="../assets/hw3/part3/part3_task4_2.png" width="400px"/>
+        <img src="../assets/hw3/part3/task4_2.png" width="400px"/>
         <figcaption>../dae/sky/CBspheres_lambertian.dae</figcaption>
       </td>
     </tr>
     <tr>
       <td colspan="2" align="center">
-        <img src="../assets/hw3/part3/part3_task4_3.png" width="400px"/>
+        <img src="../assets/hw3/part3/task4_3.png" width="400px"/>
         <figcaption>../dae/sky/dragon.dae</figcaption>
       </td>
     </tr>
   </table>
 </div>
+
+Now, using ../dae/sky/CBbunny.dae, we can compare the noise levels in soft shadows when rendering with 1, 4, 16, and 64 light rays, and with 1 sample per pixel by running the command <code class="language-plaintext highlighter-rouge">./pathtracer -t 8 -s 1 -l {num_rays} -m 6 -r 480 360 ../dae/sky/CBbunny.dae</code>.
+
+<div align="center">
+  <table style="width:100%">
+  <colgroup>
+      <col width="50%" />
+      <col width="50%" />
+  </colgroup>
+  <tr>
+    <td align="center">
+      <img src="../assets/hw3/part3/task4_l1s1.png" width="100%"/>
+      <figcaption>../dae/sky/CBbunny.dae, 1 light ray, 1 sample per pixel</figcaption>
+    </td>
+    <td align="center">
+      <img src="../assets/hw3/part3/task4_l4s1.png" width="100%"/>
+      <figcaption>../dae/sky/CBbunny.dae, 4 light rays, 1 sample per pixel</figcaption>
+    </td>
+  </tr>
+  <tr>
+    <td align="center">
+      <img src="../assets/hw3/part3/task4_l16s1.png" width="100%"/>
+      <figcaption>../dae/sky/CBbunny.dae, 16 light rays, 1 sample per pixel</figcaption>
+    </td>
+    <td align="center">
+      <img src="../assets/hw3/part3/task4_l64s1.png" width="100%"/>
+      <figcaption>../dae/sky/CBbunny.dae, 64 light rays, 1 sample per pixel</figcaption>
+    </td>
+  </tr>
+  </table>
+</div>
+
 
 ### Uniform Hemisphere Sampling v. Lighting Sampling
 <div align="center">
@@ -428,21 +460,21 @@ Running <code class="language-plaintext highlighter-rouge">./pathtracer -t 8 -s 
   </colgroup>
   <tr>
     <td align="center">
-      <img src="../assets/hw3/part3/part3_task3_1.png" width="100%"/>
+      <img src="../assets/hw3/part3/task3_1.png" width="100%"/>
       <figcaption>../dae/sky/CBbunny.dae<br>uniform hemisphere sampling</figcaption>
     </td>
     <td align="center">
-      <img src="../assets/hw3/part3/part3_task4_1.png" width="100%"/>
+      <img src="../assets/hw3/part3/task4_1.png" width="100%"/>
       <figcaption>../dae/sky/CBbunny.dae<br>lighting sampling</figcaption>
     </td>
   </tr>
   <tr>
     <td align="center">
-      <img src="../assets/hw3/part3/part3_task3_2.png" width="100%"/>
+      <img src="../assets/hw3/part3/task3_2.png" width="100%"/>
       <figcaption>../dae/sky/CBspheres_lambertian.dae<br>uniform hemisphere sampling</figcaption>
     </td>
     <td align="center">
-      <img src="../assets/hw3/part3/part3_task4_2.png" width="100%"/>
+      <img src="../assets/hw3/part3/task4_2.png" width="100%"/>
       <figcaption>../dae/sky/CBspheres_lambertian.dae<br>lighting sampling</figcaption>
     </td>
   </tr>
@@ -452,6 +484,7 @@ Running <code class="language-plaintext highlighter-rouge">./pathtracer -t 8 -s 
 ## Part 4: Global Illumination
 
 ### Task 1: Sampling with Diffuse BSDF
+This task was a repeat of [Task 1](/hw3.md#task-1-diffuse-bsdf) from [Part 3](/hw3.md#part-3-direct-illumination).
 
 ### Task 2: Global Illumination with up to N Bounces of Light
 
@@ -461,3 +494,5 @@ Running <code class="language-plaintext highlighter-rouge">./pathtracer -t 8 -s 
 
 ## Contributors
 Edward Park, Ashley Chiu
+
+TODO: At the end, if you worked with a partner, please write a short paragraph together for your final report that describes how you collaborated, how it went, and what you learned.
