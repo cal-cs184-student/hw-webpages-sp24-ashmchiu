@@ -482,11 +482,83 @@ Now, using ../dae/sky/CBbunny.dae, we can compare the noise levels in soft shado
 </div>
 
 ## Part 4: Global Illumination
+<!--
+we like pretty spheres.
+-->
 
 ### Task 1: Sampling with Diffuse BSDF
 This task was a repeat of [Task 1](/hw3.md#task-1-diffuse-bsdf) from [Part 3](/hw3.md#part-3-direct-illumination).
 
 ### Task 2: Global Illumination with up to N Bounces of Light
+
+<div align="center">
+  <table style="width:100%">
+  <colgroup>
+      <col width="50%" />
+      <col width="50%" />
+  </colgroup>
+  <tr>
+    <td align="center">
+      <img src="../assets/hw3/part4/task2_m0accum.png" width="100%"/>
+      <figcaption>../dae/sky/CBbunny.dae, 0th bounce of light, with accumulation</figcaption>
+    </td>
+    <td align="center">
+      <img src="../assets/hw3/part4/task2_m0noaccum.png" width="100%"/>
+      <figcaption>../dae/sky/CBbunny.dae, 0th bounce of light, no accumulation</figcaption>
+    </td>
+  </tr>
+  <tr>
+    <td align="center">
+      <img src="../assets/hw3/part4/task2_m1accum.png" width="100%"/>
+      <figcaption>../dae/sky/CBbunny.dae, 1st bounce of light, with accumulation</figcaption>
+    </td>
+    <td align="center">
+      <img src="../assets/hw3/part4/task2_m1noaccum.png" width="100%"/>
+      <figcaption>../dae/sky/CBbunny.dae, 1st bounce of light, no accumulation</figcaption>
+    </td>
+  </tr>
+  <tr>
+    <td align="center">
+      <img src="../assets/hw3/part4/task2_m2accum.png" width="100%"/>
+      <figcaption>../dae/sky/CBbunny.dae, 2nd bounce of light, with accumulation</figcaption>
+    </td>
+    <td align="center">
+      <img src="../assets/hw3/part4/task2_m2noaccum.png" width="100%"/>
+      <figcaption>../dae/sky/CBbunny.dae, 2nd bounce of light, no accumulation</figcaption>
+    </td>
+  </tr>
+  <tr>
+    <td align="center">
+      <img src="../assets/hw3/part4/task2_m3accum.png" width="100%"/>
+      <figcaption>.../dae/sky/CBbunny.dae, 3rd bounce of light, with accumulation</figcaption>
+    </td>
+    <td align="center">
+      <img src="../assets/hw3/part4/task2_m3noaccum.png" width="100%"/>
+      <figcaption>../dae/sky/CBbunny.dae, 3rd bounce of light, no accumulation</figcaption>
+    </td>
+  </tr>
+  <tr>
+    <td align="center">
+      <img src="../assets/hw3/part4/task2_m4accum.png" width="100%"/>
+      <figcaption>../dae/sky/CBbunny.dae, 4th bounce of light, with accumulation</figcaption>
+    </td>
+    <td align="center">
+      <img src="../assets/hw3/part4/task2_m4noaccum.png" width="100%"/>
+      <figcaption>.../dae/sky/CBbunny.dae, 4th bounce of light, no accumulation</figcaption>
+    </td>
+  </tr>
+  <tr>
+    <td align="center">
+      <img src="../assets/hw3/part4/task2_m5accum.png" width="100%"/>
+      <figcaption>../dae/sky/CBbunny.dae, 5th bounce of light, with accumulation</figcaption>
+    </td>
+    <td align="center">
+      <img src="../assets/hw3/part4/task2_m5noaccum.png" width="100%"/>
+      <figcaption>../dae/sky/CBbunny.dae, 5th bounce of light, no accumulationg</figcaption>
+    </td>
+  </tr>
+  </table>
+</div>
 
 ### Task 3: Global Illumination with Russian Roulette
 
