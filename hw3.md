@@ -367,6 +367,20 @@ We then updated <code class="language-plaintext highlighter-rouge">est_radiance_
 </div>
 
 ### Task 3: Direct Lighting with Uniform Hemisphere Sampling
+Iterating through a total of <code class="language-plaintext highlighter-rouge">num_samples</code> samples, we first calculate the incoming light source value by sampling a <code class="language-plaintext highlighter-rouge">w_in</code> vector from the hemisphere and calculating its world-space coordinates. Then, we initialized a sample <code class="language-plaintext highlighter-rouge">Ray</code>, setting its <code class="language-plaintext highlighter-rouge">min_t</code> to <code class="language-plaintext highlighter-rouge">EPS_F</code>.
+
+Then, creating an <code class="language-plaintext highlighter-rouge">Intersection</code>, we checked whether the bounding volume hierarchy intersected the sampled <code class="language-plaintext highlighter-rouge">Ray</code> by calling the <code class="language-plaintext highlighter-rouge">intersect</code> function from [Part 2 Task 3](/hw3.md#task-3-intersecting-the-bvh).
+
+If there was an intersection from calling <code class="language-plaintext highlighter-rouge">intersect</code>, then we calculated the $$f_r$$, $$L_i$$, $$\cos_j$$, and $$pdf$$ to compute the reflection equation to get the outgoing lighting from this intersection.
+- $$f_r$$: We call the function we wrote in [Task 1](/hw3.md#task-1-diffuse-bsdf) to calculate the BSDF.
+- $$L_i$$: The incoming light is given by the emission of the intersection's BSDF.
+- $$\cos_j$$: The dot product between the surface normal of the intersection and the world-space units of the ray gives the cosine angle between the two unit vectors
+- $$pdf$$: our pdf for hemisphere sampling is $$1 / (2 * \pi)$$ because the surface area for a unit sphere is $$4 \pi * r^2 = 4 \pi * 1^2 = 4 \pi$$, and hence, the surface area for a unit hemisphere is $$2 \pi$$, so the probability of sampling any point uniformly is $$1 \ (2 * \pi)$$.
+
+Given these values, for each sample <code class="language-plaintext highlighter-rouge">Ray</code>, when an intersection existed, we added $$(f_r * L_i * \cos_j) / pdf$$ to our <code class="language-plaintext highlighter-rouge">L_out</code> value.
+
+Finally, after performing <code class="language-plaintext highlighter-rouge">num_sample</code> samples, we normalized the outgoing light, <code class="language-plaintext highlighter-rouge">L_out</code>, by dividing by <code class="language-plaintext highlighter-rouge">num_samples</code>, returning this final <code class="language-plaintext highlighter-rouge">L_out</code>.
+
 Running <code class="language-plaintext highlighter-rouge">./pathtracer -t 8 -s 64 -l 32 -m 6 -H -f {filename}.png -r 480 360 ../dae/sky/{filename}.dae</code> for uniform hemisphere sampling gave these two renders.
 <div align="center">
   <table style="width:100%">
@@ -384,8 +398,28 @@ Running <code class="language-plaintext highlighter-rouge">./pathtracer -t 8 -s 
 </div>
 
 ### Task 4: Direct Lighting by Importance Sampling Lights
+For importance sampling, we performed a similar workflow as in [Task 3's hemisphere sampling](/hw3.md#task-3-direct-lighting-with-uniform-hemisphere-sampling) conceptually by calculating incoming light, and generating a sample ray to intersect with, but the structure of the looping was difference since we now were iterating through all the lights.
 
-While working on this task, we ran into an interesting debugging problem
+Particularly, iterating through all of <code class="language-plaintext highlighter-rouge">scene->lights</code>, we first checked whether <code class="language-plaintext highlighter-rouge">is_delta_light()</code> was true since if we were sampling a point light, it wouldn't matter what direction the ray was, the outgoing light would still be the same (so we would only need 1 sample, as opposed to <code class="language-plaintext highlighter-rouge">num_samples</code>, which we defined similarly to [Task 3](/hw3.md#task-3-direct-lighting-with-uniform-hemisphere-sampling)). 
+
+Then, using however many samples we needed for that light as an index, we would iterate that many times, first calling the <code class="language-plaintext highlighter-rouge">light</code>'s <code class="language-plaintext highlighter-rouge">sample_L</code>, which returns the $$L_i$$ for this sample. Calling <code class="language-plaintext highlighter-rouge">sample_L</code> would populate
+- <code class="language-plaintext highlighter-rouge">w_in</code> in world-space, so we would use the <code class="language-plaintext highlighter-rouge">w2o</code> matrix to also find the incoming light in local coordinates
+- <code class="language-plaintext highlighter-rouge">distToLight</code> for the sample
+- <code class="language-plaintext highlighter-rouge">pdf</code> that will be used to calculate outgoing light
+
+We then utilized the resulting world-space incoming light vector and the <code class="language-plaintext highlighter-rouge">hit_p</code> to generate a <code class="language-plaintext highlighter-rouge">sample</code> <code class="language-plaintext highlighter-rouge">Ray</code>. We would set this <code class="language-plaintext highlighter-rouge">Ray</code>'s <code class="language-plaintext highlighter-rouge">min_t</code> to <code class="language-plaintext highlighter-rouge">EPS_F</code> and its <code class="language-plaintext highlighter-rouge">max_t</code> to <code class="language-plaintext highlighter-rouge">distToLight - EPS_F</code>.
+
+Then, creating an <code class="language-plaintext highlighter-rouge">Intersection</code>, we checked whether the bounding volume hierarchy intersected the sampled <code class="language-plaintext highlighter-rouge">Ray</code> by calling the <code class="language-plaintext highlighter-rouge">intersect</code> function from [Part 2 Task 3](/hw3.md#task-3-intersecting-the-bvh).
+
+If there wasn't an intersection from calling <code class="language-plaintext highlighter-rouge">intersect</code>, then we calculated the $$f_r$$ and $$pdf$$ (since the $$L_i$$ was returned from <code class="language-plaintext highlighter-rouge">sample_L</code> and the $$pdf$$ was populated from <code class="language-plaintext highlighter-rouge">sample_L</code>) to compute the reflection equation to get the outgoing lighting from this intersection. We note this difference from [Task 3](/hw3.md#task-3-direct-lighting-with-uniform-hemisphere-sampling) since we are only calculating if there wasn't an intersection since this means that the light source was not obstructed and thus, would actually hit this hit point. If there was an intersection, then we wouldn't actually want to illuminate this hit point because another object intersected with it first.
+- $$f_r$$: We call the function we wrote in [Task 1](/hw3.md#task-1-diffuse-bsdf) to calculate the BSDF.
+- $$\cos_j$$: The dot product between the surface normal of the intersection and the world-space units of the ray gives the cosine angle between the two unit vectors
+
+Given these values, for each sample <code class="language-plaintext highlighter-rouge">Ray</code>, when an intersection existed, we added $$(f_r * L_i * \cos_j) / pdf$$ to our <code class="language-plaintext highlighter-rouge">L_out</code> value.
+
+Finally, after performing <code class="language-plaintext highlighter-rouge">num_sample</code> samples per light in <code class="language-plaintext highlighter-rouge">scene->lights</code> (or 1 if the light was an area light), we normalized the outgoing light, <code class="language-plaintext highlighter-rouge">L_out</code>, by dividing by <code class="language-plaintext highlighter-rouge">num_samples</code>, adding this outgoing light through this light to our desired outgoing light <code class="language-plaintext highlighter-rouge">L_out</code>. After aggregating across all the lights, we would return this final <code class="language-plaintext highlighter-rouge">L_out</code>.
+
+While working on this task, we ran into an interesting debugging problem where the shadows seemingly rendered lighter than the areas where light should have hit, like shown in the bunny below.
 <div align="center">
   <table style="width:100%">
     <tr>
@@ -396,6 +430,8 @@ While working on this task, we ran into an interesting debugging problem
     </tr>
   </table>
 </div>
+
+We realized this was an error as we had kept our original code from [Task 3](/hw3.md#task-3-direct-lighting-with-uniform-hemisphere-sampling) to add to outgoing light if there was an intersection between the ray and the light--however, we soon realized we should only add to outgoing light if it were the opposite since this would mean there wouldn't be any obstruction from the light to the desired <code class="language-plaintext highlighter-rouge">hit_point</code>.
 
 Running <code class="language-plaintext highlighter-rouge">./pathtracer -t 8 -s 64 -l 32 -m 6 -f {filename}.png -r 480 360 ../dae/sky/{filename}.dae</code> for importance sampling lights gave these three renders.
 <div align="center">
@@ -450,6 +486,7 @@ Now, using ../dae/sky/CBbunny.dae, we can compare the noise levels in soft shado
   </table>
 </div>
 
+We can see that as the number of light rays increases, there's less noise in our outputted render. Particularly, the shadows of the bunny becomes more smoothed out, and the edges of shadows become softer (less harsh). The reasoning for this is because when there are less light rays, each shadow point calculated is clearer--each pixelated. However, when we add more light rays, there's more of a range (similar to when we supersampled in [Homework 1](/hw1.md#impacts-of-supersampling)). This allows for an overall smoother shadow where there are varying levels of grey that mark out the general portion of the shadow (darker) and the edges (lighter).
 
 ### Uniform Hemisphere Sampling v. Lighting Sampling
 <div align="center">
@@ -483,7 +520,7 @@ Now, using ../dae/sky/CBbunny.dae, we can compare the noise levels in soft shado
 
 ## Part 4: Global Illumination
 <!--
-we like pretty spheres.
+we like pretty spheres. https://cal-cs184-student.github.io/hw-webpages-sp24-ashmchiu/assets/hw3/part4/pretty_sphere.png
 -->
 
 ### Task 1: Sampling with Diffuse BSDF
@@ -491,6 +528,67 @@ This task was a repeat of [Task 1](/hw3.md#task-1-diffuse-bsdf) from [Part 3](/h
 
 ### Task 2: Global Illumination with up to N Bounces of Light
 
+### Direct v. Indirect Illumination
+<div align="center">
+  <table style="width:100%">
+  <colgroup>
+      <col width="50%" />
+      <col width="50%" />
+  </colgroup>
+  <tr>
+    <td align="center">
+      <img src="../assets/hw3/part4/task2_direct_illumination_spheres.png" width="100%"/>
+      <figcaption>../dae/sky/CBspheres_lambertian.dae, direct illumination (0 and 1 bounce)</figcaption>
+    </td>
+    <td align="center">
+      <img src="../assets/hw3/part4/task2_indirect_illumination_spheres.png" width="100%"/>
+      <figcaption>../dae/sky/CBspheres_lambertian.dae, indirect illumination (> 1 bounce)</figcaption>
+    </td>
+  </tr>
+  <tr>
+    <td align="center">
+      <img src="../assets/hw3/part4/task2_direct_illumination_bunny.png" width="100%"/>
+      <figcaption>../dae/sky/CBspheres_lambertian.dae, direct illumination (0 and 1 bounce)</figcaption>
+    </td>
+    <td align="center">
+      <img src="../assets/hw3/part4/task2_indirect_illumination_bunny.png" width="100%"/>
+      <figcaption>../dae/sky/CBspheres_lambertian.dae, indirect illumination (> 1 bounce)</figcaption>
+    </td>
+  </tr>
+  </table>
+</div>
+
+Using global illumination (now a combination of direct and indirect illumination), we render the following images using 1024 sampels per pixel:
+<div align="center">
+  <table style="width:100%">
+  <colgroup>
+      <col width="50%" />
+      <col width="50%" />
+  </colgroup>
+  <tr>
+    <td align="center">
+      <img src="../assets/hw3/part4/task2_global_illumination_spheres.png" width="100%"/>
+      <figcaption>../dae/sky/CBspheres_lambertian.dae, global illumination</figcaption>
+    </td>
+    <td align="center">
+      <img src="../assets/hw3/part4/task2_global_illumination_bunny.png" width="100%"/>
+      <figcaption>../dae/sky/CBbunny.dae, global illumination</figcaption>
+    </td>
+  </tr>
+  <tr>
+    <td align="center">
+      <img src="../assets/hw3/part4/task2_global_illumination_blob.png" width="100%"/>
+      <figcaption>../dae/sky/blob.dae, global illumination</figcaption>
+    </td>
+    <td align="center">
+      <img src="../assets/hw3/part4/task2_global_illumination_dragon.png" width="100%"/>
+      <figcaption>../dae/sky/dragon.dae, global illumination</figcaption>
+    </td>
+  </tr>
+  </table>
+</div>
+
+### Adding Non-Accumulation Rendering
 <div align="center">
   <table style="width:100%">
   <colgroup>
@@ -557,6 +655,52 @@ This task was a repeat of [Task 1](/hw3.md#task-1-diffuse-bsdf) from [Part 3](/h
       <figcaption>../dae/sky/CBbunny.dae, 5th bounce of light, no accumulationg</figcaption>
     </td>
   </tr>
+  </table>
+</div>
+
+Pick one scene and compare rendered views with various sample-per-pixel rates, including at least 1, 2, 4, 8, 16, 64, and 1024. Use 4 light rays.
+<div align="center">
+  <table style="width:100%">
+  <colgroup>
+      <col width="50%" />
+      <col width="50%" />
+  </colgroup>
+  <tr>
+    <td align="center">
+      <img src="../assets/hw3/part4/task2_bunny_s1l4.png" width="100%"/>
+      <figcaption>../dae/sky/CBbunny.dae, 1 sample per pixel, 4 light rays</figcaption>
+    </td>
+    <td align="center">
+      <img src="../assets/hw3/part4/task2_bunny_s2l4.png" width="100%"/>
+      <figcaption>../dae/sky/CBbunny.dae, 2 samples per pixel, 4 light rays</figcaption>
+    </td>
+  </tr>
+  <tr>
+    <td align="center">
+      <img src="../assets/hw3/part4/task2_bunny_s4l4.png" width="100%"/>
+      <figcaption>../dae/sky/CBbunny.dae, 4 samples per pixel, 4 light rays</figcaption>
+    </td>
+    <td align="center">
+      <img src="../assets/hw3/part4/task2_bunny_s8l4.png" width="100%"/>
+      <figcaption>../dae/sky/CBbunny.dae, 8 samples per pixel, 4 light rays</figcaption>
+    </td>
+  </tr>
+  <tr>
+    <td align="center">
+      <img src="../assets/hw3/part4/task2_bunny_s16l4.png" width="100%"/>
+      <figcaption>../dae/sky/CBbunny.dae, 16 samples per pixel, 4 light rays</figcaption>
+    </td>
+    <td align="center">
+      <img src="../assets/hw3/part4/task2_bunny_s64l4.png" width="100%"/>
+      <figcaption>../dae/sky/CBbunny.dae, 64 samples per pixel, 4 light rays</figcaption>
+    </td>
+  </tr>
+  <tr>
+      <td colspan="2" align="center">
+        <img src="../assets/hw3/part4/task2_bunny_s1024l4.png" width="400px"/>
+        <figcaption>../dae/sky/CBbunny.dae, 1024 samples per pixel, 4 light rays</figcaption>
+      </td>
+    </tr>
   </table>
 </div>
 
