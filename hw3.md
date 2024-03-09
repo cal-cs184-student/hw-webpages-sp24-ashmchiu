@@ -518,6 +518,8 @@ We can see that as the number of light rays increases, there's less noise in our
   </table>
 </div>
 
+Overall, when we compare uniform hemisphere sampling to lighting sampling, we see that the lighting sampling outputs are much smoother and sharper as opposed to uniform hemisphere sampling, where there was a lot more graininess and noise. Notably, if we look at the walls, we see that the light that hits the walls isn't smoothly dispersed, but much more grainy in uniform hemisphere sampling. Since in uniform hemisphere sampling, we're taking samples in different directions around the given point, which means that in parts of an image that don't converge as quickly, they appear darker since they weren't sampled as much as needed, resulting in a grainy texture. In contrast, the lighting sampling we used placed importance of samples that actually impact the final lighting: we choose to include outgoing light only when it would be unobstructed and we sample directly from the light source rather than just points within the hemisphere itself. Therefore, since not all the samples of hemisphere sampling were not in the direction of the light source, there was a lot of noice as compared to lighting sampling, where we only get light and shadow rays since we only sample from lights, effectively removing all the noise.
+
 ## Part 4: Global Illumination
 <!--
 we like pretty spheres. https://cal-cs184-student.github.io/hw-webpages-sp24-ashmchiu/assets/hw3/part4/pretty_sphere.png
