@@ -374,7 +374,7 @@ Then, creating an <code class="language-plaintext highlighter-rouge">Intersectio
 If there was an intersection from calling <code class="language-plaintext highlighter-rouge">intersect</code>, then we calculated the $$f_r$$, $$L_i$$, $$\cos_j$$, and $$pdf$$ to compute the reflection equation to get the outgoing lighting from this intersection.
 - $$f_r$$: We call the function we wrote in [Task 1](/hw3.md#task-1-diffuse-bsdf) to calculate the BSDF.
 - $$L_i$$: The incoming light is given by the emission of the intersection's BSDF.
-- $$\cos_j$$: The dot product between the surface normal of the intersection and the world-space units of the ray gives the cosine angle between the two unit vectors
+- $$\cos_j$$: The dot product between the surface normal of the intersection and the world-space units of the ray gives the cosine angle between the two unit vectors.
 - $$pdf$$: our pdf for hemisphere sampling is $$1 / (2 * \pi)$$ because the surface area for a unit sphere is $$4 \pi * r^2 = 4 \pi * 1^2 = 4 \pi$$, and hence, the surface area for a unit hemisphere is $$2 \pi$$, so the probability of sampling any point uniformly is $$1 \ (2 * \pi)$$.
 
 Given these values, for each sample <code class="language-plaintext highlighter-rouge">Ray</code>, when an intersection existed, we added $$(f_r * L_i * \cos_j) / pdf$$ to our <code class="language-plaintext highlighter-rouge">L_out</code> value.
@@ -413,7 +413,7 @@ Then, creating an <code class="language-plaintext highlighter-rouge">Intersectio
 
 If there wasn't an intersection from calling <code class="language-plaintext highlighter-rouge">intersect</code>, then we calculated the $$f_r$$ and $$pdf$$ (since the $$L_i$$ was returned from <code class="language-plaintext highlighter-rouge">sample_L</code> and the $$pdf$$ was populated from <code class="language-plaintext highlighter-rouge">sample_L</code>) to compute the reflection equation to get the outgoing lighting from this intersection. We note this difference from [Task 3](/hw3.md#task-3-direct-lighting-with-uniform-hemisphere-sampling) since we are only calculating if there wasn't an intersection since this means that the light source was not obstructed and thus, would actually hit this hit point. If there was an intersection, then we wouldn't actually want to illuminate this hit point because another object intersected with it first.
 - $$f_r$$: We call the function we wrote in [Task 1](/hw3.md#task-1-diffuse-bsdf) to calculate the BSDF.
-- $$\cos_j$$: The dot product between the surface normal of the intersection and the world-space units of the ray gives the cosine angle between the two unit vectors
+- $$\cos_j$$: The dot product between the surface normal of the intersection and the world-space units of the ray gives the cosine angle between the two unit vectors.
 
 Given these values, for each sample <code class="language-plaintext highlighter-rouge">Ray</code>, when an intersection existed, we added $$(f_r * L_i * \cos_j) / pdf$$ to our <code class="language-plaintext highlighter-rouge">L_out</code> value.
 
@@ -529,36 +529,19 @@ we like pretty spheres. https://cal-cs184-student.github.io/hw-webpages-sp24-ash
 This task was a repeat of [Task 1](/hw3.md#task-1-diffuse-bsdf) from [Part 3](/hw3.md#part-3-direct-illumination).
 
 ### Task 2: Global Illumination with up to N Bounces of Light
+Let's describe our implementation of the indirect lighting function. We first update <code class="language-plaintext highlighter-rouge">est_radiance_global_illumination</code> to first calculate <code class="language-plaintext highlighter-rouge">L_out</code> as the sum of the <code class="language-plaintext highlighter-rouge">zero_bounce_radiance</code> and <code class="language-plaintext highlighter-rouge">at_least_one_bounce_radiance</code>. We also modify <code class="language-plaintext highlighter-rouge">raytrace_pixel</code> to mark our camera ray's <code class="language-plaintext highlighter-rouge">depth</code> to be the <code class="language-plaintext highlighter-rouge">max_ray_depth</code>.
 
-### Direct v. Indirect Illumination
-<div align="center">
-  <table style="width:100%">
-  <colgroup>
-      <col width="50%" />
-      <col width="50%" />
-  </colgroup>
-  <tr>
-    <td align="center">
-      <img src="../assets/hw3/part4/task2_direct_illumination_spheres.png" width="100%"/>
-      <figcaption>../dae/sky/CBspheres_lambertian.dae, direct illumination (0 and 1 bounce)</figcaption>
-    </td>
-    <td align="center">
-      <img src="../assets/hw3/part4/task2_indirect_illumination_spheres.png" width="100%"/>
-      <figcaption>../dae/sky/CBspheres_lambertian.dae, indirect illumination (> 1 bounce)</figcaption>
-    </td>
-  </tr>
-  <tr>
-    <td align="center">
-      <img src="../assets/hw3/part4/task2_direct_illumination_bunny.png" width="100%"/>
-      <figcaption>../dae/sky/CBspheres_lambertian.dae, direct illumination (0 and 1 bounce)</figcaption>
-    </td>
-    <td align="center">
-      <img src="../assets/hw3/part4/task2_indirect_illumination_bunny.png" width="100%"/>
-      <figcaption>../dae/sky/CBspheres_lambertian.dae, indirect illumination (> 1 bounce)</figcaption>
-    </td>
-  </tr>
-  </table>
-</div>
+Within <code class="language-plaintext highlighter-rouge">at_least_one_bounce_radiance</code> is where the bulk of our remaining code resides. If the ray's depth is greater than 0, then we accumulate into <code class="language-plaintext highlighter-rouge">L_out</code> the return value of <code class="language-plaintext highlighter-rouge">one_bounce_radiance</code>. If the ray's depth is equal to 1, then this is the <code class="language-plaintext highlighter-rouge">L_out</code> that we actually return (if the ray's depth is less than 1, we return <code class="language-plaintext highlighter-rouge">Vector3D(0, 0, 0)</code>).
+
+Then, if the ray's depth is greater than 1 (so we need to make a recursive call), we first take one random <code class="language-plaintext highlighter-rouge">sample_f</code> of the intersection's BSDF to get the incoming light <code class="language-plaintext highlighter-rouge">w_in</code> and calculate its world-space value.
+
+Then, we generate a sample <code class="language-plaintext highlighter-rouge">Ray</code> from <code class="language-plaintext highlighter-rouge">hit_p</code> and the world-space <code class="language-plaintext highlighter-rouge">w_in</code>, setting the <code class="language-plaintext highlighter-rouge">Ray</code>'s <code class="language-plaintext highlighter-rouge">min_t</code> to <code class="language-plaintext highlighter-rouge">EPS_F</code> and <code class="language-plaintext highlighter-rouge">max_t</code> to <code class="language-plaintext highlighter-rouge">r.depth - 1</code>. This reflects the fact that we previously set the depth of the ray to the number of bounces specified on the command line, and here, our recursive call is decrementing the <code class="language-plaintext highlighter-rouge">depth</code> for each bounce we perform.
+
+Then, we check whether nodes in our BVH intersect the sample ray, and if so, we calculate
+- $$L_i$$: The recursive call to <code class="language-plaintext highlighter-rouge">at_least_one_bounce_radiance</code>, which will return to us the radiance from all later bounces.
+- $$\cos_j$$: The dot product between the surface normal of the intersection and the world-space units of the ray gives the cosine angle between the two unit vectors.
+
+Then, we accumulate into <code class="language-plaintext highlighter-rouge">L_out</code> the calculated $$(f_r * L_i * \cos_j) / pdf$$, returning <code class="language-plaintext highlighter-rouge">L_out</code>  at the end.
 
 Using global illumination (now a combination of direct and indirect illumination), we render the following images using 1024 sampels per pixel:
 <div align="center">
@@ -590,7 +573,47 @@ Using global illumination (now a combination of direct and indirect illumination
   </table>
 </div>
 
+### Direct v. Indirect Illumination
+For both ../dae/sky/CBspheres_lambertian.dae and ../dae/sky/CBbunny.dae, we've rendered direct illumination (0 and 1 bounce) versus indirect illumination (> 1 bounce) at 1024 samples per pixel. Note in particular that the 0 and 1 bounce illumination resembles what we did in [Part 3](/hw3.md#part-3-direct-illumination) for zero- and one-bounce illumination while indirect illumination is what we accounted for in [Part 4](/hw3.md#part-4-global-illumination). Interestingly, we can see light now hitting the ceiling in the indirect illumination only renders as the light has come out of the area light, bounced off to some other surface, and then bounced to illuminate the ceiling.
+
+<div align="center">
+  <table style="width:100%">
+  <colgroup>
+      <col width="50%" />
+      <col width="50%" />
+  </colgroup>
+  <tr>
+    <td align="center">
+      <img src="../assets/hw3/part4/task2_direct_illumination_spheres.png" width="100%"/>
+      <figcaption>../dae/sky/CBspheres_lambertian.dae, direct illumination (0 and 1 bounce)</figcaption>
+    </td>
+    <td align="center">
+      <img src="../assets/hw3/part4/task2_indirect_illumination_spheres.png" width="100%"/>
+      <figcaption>../dae/sky/CBspheres_lambertian.dae, indirect illumination (> 1 bounce)</figcaption>
+    </td>
+  </tr>
+  <tr>
+    <td align="center">
+      <img src="../assets/hw3/part4/task2_direct_illumination_bunny.png" width="100%"/>
+      <figcaption>../dae/sky/CBbunny.dae, direct illumination (0 and 1 bounce)</figcaption>
+    </td>
+    <td align="center">
+      <img src="../assets/hw3/part4/task2_indirect_illumination_bunny.png" width="100%"/>
+      <figcaption>../dae/sky/CBbunny.dae, indirect illumination (> 1 bounce)</figcaption>
+    </td>
+  </tr>
+  </table>
+</div>
+
 ### Adding Non-Accumulation Rendering
+In order to account for rendering non-accumulated bounces, we needed to utilize the <code class="language-plaintext highlighter-rouge">isAccumBounces</code> variable of the <code class="language-plaintext highlighter-rouge">PathTracer</code> class. Namely, we know that when <code class="language-plaintext highlighter-rouge">isAccumBounces</code> is false, we only want to add the outgoing light for the last bounce, and for all other bounces, return <code class="language-plaintext highlighter-rouge">Vector3D(0, 0, 0)</code>.
+
+To facilitate this, we updated two things, namely just instances where we add to <code class="language-plaintext highlighter-rouge">L_out</code>.
+- Instead of always adding <code class="language-plaintext highlighter-rouge">one_bounce_radiance</code> to <code class="language-plaintext highlighter-rouge">L_out</code>, we only call this when <code class="language-plaintext highlighter-rouge">isAccumBounces</code> is true or the depth of the ray is one (which means we've hit the last bounce).
+- Instead of accumulating to <code class="language-plaintext highlighter-rouge">L_out</code> (summing), we directly set <code class="language-plaintext highlighter-rouge">L_out</code> equal to $$(f_r * L_i * \cos_j) / pdf$$ if <code class="language-plaintext highlighter-rouge">isAccumBounces</code> is false since we don't want to accumulate the outgoing light, but instead, just return $$(f_r * L_i * \cos_j) / pdf$$, noting that $$L_i$$ is the output of our recursive call to <code class="language-plaintext highlighter-rouge">at_least_one_bounce_radiance</code>.
+
+Here, in two columns, we shown the output of ../dae/sky/CBbunny.dae sampled 1024 times per pixel, from the 0th to 5th bounce of light, where the left column accumulates the light (so <code class="language-plaintext highlighter-rouge">isAccumBouces</code> is true) while the right column does not accumulate the outgoing light and instead just shows the light from that specific bounce (<code class="language-plaintext highlighter-rouge">isAccumBounces</code> is false).
+
 <div align="center">
   <table style="width:100%">
   <colgroup>
@@ -654,13 +677,18 @@ Using global illumination (now a combination of direct and indirect illumination
     </td>
     <td align="center">
       <img src="../assets/hw3/part4/task2_m5noaccum.png" width="100%"/>
-      <figcaption>../dae/sky/CBbunny.dae, 5th bounce of light, no accumulationg</figcaption>
+      <figcaption>../dae/sky/CBbunny.dae, 5th bounce of light, no accumulation</figcaption>
     </td>
   </tr>
   </table>
 </div>
+Between the second and third bounce of light, we see that the image gets a lot darker overall (the bunny texture isn't as clear around its legs), however, it looks like the edges of the floor still retain some light. Overall, we can understand why because after the second bounce, it makes sense that the light has already dissapated. The decrease in intensity of outgoing light experienced here could also be due to the fact that the light could have also been absorbed by the bunny or the walls. In the second bounce, light that hit the ground would've hit the bottom side of the bunny, explaining why its legs were most likely illuminated. By the third bounce, the only really light areas with higher density of sharpened light seems to be near the edges of the floor in the back and a little halo under the bunny.
 
-Pick one scene and compare rendered views with various sample-per-pixel rates, including at least 1, 2, 4, 8, 16, 64, and 1024. Use 4 light rays.
+In contrast to purely rasterized images, we know that adding bounces and global illumination definitely impacts the realism of the image since we're now able to add complex shadows and diffuse shadows and colors more smoothly across images. Pure rasterization did not allow for the interaction of light within a scene, which meant that prior to our work here, in previous projects, we were unable to render anything out of a controlled setting--it was always just one item in empty space. Now, we have the ability to utilize lights in our staging and mimic shadows and perspective similarly how we perceive three-dimensional objects in real life. Pretty neat!
+
+### Pixel Sampling Rate Variation
+
+Next, we render ../dae/sky/CBbunny.dae at 4 light rays with various sample-per-pixel rates.
 <div align="center">
   <table style="width:100%">
   <colgroup>
@@ -706,9 +734,53 @@ Pick one scene and compare rendered views with various sample-per-pixel rates, i
   </table>
 </div>
 
+We see that as the pixel sampling rate increases, the bunny gets smoother, clearer, and less grainier: the perks of higher sampling rates!
+
 ### Task 3: Global Illumination with Russian Roulette
+TODO: explain additions for russian roulette
+
+Here we render ../dae/sky/CBbunny.dae with Russian Roulette with 1024 samples per pixel, setting the maximum ray depth set to 0, 1, 2, 3, 4, and 100.
+<div align="center">
+  <table style="width:100%">
+  <colgroup>
+      <col width="50%" />
+      <col width="50%" />
+  </colgroup>
+  <tr>
+    <td align="center">
+      <img src="../assets/hw3/part4/russian_bunny_0.png" width="100%"/>
+      <figcaption>.../dae/sky/CBbunny.dae, Russian Roulette rendering up to 0 0 bounce</figcaption>
+    </td>
+    <td align="center">
+      <img src="../assets/hw3/part4/russian_bunny_1.png" width="100%"/>
+      <figcaption>.../dae/sky/CBbunny.dae, Russian Roulette rendering up to 1 bounce</figcaption>
+    </td>
+  </tr>
+  <tr>
+    <td align="center">
+      <img src="../assets/hw3/part4/russian_bunny_2.png" width="100%"/>
+      <figcaption>.../dae/sky/CBbunny.dae, Russian Roulette rendering up to 2 bounces</figcaption>
+    </td>
+    <td align="center">
+      <img src="../assets/hw3/part4/russian_bunny_3.png" width="100%"/>
+      <figcaption>.../dae/sky/CBbunny.dae, Russian Roulette rendering up to 3 bounces</figcaption>
+    </td>
+  </tr>
+  <tr>
+    <td align="center">
+      <img src="../assets/hw3/part4/russian_bunny_4.png" width="100%"/>
+      <figcaption>.../dae/sky/CBbunny.dae, Russian Roulette rendering up to 4 bounces</figcaption>
+    </td>
+    <td align="center">
+      <img src="../assets/hw3/part4/russian_bunny_100.png" width="100%"/>
+      <figcaption>.../dae/sky/CBbunny.dae, Russian Roulette rendering up to 100 bounces</figcaption>
+    </td>
+  </tr>
+  </table>
+</div>
 
 ## Part 5: Adaptive Sampling
+TODO
 
 ## Contributors
 Edward Park, Ashley Chiu
