@@ -12,12 +12,14 @@ This assignment has not been completed yet.
 site: [https://cal-cs184-student.github.io/hw-webpages-sp24-ashmchiu/hw3/](https://cal-cs184-student.github.io/hw-webpages-sp24-ashmchiu/hw3/)
 
 ## Overview
+This homework began with generating rays and performing primitive intersections, in which we learned how to convert between camera space and world space, generated samples and intersected rays with triangles and spheres. This allowed us to progress to the next step, dealing with bounding volume hierarchies where we could greatly increase the speed of our work. By splitting primitives into BVH nodes, we no longer had to naively intersect the ray with each primitive and instead, test on broader bounding boxes--and wrap this all into one larger intersection method that was able to determine the nearest intersection for a ray within a BVH. Once our BVH was working, we could move onto direct illumination! Direct illumination, involving zero- and one-bounce illumination, allows us to show the direct emission from lights and render one-bounce illumination with uniform hemisphere sampling and importance sampling with lights. With direct illumination complete, we moved into global illumination, first writing a method to implement indirect illumination (all outgoing light past the first bounce in ray tracing). We also implemented Russian Roulette-style random termination, noting that this made previously infeasible renderings now possible by randomly terminating the recursive tracing. Finally, in an effort to dynamically determine how many times we need to sample a pixel, we implemented adaptive sampling, which, with the ability to calculate which pixels took longer to converge, would spend more samples on those difficult to render (or important) locations and sample less on those that converged faster. 
 
-TODO: TEST TEST TEST $a^2 + b^2 = c^2$
+We found it interesting how now, beyond just pure two-dimensional and three-dimensional work, we now were able to show how light interacts with a scene. The difference between direct and indirect lighting was particularly illuminating: prior to learning about the Monte Carlo estimations and how multi-bounce inverse paths worked, we never thought about how light could bounce back and forth between surfaces, actually lightening areas that smoothed out shadows. It's been really rewarding to be able to render realistically lit scenes as opposed to the pure rasterizations we previously performed for two-dimensional shapes in [Homework 1](/hw1.md) and smooth meshes in [Homework 2](/hw2.md). Our images are no longer purely of one two- or three-dimensional object, but rather a more realistic interaction of lights and textures.
 
-$$
-x = \frac{-b \pm \sqrt{b^2 - 4ac}}{2a}
-$$
+A few difficult debugging journeys we crossed were:
+- [Part 2 Task 1](/hw3.md#task-1-constructing-the-bvh): we originally initialized two new vectors of <code class="language-plaintext highlighter-rouge">Primitive *</code>s, but the memory management here was difficult as we debugged and learned that the relative addressing wasn't working the way it was. We eventually stumbled upon the <code class="language-plaintext highlighter-rouge">std::stable_partition</code> method that luckily worked on <code class="language-plaintext highlighter-rouge">std::vector</code>s, and this not only worked, but simplified a lot of the code we were originally had to traverse through the list of <code class="language-plaintext highlighter-rouge">Primitive *</code>s. The only difficulty was coming up with the syntax for the lambda function to split the groups--we hadn't worked with lambda functions in C++ yet, so we had to learn to capture variables by reference if they weren't going to be parameters into our lambda function.
+- [Part 3 Task 3](/hw3.md#task-3-direct-lighting-with-uniform-hemisphere-sampling): We ran into a problem where our zero-bounce (<code class="language-plaintext highlighter-rouge">get_emission)</code> was always returning <code class="language-plaintext highlighter-rouge">Vector3D(0, 0, 0)</code>. We spent a while debugging this only to learn that our <code class="language-plaintext highlighter-rouge">Intersection</code> object had the same name, <code class="language-plaintext highlighter-rouge">isect</code>, as the <code class="language-plaintext highlighter-rouge">Intersection</code> passed in. Lesson learned to keep track of accidentally overwriting variables :')
+- [Part 4 Task 2](/hw3.md#adding-non-accumulation-rendering): Namely, to add non-accumulated rendering, we were having trouble with outgoing light from previous bounces still showing up in our renders. We originally we believed we always needed <code class="language-plaintext highlighter-rouge">one_bounce_radiance</code> to be called to simulate the bounce, but we realized that we only needed to ensure that in our <code class="language-plaintext highlighter-rouge">L_out</code> calculation to not accumulate: we didn't need to call <code class="language-plaintext highlighter-rouge">one_bounce_radiance</code> unless it was the last bounce we were performing--and that was the <code class="language-plaintext highlighter-rouge">L_out</code> we returned.
 
 ## Part 1: Ray Generation and Scene Intersection
 Let's utilize [Task 1](/hw3.md#task-1-generating-camera-rays) and [Task 2](/hw3.md#task-2-generation-pixel-samples) to discuss the ray generation and primitive intersection parts of the rendering pipeline. We will also explain primitive intersections and sphere intersections in [Task 4](/hw3.md#task-4-ray-sphere-intersection).
@@ -35,7 +37,6 @@ Then, to set our range for the clipping planes, we utilized <code class="languag
 Then, now that we've generated our camera rays in world space, we now need to generate pixel samples!
 
 We generate <code class="language-plaintext highlighter-rouge">ns_aa</code> random samples within the pixel, ensuring to normalize these coordinates. Then, we call <code class="language-plaintext highlighter-rouge">camera->generate_ray</code>, passing in these normalized <code class="language-plaintext highlighter-rouge">(x, y)</code> coordinates, and then estimate the radiance by calling <code class="language-plaintext highlighter-rouge">est_radiance_global_illumination</code>. Finally, once we've generated these <code class="language-plaintext highlighter-rouge">ns_aa</code> samples, we can average out the pixel color, and then update the <code class="language-plaintext highlighter-rouge">sampleBuffer</code> by calling <code class="language-plaintext highlighter-rouge">update_pixel</code> with that color.
-
 
 ### Task 3: Ray-Triangle Intersection
 In order to implement our ray-triangle intersection algorithm, we had to modify the <code class="language-plaintext highlighter-rouge">Triangle::has_intersection</code> and <code class="language-plaintext highlighter-rouge">Triangle::intersect</code> methods. We created a helper function, <code class="language-plaintext highlighter-rouge">Triangle::test</code>, to match the code structure of the ray-sphere intersection, as well as to avoid rewriting code. Our overall strategy was to use the Möller-Trumbore intersection algorithm depicted in lecture.
@@ -371,13 +372,13 @@ Iterating through a total of <code class="language-plaintext highlighter-rouge">
 
 Then, creating an <code class="language-plaintext highlighter-rouge">Intersection</code>, we checked whether the bounding volume hierarchy intersected the sampled <code class="language-plaintext highlighter-rouge">Ray</code> by calling the <code class="language-plaintext highlighter-rouge">intersect</code> function from [Part 2 Task 3](/hw3.md#task-3-intersecting-the-bvh).
 
-If there was an intersection from calling <code class="language-plaintext highlighter-rouge">intersect</code>, then we calculated the $$f_r$$, $$L_i$$, $$\cos_j$$, and $$pdf$$ to compute the reflection equation to get the outgoing lighting from this intersection.
+If there was an intersection from calling <code class="language-plaintext highlighter-rouge">intersect</code>, then we calculated the $$f_r$$, $$L_i$$, $$\cos_j$$, and $$\text{pdf}$$ to compute the reflection equation to get the outgoing lighting from this intersection.
 - $$f_r$$: We call the function we wrote in [Task 1](/hw3.md#task-1-diffuse-bsdf) to calculate the BSDF.
 - $$L_i$$: The incoming light is given by the emission of the intersection's BSDF.
 - $$\cos_j$$: The dot product between the surface normal of the intersection and the world-space units of the ray gives the cosine angle between the two unit vectors.
-- $$pdf$$: our pdf for hemisphere sampling is $$1 / (2 * \pi)$$ because the surface area for a unit sphere is $$4 \pi * r^2 = 4 \pi * 1^2 = 4 \pi$$, and hence, the surface area for a unit hemisphere is $$2 \pi$$, so the probability of sampling any point uniformly is $$1 \ (2 * \pi)$$.
+- $$\text{pdf}$$: Our pdf for hemisphere sampling is $$1 / (2 * \pi)$$ because the surface area for a unit sphere is $$4 \pi * r^2 = 4 \pi * 1^2 = 4 \pi$$, and hence, the surface area for a unit hemisphere is $$2 \pi$$, so the probability of sampling any point uniformly is $$1 \ (2 * \pi)$$.
 
-Given these values, for each sample <code class="language-plaintext highlighter-rouge">Ray</code>, when an intersection existed, we added $$(f_r * L_i * \cos_j) / pdf$$ to our <code class="language-plaintext highlighter-rouge">L_out</code> value.
+Given these values, for each sample <code class="language-plaintext highlighter-rouge">Ray</code>, when an intersection existed, we added $$(f_r * L_i * \cos_j) / \text{pdf}$$ to our <code class="language-plaintext highlighter-rouge">L_out</code> value.
 
 Finally, after performing <code class="language-plaintext highlighter-rouge">num_sample</code> samples, we normalized the outgoing light, <code class="language-plaintext highlighter-rouge">L_out</code>, by dividing by <code class="language-plaintext highlighter-rouge">num_samples</code>, returning this final <code class="language-plaintext highlighter-rouge">L_out</code>.
 
@@ -411,11 +412,11 @@ We then utilized the resulting world-space incoming light vector and the <code c
 
 Then, creating an <code class="language-plaintext highlighter-rouge">Intersection</code>, we checked whether the bounding volume hierarchy intersected the sampled <code class="language-plaintext highlighter-rouge">Ray</code> by calling the <code class="language-plaintext highlighter-rouge">intersect</code> function from [Part 2 Task 3](/hw3.md#task-3-intersecting-the-bvh).
 
-If there wasn't an intersection from calling <code class="language-plaintext highlighter-rouge">intersect</code>, then we calculated the $$f_r$$ and $$pdf$$ (since the $$L_i$$ was returned from <code class="language-plaintext highlighter-rouge">sample_L</code> and the $$pdf$$ was populated from <code class="language-plaintext highlighter-rouge">sample_L</code>) to compute the reflection equation to get the outgoing lighting from this intersection. We note this difference from [Task 3](/hw3.md#task-3-direct-lighting-with-uniform-hemisphere-sampling) since we are only calculating if there wasn't an intersection since this means that the light source was not obstructed and thus, would actually hit this hit point. If there was an intersection, then we wouldn't actually want to illuminate this hit point because another object intersected with it first.
+If there wasn't an intersection from calling <code class="language-plaintext highlighter-rouge">intersect</code>, then we calculated the $$f_r$$ and $$\text{pdf}$$ (since the $$L_i$$ was returned from <code class="language-plaintext highlighter-rouge">sample_L</code> and the $$\text{pdf}$$ was populated from <code class="language-plaintext highlighter-rouge">sample_L</code>) to compute the reflection equation to get the outgoing lighting from this intersection. We note this difference from [Task 3](/hw3.md#task-3-direct-lighting-with-uniform-hemisphere-sampling) since we are only calculating if there wasn't an intersection since this means that the light source was not obstructed and thus, would actually hit this hit point. If there was an intersection, then we wouldn't actually want to illuminate this hit point because another object intersected with it first.
 - $$f_r$$: We call the function we wrote in [Task 1](/hw3.md#task-1-diffuse-bsdf) to calculate the BSDF.
 - $$\cos_j$$: The dot product between the surface normal of the intersection and the world-space units of the ray gives the cosine angle between the two unit vectors.
 
-Given these values, for each sample <code class="language-plaintext highlighter-rouge">Ray</code>, when an intersection existed, we added $$(f_r * L_i * \cos_j) / pdf$$ to our <code class="language-plaintext highlighter-rouge">L_out</code> value.
+Given these values, for each sample <code class="language-plaintext highlighter-rouge">Ray</code>, when an intersection existed, we added $$(f_r * L_i * \cos_j) / \text{pdf}$$ to our <code class="language-plaintext highlighter-rouge">L_out</code> value.
 
 Finally, after performing <code class="language-plaintext highlighter-rouge">num_sample</code> samples per light in <code class="language-plaintext highlighter-rouge">scene->lights</code> (or 1 if the light was an area light), we normalized the outgoing light, <code class="language-plaintext highlighter-rouge">L_out</code>, by dividing by <code class="language-plaintext highlighter-rouge">num_samples</code>, adding this outgoing light through this light to our desired outgoing light <code class="language-plaintext highlighter-rouge">L_out</code>. After aggregating across all the lights, we would return this final <code class="language-plaintext highlighter-rouge">L_out</code>.
 
@@ -541,7 +542,7 @@ Then, we check whether nodes in our BVH intersect the sample ray, and if so, we 
 - $$L_i$$: The recursive call to <code class="language-plaintext highlighter-rouge">at_least_one_bounce_radiance</code>, which will return to us the radiance from all later bounces.
 - $$\cos_j$$: The dot product between the surface normal of the intersection and the world-space units of the ray gives the cosine angle between the two unit vectors.
 
-Then, we accumulate into <code class="language-plaintext highlighter-rouge">L_out</code> the calculated $$(f_r * L_i * \cos_j) / pdf$$, returning <code class="language-plaintext highlighter-rouge">L_out</code>  at the end.
+Then, we accumulate into <code class="language-plaintext highlighter-rouge">L_out</code> the calculated $$(f_r * L_i * \cos_j) / \text{pdf}$$, returning <code class="language-plaintext highlighter-rouge">L_out</code>  at the end.
 
 Using global illumination (now a combination of direct and indirect illumination), we render the following images using 1024 sampels per pixel:
 <div align="center">
@@ -610,7 +611,7 @@ In order to account for rendering non-accumulated bounces, we needed to utilize 
 
 To facilitate this, we updated two things, namely just instances where we add to <code class="language-plaintext highlighter-rouge">L_out</code>.
 - Instead of always adding <code class="language-plaintext highlighter-rouge">one_bounce_radiance</code> to <code class="language-plaintext highlighter-rouge">L_out</code>, we only call this when <code class="language-plaintext highlighter-rouge">isAccumBounces</code> is true or the depth of the ray is one (which means we've hit the last bounce).
-- Instead of accumulating to <code class="language-plaintext highlighter-rouge">L_out</code> (summing), we directly set <code class="language-plaintext highlighter-rouge">L_out</code> equal to $$(f_r * L_i * \cos_j) / pdf$$ if <code class="language-plaintext highlighter-rouge">isAccumBounces</code> is false since we don't want to accumulate the outgoing light, but instead, just return $$(f_r * L_i * \cos_j) / pdf$$, noting that $$L_i$$ is the output of our recursive call to <code class="language-plaintext highlighter-rouge">at_least_one_bounce_radiance</code>.
+- Instead of accumulating to <code class="language-plaintext highlighter-rouge">L_out</code> (summing), we directly set <code class="language-plaintext highlighter-rouge">L_out</code> equal to $$(f_r * L_i * \cos_j) / \text{pdf}$$ if <code class="language-plaintext highlighter-rouge">isAccumBounces</code> is false since we don't want to accumulate the outgoing light, but instead, just return $$(f_r * L_i * \cos_j) / \text{pdf}$$, noting that $$L_i$$ is the output of our recursive call to <code class="language-plaintext highlighter-rouge">at_least_one_bounce_radiance</code>.
 
 Here, in two columns, we shown the output of ../dae/sky/CBbunny.dae sampled 1024 times per pixel, from the 0th to 5th bounce of light, where the left column accumulates the light (so <code class="language-plaintext highlighter-rouge">isAccumBouces</code> is true) while the right column does not accumulate the outgoing light and instead just shows the light from that specific bounce (<code class="language-plaintext highlighter-rouge">isAccumBounces</code> is false).
 
@@ -737,7 +738,9 @@ Next, we render ../dae/sky/CBbunny.dae at 4 light rays with various sample-per-p
 We see that as the pixel sampling rate increases, the bunny gets smoother, clearer, and less grainier: the perks of higher sampling rates!
 
 ### Task 3: Global Illumination with Russian Roulette
-TODO: explain additions for russian roulette
+The intention behind Russian Roulette is to allow for unbiased random termination in our recursive model for modeling outgoing light at different bounces. In an ideal world, we would be able to continuously recurse for high depth renders, however, Russian Roulette allows you to probabilistically choose, at each step, whether to stop the recursion or not. This makes previously computationally infeasible renders that would take (down) horrendous amounts of time now feasible.
+
+To implement Russian Roulette random termination in <code class="language-plaintext highlighter-rouge">at_least_one_bounce_radiance</code>, we decided on a termination probability of 0.3. Then, when we need to make a recursive call (so when <code class="language-plaintext highlighter-rouge">r.depth > 1</code>), then we take a <code class="language-plaintext highlighter-rouge">coin_flip</code>, passing in the probability of <code class="language-plaintext highlighter-rouge">0.7</code> since we want a termination probability of 0.3. Then, only if the <code class="language-plaintext highlighter-rouge">coin_flip</code> returns true or if the depth of the ray is equal to the maximum ray depth, then we will recurse. We have the second condition since we note that if <code class="language-plaintext highlighter-rouge">max_ray_depth > 1</code>, we need to at least trace one indirect ray bounce (hence, we must recurse at least once).
 
 Here we render ../dae/sky/CBbunny.dae with Russian Roulette with 1024 samples per pixel, setting the maximum ray depth set to 0, 1, 2, 3, 4, and 100.
 <div align="center">
@@ -749,7 +752,7 @@ Here we render ../dae/sky/CBbunny.dae with Russian Roulette with 1024 samples pe
   <tr>
     <td align="center">
       <img src="../assets/hw3/part4/russian_bunny_0.png" width="100%"/>
-      <figcaption>.../dae/sky/CBbunny.dae, Russian Roulette rendering up to 0 0 bounce</figcaption>
+      <figcaption>.../dae/sky/CBbunny.dae, Russian Roulette rendering up to 0 bounce</figcaption>
     </td>
     <td align="center">
       <img src="../assets/hw3/part4/russian_bunny_1.png" width="100%"/>
@@ -779,10 +782,75 @@ Here we render ../dae/sky/CBbunny.dae with Russian Roulette with 1024 samples pe
   </table>
 </div>
 
+With Russian Roulette work, we note that similar to previous renders, the images get brighter (more illuminated) with maximum ray depth. This makes sense with our light accumulation renders [above](/hw3.md#adding-non-accumulation-rendering). However, we note that between a maximum ray depth of 4 and a maximum ray depth of 100, there isn't that big of a difference between the images. We note this probably is due to the fact that with Russian Roulette random termination, the image rendered with a maximum ray depth of 100 most likely did not reach up to 100 levels of bounces, with a termination probability of 0.3 at each level of recursion.
+
 ## Part 5: Adaptive Sampling
-TODO
+Path tracing via Monte Carlo estimation is powerful, but now, we want to solve the problem of having noise in our images: thus, we now move towards adaptive sampling, which takes a high number of samples per pixel, but concentrates samples in areas that are more difficult to render, namely, reducing the number of samplesfor pixels that converge quickly.
+
+Our implementation of adaptive sampling first has us defining our  <code class="language-plaintext highlighter-rouge">num_samples</code> to be  <code class="language-plaintext highlighter-rouge">ns_aa</code> and an origin vector to represent the bottom left corner of the pixel. Then, we define two doubles <code class="language-plaintext highlighter-rouge">s1</code> and <code class="language-plaintext highlighter-rouge">s2</code> to keep track of the sum of illuminances and the sum of squared illuminances respectively.
+
+Iterating through <code class="language-plaintext highlighter-rouge">num_samples</code> times, we first check whether our index <code class="language-plaintext highlighter-rouge">i</code> is now a multiple of <code class="language-plaintext highlighter-rouge">samplesPerBatch</code>, and if so, we want to perform a convergence check.
+
+Our convergence check composes of defining a mean <code class="language-plaintext highlighter-rouge">mu</code>, equal to <code class="language-plaintext highlighter-rouge">s1 / i</code>. We also defined the variance <code class="language-plaintext highlighter-rouge">sigma_squared</code>, equal to <code class="language-plaintext highlighter-rouge">(s2 - (s1 * s1) / i) / (i - 1)</code>. Given this, we want to calculate $$I = 1.96 \cdot \frac{\sigma}{\sqrt{n}}$$ to measure the pixel's convergence. We calculate <code class="language-plaintext highlighter-rouge">i = 1.96 * sqrt(sigma_squared / i)</code>. Knowing our <code class="language-plaintext highlighter-rouge">i</code>, we know that if $$I \leq maxTolerance \cdot \mu$$, then we can assume the pixel has converged, so we can stop tracing more rays. Thus, we set the <code class="language-plaintext highlighter-rouge">num_samples</code> equal to our current index <code class="language-plaintext highlighter-rouge">i</code> and break out of our loop.
+
+However, if the pixel has not yet converged, then we get a sample from the grid and normalize the sample within the pixel. From there, we generate a <code class="language-plaintext highlighter-rouge">Ray</code> and set a <code class="language-plaintext highlighter-rouge">sample_radiance</code> by calling <code class="language-plaintext highlighter-rouge">est_radiance_global_illumination</code>, adding that to our overal pixel's value (radiance). Then, we sample the illuminance from <code class="language-plaintext highlighter-rouge">sample_radiance</code>, adding that value to <code class="language-plaintext highlighter-rouge">s1</code> and adding its square to <code class="language-plaintext highlighter-rouge">s2</code>.
+
+Outside, once we've completed the iteration, we normalize the pixel's average radiance by dividing by the number of samples we actually took, saving this value into our <code class="language-plaintext highlighter-rouge">sampleCountBuffer</code>, and finally call <code class="language-plaintext highlighter-rouge">update_pixel</code>, unmodified from our original code from [Part 1 Task 2](/hw3.md#task-2-generation-pixel-samples).
+
+Running <code class="language-plaintext highlighter-rouge">./pathtracer -t 8 -s 2048 -a 64 0.05 -l 1 -m 5 -r 480 360 -f {filename}.png ../dae/sky/{filename}.dae</code> shows the impact of adaptive sampling. We show on the left, the actual image rendered alongside the image on the right that shows the sample rate of every pixel. We note that red and blue colors represent high and low sampling rates respectively, where sample rates are the ratio between the actual number of samples taken (so our ending <code class="language-plaintext highlighter-rouge">num_samples</code>, depending on whether we converged early) and the maximum number of samples allowed (here, 2048).
+
+<div align="center">
+  <table style="width:100%">
+  <colgroup>
+      <col width="50%" />
+      <col width="50%" />
+  </colgroup>
+  <tr>
+    <td align="center">
+      <img src="../assets/hw3/part5/bunny.png" width="100%"/>
+      <figcaption>.../dae/sky/CBbunny.dae, adaptive sampling image</figcaption>
+    </td>
+    <td align="center">
+      <img src="../assets/hw3/part5/bunny_rate.png" width="100%"/>
+      <figcaption>.../dae/sky/CBbunny.dae, sample rate per pixel</figcaption>
+    </td>
+  </tr>
+  <tr>
+    <td align="center">
+      <img src="../assets/hw3/part5/spheres.png" width="100%"/>
+      <figcaption>.../dae/sky/CBspheres_lambertian.dae, adaptive sampling image</figcaption>
+    </td>
+    <td align="center">
+      <img src="../assets/hw3/part5/spheres_rate.png" width="100%"/>
+      <figcaption>.../dae/sky/CBspheres_lambertian.dae, sample rate per pixel</figcaption>
+    </td>
+  </tr>
+  <tr>
+    <td align="center">
+      <img src="../assets/hw3/part5/dragon.png" width="100%"/>
+      <figcaption>.../dae/sky/dragon.dae, adaptive sampling image</figcaption>
+    </td>
+    <td align="center">
+      <img src="../assets/hw3/part5/dragon_rate.png" width="100%"/>
+      <figcaption>.../dae/sky/dragon.dae, sample rate per pixel</figcaption>
+    </td>
+  </tr>
+  <tr>
+    <td align="center">
+      <img src="../assets/hw3/part5/blob.png" width="100%"/>
+      <figcaption>.../dae/sky/blob.dae, adaptive sampling image</figcaption>
+    </td>
+    <td align="center">
+      <img src="../assets/hw3/part5/blob_rate.png" width="100%"/>
+      <figcaption>.../dae/sky/blob.dae, sample rate per pixel</figcaption>
+    </td>
+  </tr>
+  </table>
+</div>
+
+For instance, if we take a look at the bunny, we see that the area around the bunny's lower body and ear have a higher sampling rate. This makes sense with the final rendered result since that area is rather bumpy with texture.
 
 ## Contributors
 Edward Park, Ashley Chiu
 
-TODO: At the end, if you worked with a partner, please write a short paragraph together for your final report that describes how you collaborated, how it went, and what you learned.
+This project was difficult to execute and coordinate with the conceptual complexity and large codebase to work with. However, we were able to divide out the work well and debug together when needed. We mostly worked asynchronously and kept each other up on what progress we'd made, however, we did work together in person for [Part 2 Task 1](/hw3.md#task-1-constructing-the-bvh) and to debug [Part 3 Task 3](/hw3.md#task-3-direct-lighting-with-uniform-hemisphere-sampling). In general, this collaboration worked for us since we were able to work when we had the time, but still discuss problems that were difficult to debug. Throughout the project, we not only learned about how to represent light within images, how ray tracing is implemented, and how lights interact with surfaces, but furthermore, how to document our code well and communicate blockers. We also learned which computers had the fastest compute power and were able to render images faster, and which laptops had issues rendering larger images or would run out of memory (we had to deal with memory management to resolve this).
