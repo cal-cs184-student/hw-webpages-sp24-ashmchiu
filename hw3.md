@@ -5,10 +5,6 @@ has_right_toc: true
 usemathjax: true
 ---
 
-<p class="warning-message">
-This assignment has not been completed yet.
-</p>
-
 site: [https://cal-cs184-student.github.io/hw-webpages-sp24-ashmchiu/hw3/](https://cal-cs184-student.github.io/hw-webpages-sp24-ashmchiu/hw3/)
 
 ## Overview
@@ -605,6 +601,8 @@ For both ../dae/sky/CBspheres_lambertian.dae and ../dae/sky/CBbunny.dae, we've r
   </tr>
   </table>
 </div>
+
+These were probably the prettiest and most interesting images to render: in the indirect images, we can see that there's somewhat of a soft glow around the sphere and bunny. It's quite satisfiying!
 
 ### Adding Non-Accumulation Rendering
 In order to account for rendering non-accumulated bounces, we needed to utilize the <code class="language-plaintext highlighter-rouge">isAccumBounces</code> variable of the <code class="language-plaintext highlighter-rouge">PathTracer</code> class. Namely, we know that when <code class="language-plaintext highlighter-rouge">isAccumBounces</code> is false, we only want to add the outgoing light for the last bounce, and for all other bounces, return <code class="language-plaintext highlighter-rouge">Vector3D(0, 0, 0)</code>.
