@@ -14,7 +14,7 @@ We found it interesting how now, beyond just pure two-dimensional and three-dime
 
 A few difficult debugging journeys we crossed were:
 - [Part 2 Task 1](/hw3.md#task-1-constructing-the-bvh): we originally initialized two new vectors of <code class="language-plaintext highlighter-rouge">Primitive *</code>s, but the memory management here was difficult as we debugged and learned that the relative addressing wasn't working the way it was. We eventually stumbled upon the <code class="language-plaintext highlighter-rouge">std::stable_partition</code> method that luckily worked on <code class="language-plaintext highlighter-rouge">std::vector</code>s, and this not only worked, but simplified a lot of the code we were originally had to traverse through the list of <code class="language-plaintext highlighter-rouge">Primitive *</code>s. The only difficulty was coming up with the syntax for the lambda function to split the groups--we hadn't worked with lambda functions in C++ yet, so we had to learn to capture variables by reference if they weren't going to be parameters into our lambda function.
-- [Part 3 Task 3](/hw3.md#task-3-direct-lighting-with-uniform-hemisphere-sampling): We ran into a problem where our zero-bounce (<code class="language-plaintext highlighter-rouge">get_emission)</code> was always returning <code class="language-plaintext highlighter-rouge">Vector3D(0, 0, 0)</code>. We spent a while debugging this only to learn that our <code class="language-plaintext highlighter-rouge">Intersection</code> object had the same name, <code class="language-plaintext highlighter-rouge">isect</code>, as the <code class="language-plaintext highlighter-rouge">Intersection</code> passed in. Lesson learned to keep track of accidentally overwriting variables :')
+- [Part 3 Task 3](/hw3.md#task-3-direct-lighting-with-uniform-hemisphere-sampling): We initially thought that our issue was that our zero-bounce (<code class="language-plaintext highlighter-rouge">get_emission</code>) was always returning <code class="language-plaintext highlighter-rouge">Vector3D(0, 0, 0)</code>. We spent a while debugging this, only to learn that we had accidentally overridden the <code class="language-plaintext highlighter-rouge">Intersection</code> parameter with another <code class="language-plaintext highlighter-rouge">Intersection</code> variable of the same name, <code class="language-plaintext highlighter-rouge">isect</code>. Lesson learned to keep track of accidentally overwriting variables :')
 - [Part 4 Task 2](/hw3.md#adding-non-accumulation-rendering): Namely, to add non-accumulated rendering, we were having trouble with outgoing light from previous bounces still showing up in our renders. We originally we believed we always needed <code class="language-plaintext highlighter-rouge">one_bounce_radiance</code> to be called to simulate the bounce, but we realized that we only needed to ensure that in our <code class="language-plaintext highlighter-rouge">L_out</code> calculation to not accumulate: we didn't need to call <code class="language-plaintext highlighter-rouge">one_bounce_radiance</code> unless it was the last bounce we were performing--and that was the <code class="language-plaintext highlighter-rouge">L_out</code> we returned.
 
 ## Part 1: Ray Generation and Scene Intersection
@@ -39,7 +39,7 @@ In order to implement our ray-triangle intersection algorithm, we had to modify 
 
 Our <code class="language-plaintext highlighter-rouge">Triangle::has_intersection</code> method allows us to <code class="language-plaintext highlighter-rouge">test</code> whether a given ray <code class="language-plaintext highlighter-rouge">r</code> intersects a triangle and if so, updates the <code class="language-plaintext highlighter-rouge">t</code>, <code class="language-plaintext highlighter-rouge">u</code>, and <code class="language-plaintext highlighter-rouge">v</code> passed in.
 
-To do so, we first check whether the ray and the plane the triangle lies on is parallel by determining whether the dot product between the two gives 0. If so, we return false (since a parallel ray and plane will never intersect). Then, we calculate <code class="language-plaintext highlighter-rouge">t</code>, <code class="language-plaintext highlighter-rouge">u</code>, and <code class="language-plaintext highlighter-rouge">v</code>. We calculate 
+To do so, we first check whether the ray and the plane the triangle lies on is parallel by determining whether the dot product between the two gives 0. If so, we return false (since a parallel ray and plane will never intersect). Then, we calculate <code class="language-plaintext highlighter-rouge">t</code>, <code class="language-plaintext highlighter-rouge">u</code>, and <code class="language-plaintext highlighter-rouge">v</code>. Given the triangle vertices $p_1$, $p_2$, and $p_3$, we calculate 
 1. the cross product between the direction of the ray and $p_3 - p_1$
 2. the cross product between the difference between the origin of the ray and $p_1$, and the difference between $p_2 - p_1$.
 
@@ -62,7 +62,7 @@ After completing Task 3, our output for <code class="language-plaintext highligh
     <tr>
       <td align="center">
         <img src="../assets/hw3/part1/task3_1.png" width="400px"/>
-        <figcaption>sky/CBempty.dae with normal shading</figcaption>
+        <figcaption>../dae/sky/CBempty.dae with normal shading</figcaption>
       </td>
     </tr>
   </table>
@@ -84,7 +84,7 @@ From here, we calculate the determinant by taking
 (3)^2 - 4 * (2) * (4)
 {% endhighlight %}
 
-If we reached this step, we know that the ray and the sphere do intersect. Now, we take the square root of the determinant and select the closest <code class="language-plaintext highlighter-rouge">t</code> that still lies between <code class="language-plaintext highlighter-rouge">min_t</code> and <code class="language-plaintext highlighter-rouge">max_t</code>, using the quadratic formula to determine the candidate's time of intersection.
+If the determinant is negative, we know that the ray and the sphere do not intersect, and we can return false. If the determinant is non-negative, we take the square root of the determinant and select the closest <code class="language-plaintext highlighter-rouge">t</code> that still lies between <code class="language-plaintext highlighter-rouge">min_t</code> and <code class="language-plaintext highlighter-rouge">max_t</code>, using the quadratic formula to determine the candidate's time of intersection.
 
 After calculating and ensuring that the minimally valid <code class="language-plaintext highlighter-rouge">t</code> candidate was selected (by ensuring that only intersections of <code class="language-plaintext highlighter-rouge">0</code> $\leq$ <code class="language-plaintext highlighter-rouge">min_t</code> $\leq$ <code class="language-plaintext highlighter-rouge">t</code> $\leq$ <code class="language-plaintext highlighter-rouge">max_t</code> are valid), we update <code class="language-plaintext highlighter-rouge">max_t</code> like desired to be the chosen candidate.
 
@@ -96,7 +96,24 @@ After completing Task 4, our output for <code class="language-plaintext highligh
     <tr>
       <td align="center">
         <img src="../assets/hw3/part1/task4_1.png" width="400px"/>
-        <figcaption>sky/CBspheres_lambertian.dae with normal shading</figcaption>
+        <figcaption>../dae/sky/CBspheres_lambertian.dae with normal shading</figcaption>
+      </td>
+    </tr>
+  </table>
+</div>
+
+Here are a few more rendered images with normal shading
+
+<div align="center">
+  <table style="width:100%">
+    <tr>
+      <td align="center">
+        <img src="../assets/hw3/part1/bench.png" width="100%"/>
+        <figcaption>../dae/sky/bench.dae with normal shading</figcaption>
+      </td>
+      <td align="center">
+        <img src="../assets/hw3/part1/cbgems.png" width="100%"/>
+        <figcaption>../dae/sky/CBgems.dae with normal shading</figcaption>
       </td>
     </tr>
   </table>
@@ -105,16 +122,16 @@ After completing Task 4, our output for <code class="language-plaintext highligh
 ## Part 2: Bounding Volume Hierarchy
 In this part of the homework, we want to implement bounding volume hierarchy (BVH) such that we can speed up the rendering of our path tracer.
 
-We will utilize [Task 1](/hw3.md#task-1-constructing-the-bvh), [Task 2](/hw3.md#task-2-intersecting-the-bounding-box), and [Task 3](/hw3.md#task-3-intersecting-the-bvh) to demonstrate our BVH construction algorithm. Within [Task 1](/hw3.md#task-1-constructing-the-bvh), we will explain the heuristic you choose for picking the splitting point.
+We will utilize [Task 1](/hw3.md#task-1-constructing-the-bvh), [Task 2](/hw3.md#task-2-intersecting-the-bounding-box), and [Task 3](/hw3.md#task-3-intersecting-the-bvh) to demonstrate our BVH construction algorithm. Within [Task 1](/hw3.md#task-1-constructing-the-bvh), we will explain the heuristic we choose for picking the splitting point.
 
 ### Task 1: Constructing the BVH
 In <code class="language-plaintext highlighter-rouge">BVHAccel::construct_bvh</code>, we first generate the outermost bounding box. We iterate through the primitives passed in, and expand (union) that bounding box with our current one. 
 
 If the number of primitives is less than or equal to the <code class="language-plaintext highlighter-rouge">max_leaf_size</code>, we create a new <code class="language-plaintext highlighter-rouge">BVHNode</code>, initializing its <code class="language-plaintext highlighter-rouge">start</code> and <code class="language-plaintext highlighter-rouge">end</code> to be the start and end of the primitives and return.
 
-If not, we need to recurse. In doing so, we will need to first determine the split point and axis selection to split up our bounding volume hierarchy spatially. In reading [this paper](https://pbr-book.org/3ed-2018/Primitives_and_Intersection_Acceleration/Bounding_Volume_Hierarchies), we decided to first compute the average centroid across all the primitives. Then, we take the extent of the resulting <code class="language-plaintext highlighter-rouge">bbox</code>, which is a vector from opposing vertices of the box (creating a diagonal across the interior of the box). We determine which axis has the longest extent and use that as the axis to split on. 
+If not, we need to recurse. In doing so, we will need to first determine the split point and axis selection to split up our bounding volume hierarchy spatially. In reading [this paper](https://pbr-book.org/3ed-2018/Primitives_and_Intersection_Acceleration/Bounding_Volume_Hierarchies), we decided to first compute the average centroid across all the primitives. Then, we take the extent of the resulting <code class="language-plaintext highlighter-rouge">bbox</code>, which is a vector from opposing vertices of the box (creating a diagonal across the interior of the box). We determine which axis has the longest extent component and use that as the axis to split on. 
 
-Then, knowing our <code class="language-plaintext highlighter-rouge">avg_centroid</code>, we take the x, y, or z point given the axis that we chose to split on. Then, we call <code class="language-plaintext highlighter-rouge">std:stable_partition</code> on the primitives given in, checking whether that primitive's <code class="language-plaintext highlighter-rouge">centroid</code> value at the chosen axis, and checking whether that is less than the averaged centroid across the entire bounding box (for this level) at the chosen axis. If it was less than, we partitioned it in the first set and if greater than or equal two, in the second partition.
+Then, using the average centroid heuristic (which splits along the average value of primitives along an axis), we take the x, y, or z component of our <code class="language-plaintext highlighter-rouge">avg_centroid</code>, giving the plane that we chose to split on. Then, we call <code class="language-plaintext highlighter-rouge">std:stable_partition</code> on the primitives given in, checking whether that primitive's <code class="language-plaintext highlighter-rouge">centroid</code> value at the chosen axis, and checking whether that is less than the averaged centroid across the entire bounding box (for this level) at the chosen axis. If it was less than, we partitioned it in the first set and if greater than or equal two, in the second partition.
 
 Finally, we checked that this start of the second partition was not equal to the original <code class="language-plaintext highlighter-rouge">start</code> or <code class="language-plaintext highlighter-rouge">end</code> (so one of the partitions wasn't empty), and if so, we assigned <code class="language-plaintext highlighter-rouge">node->l</code> and <code class="language-plaintext highlighter-rouge">node->r</code> to be recursive calls to <code class="language-plaintext highlighter-rouge">construct_bvh</code> given our two partitions so our <code class="language-plaintext highlighter-rouge">l</code> attribute was the first partition and the <code class="language-plaintext highlighter-rouge">r</code> attribute was the second partition.
 
@@ -152,7 +169,7 @@ Now that we've constructed our bounding volume heirarchy, we want to check wheth
 
 Namely, since we want to represent time as $t = \frac{p_x' - o_x}{d_x}$, calculating perpendicular to x-axis, we calculate a <code class="language-plaintext highlighter-rouge">min_t</code> and a <code class="language-plaintext highlighter-rouge">max_t</code>. Then from here, we ensure that for all axes, <code class="language-plaintext highlighter-rouge">min_t[axis] < max_t[axis]</code>, swapping if that was not the case.
 
-Finally, we calculate the interval of intersecting as the maximum of all the <code class="language-plaintext highlighter-rouge">min_t</code> axes and the minimum of all the <code class="language-plaintext highlighter-rouge">max_t</code> axes since we want to create the tighest bound. If the maximum <code class="language-plaintext highlighter-rouge">min_t</code> is greater than the minimum <code class="language-plaintext highlighter-rouge">max_t</code>, then we return false (there is no intersection since the ray missed the box), otherwise we set <code class="language-plaintext highlighter-rouge">t_0</code> and <code class="language-plaintext highlighter-rouge">t_1</code> accordingly and return true.
+Finally, we calculate the interval of intersection as the maximum of all the <code class="language-plaintext highlighter-rouge">min_t</code> axes and the minimum of all the <code class="language-plaintext highlighter-rouge">max_t</code> axes since we want to create the tighest bound. If the maximum <code class="language-plaintext highlighter-rouge">min_t</code> is greater than the minimum <code class="language-plaintext highlighter-rouge">max_t</code>, then we return false (there is no intersection since the ray missed the box), otherwise we set <code class="language-plaintext highlighter-rouge">t_0</code> and <code class="language-plaintext highlighter-rouge">t_1</code> accordingly and return true.
 
 ### Task 3: Intersecting the BVH
 Finally, now that we have the ability to intersect a ray with a bounding box, we can now test that intersection with the BVH. Namely, here, we've completed <code class="language-plaintext highlighter-rouge">BVHAccel::has_intersection</code> and <code class="language-plaintext highlighter-rouge">BVHAccel:intersect</code>. We implement this using [this lecture slide](https://cs184.eecs.berkeley.edu/sp24/lecture/9-73/ray-tracing-and-acceleration-str) on BVH Recursive Traversal as a guide.
@@ -342,7 +359,7 @@ In this task, we needed to implement <code class="language-plaintext highlighter
   </table>
 </div>
 
-We see that using <code class="language-plaintext highlighter-rouge">reflectance</code> $$/ \pi$$ gave the brightness that best matched the desired output.
+We see that using <code class="language-plaintext highlighter-rouge">reflectance</code> $$/ \pi$$ gave the brightness that best matched the desired output. Dividing by $\pi$ also matches [this lecture slide](https://cs184.eecs.berkeley.edu/sp24/lecture/11-40/radiometry-and-photometry), which we unfortunately did not discover until after completing this task.
 
 We also needed to implement <code class="language-plaintext highlighter-rouge">DiffuseBSDF::sample_f</code>, in which we sample a value based on the given <code class="language-plaintext highlighter-rouge">pdf</code> for <code class="language-plaintext highlighter-rouge">wi</code>, and then return <code class="language-plaintext highlighter-rouge">DiffuseBSDF::f</code> called with the passed in <code class="language-plaintext highlighter-rouge">wo</code> and our sampled <code class="language-plaintext highlighter-rouge">wi</code>.
 
@@ -368,13 +385,13 @@ Iterating through a total of <code class="language-plaintext highlighter-rouge">
 
 Then, creating an <code class="language-plaintext highlighter-rouge">Intersection</code>, we checked whether the bounding volume hierarchy intersected the sampled <code class="language-plaintext highlighter-rouge">Ray</code> by calling the <code class="language-plaintext highlighter-rouge">intersect</code> function from [Part 2 Task 3](/hw3.md#task-3-intersecting-the-bvh).
 
-If there was an intersection from calling <code class="language-plaintext highlighter-rouge">intersect</code>, then we calculated the $$f_r$$, $$L_i$$, $$\cos_j$$, and $$\text{pdf}$$ to compute the reflection equation to get the outgoing lighting from this intersection.
+If there was an intersection from calling <code class="language-plaintext highlighter-rouge">intersect</code>, then we calculated the $$f_r$$, $$L_i$$, $$\cos{\theta_j}$$, and $$\text{pdf}$$ to compute the reflection equation to get the outgoing lighting from this intersection.
 - $$f_r$$: We call the function we wrote in [Task 1](/hw3.md#task-1-diffuse-bsdf) to calculate the BSDF.
 - $$L_i$$: The incoming light is given by the emission of the intersection's BSDF.
-- $$\cos_j$$: The dot product between the surface normal of the intersection and the world-space units of the ray gives the cosine angle between the two unit vectors.
-- $$\text{pdf}$$: Our pdf for hemisphere sampling is $$1 / (2 * \pi)$$ because the surface area for a unit sphere is $$4 \pi * r^2 = 4 \pi * 1^2 = 4 \pi$$, and hence, the surface area for a unit hemisphere is $$2 \pi$$, so the probability of sampling any point uniformly is $$1 \ (2 * \pi)$$.
+- $$\cos{\theta_j}$$: The dot product between the surface normal of the intersection and the world-space units of the ray gives the cosine angle between the two unit vectors.
+- $$\text{pdf}$$: Our pdf for hemisphere sampling is $$1 / (2 * \pi)$$ because the surface area for a unit sphere is $$4 \pi * r^2 = 4 \pi * 1^2 = 4 \pi$$, and hence, the surface area for a unit hemisphere is $$2 \pi$$, so the probability of sampling any point uniformly is $$1 / (2 * \pi)$$.
 
-Given these values, for each sample <code class="language-plaintext highlighter-rouge">Ray</code>, when an intersection existed, we added $$(f_r * L_i * \cos_j) / \text{pdf}$$ to our <code class="language-plaintext highlighter-rouge">L_out</code> value.
+Given these values, for each sample <code class="language-plaintext highlighter-rouge">Ray</code>, when an intersection existed, we added $$(f_r * L_i * \cos{\theta_j}) / \text{pdf}$$ to our <code class="language-plaintext highlighter-rouge">L_out</code> value.
 
 Finally, after performing <code class="language-plaintext highlighter-rouge">num_sample</code> samples, we normalized the outgoing light, <code class="language-plaintext highlighter-rouge">L_out</code>, by dividing by <code class="language-plaintext highlighter-rouge">num_samples</code>, returning this final <code class="language-plaintext highlighter-rouge">L_out</code>.
 
@@ -410,11 +427,11 @@ Then, creating an <code class="language-plaintext highlighter-rouge">Intersectio
 
 If there wasn't an intersection from calling <code class="language-plaintext highlighter-rouge">intersect</code>, then we calculated the $$f_r$$ and $$\text{pdf}$$ (since the $$L_i$$ was returned from <code class="language-plaintext highlighter-rouge">sample_L</code> and the $$\text{pdf}$$ was populated from <code class="language-plaintext highlighter-rouge">sample_L</code>) to compute the reflection equation to get the outgoing lighting from this intersection. We note this difference from [Task 3](/hw3.md#task-3-direct-lighting-with-uniform-hemisphere-sampling) since we are only calculating if there wasn't an intersection since this means that the light source was not obstructed and thus, would actually hit this hit point. If there was an intersection, then we wouldn't actually want to illuminate this hit point because another object intersected with it first.
 - $$f_r$$: We call the function we wrote in [Task 1](/hw3.md#task-1-diffuse-bsdf) to calculate the BSDF.
-- $$\cos_j$$: The dot product between the surface normal of the intersection and the world-space units of the ray gives the cosine angle between the two unit vectors.
+- $$\cos{\theta_j}$$: The dot product between the surface normal of the intersection and the world-space units of the ray gives the cosine angle between the two unit vectors.
 
-Given these values, for each sample <code class="language-plaintext highlighter-rouge">Ray</code>, when an intersection existed, we added $$(f_r * L_i * \cos_j) / \text{pdf}$$ to our <code class="language-plaintext highlighter-rouge">L_out</code> value.
+Given these values, for each sample <code class="language-plaintext highlighter-rouge">Ray</code>, when an intersection existed, we added $$(f_r * L_i * \cos{\theta_j}) / \text{pdf}$$ to our <code class="language-plaintext highlighter-rouge">L_out</code> value.
 
-Finally, after performing <code class="language-plaintext highlighter-rouge">num_sample</code> samples per light in <code class="language-plaintext highlighter-rouge">scene->lights</code> (or 1 if the light was an area light), we normalized the outgoing light, <code class="language-plaintext highlighter-rouge">L_out</code>, by dividing by <code class="language-plaintext highlighter-rouge">num_samples</code>, adding this outgoing light through this light to our desired outgoing light <code class="language-plaintext highlighter-rouge">L_out</code>. After aggregating across all the lights, we would return this final <code class="language-plaintext highlighter-rouge">L_out</code>.
+Finally, after performing <code class="language-plaintext highlighter-rouge">num_sample</code> samples per light in <code class="language-plaintext highlighter-rouge">scene->lights</code> (or 1 if the light was a point light), we normalized the outgoing light, <code class="language-plaintext highlighter-rouge">L_out</code>, by dividing by <code class="language-plaintext highlighter-rouge">num_samples</code>, adding this outgoing light through this light to our desired outgoing light <code class="language-plaintext highlighter-rouge">L_out</code>. After aggregating across all the lights, we would return this final <code class="language-plaintext highlighter-rouge">L_out</code>.
 
 While working on this task, we ran into an interesting debugging problem where the shadows seemingly rendered lighter than the areas where light should have hit, like shown in the bunny below.
 <div align="center">
@@ -536,9 +553,9 @@ Then, we generate a sample <code class="language-plaintext highlighter-rouge">Ra
 
 Then, we check whether nodes in our BVH intersect the sample ray, and if so, we calculate
 - $$L_i$$: The recursive call to <code class="language-plaintext highlighter-rouge">at_least_one_bounce_radiance</code>, which will return to us the radiance from all later bounces.
-- $$\cos_j$$: The dot product between the surface normal of the intersection and the world-space units of the ray gives the cosine angle between the two unit vectors.
+- $$\cos{\theta_j}$$: The dot product between the surface normal of the intersection and the world-space units of the ray gives the cosine angle between the two unit vectors.
 
-Then, we accumulate into <code class="language-plaintext highlighter-rouge">L_out</code> the calculated $$(f_r * L_i * \cos_j) / \text{pdf}$$, returning <code class="language-plaintext highlighter-rouge">L_out</code>  at the end.
+Then, we accumulate into <code class="language-plaintext highlighter-rouge">L_out</code> the calculated $$(f_r * L_i * \cos{\theta_j}) / \text{pdf}$$, returning <code class="language-plaintext highlighter-rouge">L_out</code>  at the end.
 
 Using global illumination (now a combination of direct and indirect illumination), we render the following images using 1024 sampels per pixel:
 <div align="center">
@@ -609,7 +626,7 @@ In order to account for rendering non-accumulated bounces, we needed to utilize 
 
 To facilitate this, we updated two things, namely just instances where we add to <code class="language-plaintext highlighter-rouge">L_out</code>.
 - Instead of always adding <code class="language-plaintext highlighter-rouge">one_bounce_radiance</code> to <code class="language-plaintext highlighter-rouge">L_out</code>, we only call this when <code class="language-plaintext highlighter-rouge">isAccumBounces</code> is true or the depth of the ray is one (which means we've hit the last bounce).
-- Instead of accumulating to <code class="language-plaintext highlighter-rouge">L_out</code> (summing), we directly set <code class="language-plaintext highlighter-rouge">L_out</code> equal to $$(f_r * L_i * \cos_j) / \text{pdf}$$ if <code class="language-plaintext highlighter-rouge">isAccumBounces</code> is false since we don't want to accumulate the outgoing light, but instead, just return $$(f_r * L_i * \cos_j) / \text{pdf}$$, noting that $$L_i$$ is the output of our recursive call to <code class="language-plaintext highlighter-rouge">at_least_one_bounce_radiance</code>.
+- Instead of accumulating to <code class="language-plaintext highlighter-rouge">L_out</code> (summing), we directly set <code class="language-plaintext highlighter-rouge">L_out</code> equal to $$(f_r * L_i * \cos{\theta_j}) / \text{pdf}$$ if <code class="language-plaintext highlighter-rouge">isAccumBounces</code> is false since we don't want to accumulate the outgoing light, but instead, just return $$(f_r * L_i * \cos{\theta_j}) / \text{pdf}$$, noting that $$L_i$$ is the output of our recursive call to <code class="language-plaintext highlighter-rouge">at_least_one_bounce_radiance</code>.
 
 Here, in two columns, we shown the output of ../dae/sky/CBbunny.dae sampled 1024 times per pixel, from the 0th to 5th bounce of light, where the left column accumulates the light (so <code class="language-plaintext highlighter-rouge">isAccumBouces</code> is true) while the right column does not accumulate the outgoing light and instead just shows the light from that specific bounce (<code class="language-plaintext highlighter-rouge">isAccumBounces</code> is false).
 
@@ -783,13 +800,13 @@ Here we render ../dae/sky/CBbunny.dae with Russian Roulette with 1024 samples pe
 With Russian Roulette work, we note that similar to previous renders, the images get brighter (more illuminated) with maximum ray depth. This makes sense with our light accumulation renders [above](/hw3.md#adding-non-accumulation-rendering). However, we note that between a maximum ray depth of 4 and a maximum ray depth of 100, there isn't that big of a difference between the images. We note this probably is due to the fact that with Russian Roulette random termination, the image rendered with a maximum ray depth of 100 most likely did not reach up to 100 levels of bounces, with a termination probability of 0.3 at each level of recursion.
 
 ## Part 5: Adaptive Sampling
-Path tracing via Monte Carlo estimation is powerful, but now, we want to solve the problem of having noise in our images: thus, we now move towards adaptive sampling, which takes a high number of samples per pixel, but concentrates samples in areas that are more difficult to render, namely, reducing the number of samplesfor pixels that converge quickly.
+Path tracing via Monte Carlo estimation is powerful, but now, we want to solve the problem of having noise in our images: thus, we now move towards adaptive sampling, which takes a high number of samples per pixel, but concentrates samples in areas that are more difficult to render, namely, reducing the number of samples for pixels that converge quickly.
 
-Our implementation of adaptive sampling first has us defining our  <code class="language-plaintext highlighter-rouge">num_samples</code> to be  <code class="language-plaintext highlighter-rouge">ns_aa</code> and an origin vector to represent the bottom left corner of the pixel. Then, we define two doubles <code class="language-plaintext highlighter-rouge">s1</code> and <code class="language-plaintext highlighter-rouge">s2</code> to keep track of the sum of illuminances and the sum of squared illuminances respectively.
+Our implementation of adaptive sampling builds off of the <code class="language-plaintext highlighter-rouge">raytrace_pixel</code> implementation from [Part 1 Task 2](/hw3.md#task-2-generation-pixel-samples). We define <code class="language-plaintext highlighter-rouge">num_samples</code> as <code class="language-plaintext highlighter-rouge">ns_aa</code> and two doubles, <code class="language-plaintext highlighter-rouge">s1</code> and <code class="language-plaintext highlighter-rouge">s2</code>, to keep track of the sum of illuminances and the sum of squared illuminances respectively.
 
 Iterating through <code class="language-plaintext highlighter-rouge">num_samples</code> times, we first check whether our index <code class="language-plaintext highlighter-rouge">i</code> is now a multiple of <code class="language-plaintext highlighter-rouge">samplesPerBatch</code>, and if so, we want to perform a convergence check.
 
-Our convergence check composes of defining a mean <code class="language-plaintext highlighter-rouge">mu</code>, equal to <code class="language-plaintext highlighter-rouge">s1 / i</code>. We also defined the variance <code class="language-plaintext highlighter-rouge">sigma_squared</code>, equal to <code class="language-plaintext highlighter-rouge">(s2 - (s1 * s1) / i) / (i - 1)</code>. Given this, we want to calculate $$I = 1.96 \cdot \frac{\sigma}{\sqrt{n}}$$ to measure the pixel's convergence. We calculate <code class="language-plaintext highlighter-rouge">i = 1.96 * sqrt(sigma_squared / i)</code>. Knowing our <code class="language-plaintext highlighter-rouge">i</code>, we know that if $$I \leq maxTolerance \cdot \mu$$, then we can assume the pixel has converged, so we can stop tracing more rays. Thus, we set the <code class="language-plaintext highlighter-rouge">num_samples</code> equal to our current index <code class="language-plaintext highlighter-rouge">i</code> and break out of our loop.
+Our convergence check composes of defining a mean <code class="language-plaintext highlighter-rouge">mu</code>, equal to <code class="language-plaintext highlighter-rouge">s1 / i</code>. We also defined the variance <code class="language-plaintext highlighter-rouge">sigma_squared</code>, equal to <code class="language-plaintext highlighter-rouge">(s2 - (s1 * s1) / i) / (i - 1)</code>. Given this, we want to calculate $$I = 1.96 \cdot \frac{\sigma}{\sqrt{n}}$$ to measure the pixel's convergence. We calculate <code class="language-plaintext highlighter-rouge">I = 1.96 * sqrt(sigma_squared / i)</code>, where <code class="language-plaintext highlighter-rouge">i</code> is the number of samples so far. Knowing our <code class="language-plaintext highlighter-rouge">I</code>, we know that if $$I \leq maxTolerance \cdot \mu$$, then we can assume the pixel has converged, so we can stop tracing more rays. Thus, we set the <code class="language-plaintext highlighter-rouge">num_samples</code> equal to our current index <code class="language-plaintext highlighter-rouge">i</code> and break out of our loop.
 
 However, if the pixel has not yet converged, then we get a sample from the grid and normalize the sample within the pixel. From there, we generate a <code class="language-plaintext highlighter-rouge">Ray</code> and set a <code class="language-plaintext highlighter-rouge">sample_radiance</code> by calling <code class="language-plaintext highlighter-rouge">est_radiance_global_illumination</code>, adding that to our overal pixel's value (radiance). Then, we sample the illuminance from <code class="language-plaintext highlighter-rouge">sample_radiance</code>, adding that value to <code class="language-plaintext highlighter-rouge">s1</code> and adding its square to <code class="language-plaintext highlighter-rouge">s2</code>.
 
