@@ -840,26 +840,6 @@ Running <code class="language-plaintext highlighter-rouge">./pathtracer -t 8 -s 
       <figcaption>.../dae/sky/CBspheres_lambertian.dae, sample rate per pixel</figcaption>
     </td>
   </tr>
-  <tr>
-    <td align="center">
-      <img src="../assets/hw3/part5/dragon.png" width="100%"/>
-      <figcaption>.../dae/sky/dragon.dae, adaptive sampling image</figcaption>
-    </td>
-    <td align="center">
-      <img src="../assets/hw3/part5/dragon_rate.png" width="100%"/>
-      <figcaption>.../dae/sky/dragon.dae, sample rate per pixel</figcaption>
-    </td>
-  </tr>
-  <tr>
-    <td align="center">
-      <img src="../assets/hw3/part5/blob.png" width="100%"/>
-      <figcaption>.../dae/sky/blob.dae, adaptive sampling image</figcaption>
-    </td>
-    <td align="center">
-      <img src="../assets/hw3/part5/blob_rate.png" width="100%"/>
-      <figcaption>.../dae/sky/blob.dae, sample rate per pixel</figcaption>
-    </td>
-  </tr>
   </table>
 </div>
 

@@ -15,7 +15,7 @@ GitHub repository for this website: [hw-webpages-sp24-ashmchiu](https://github.c
 - [homework 3: pathtracer](/hw3.md)
 
 🚧 In Progress:
-- [segfault]
+- [homework 4: clothsim](/hw4.md)
 
 🔜 Upcoming:
-- [homework 4](/hw-webpages-sp24-ashmchiu/hw4)
+- [final project](/project.md)

@@ -1,6 +1,6 @@
 ---
 layout: page
-title: 'Homework 4: Clothsim'
+title: 'Project'
 has_right_toc: true
 ---
 <p class="warning-message">
