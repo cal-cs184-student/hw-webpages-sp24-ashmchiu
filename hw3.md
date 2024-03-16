@@ -73,18 +73,18 @@ Like with [ray-triangle intersection](/hw3.md#task-3-ray-triangle-intersection),
 
 Like in our <code class="language-plaintext highlighter-rouge">Triangle</code> class, we use <code class="language-plaintext highlighter-rouge">Sphere::has_intersection</code> and <code class="language-plaintext highlighter-rouge">Sphere::intersect</code> as a way to call into our <code class="language-plaintext highlighter-rouge">Sphere::test</code>. 
 
-Namely, within the <code class="language-plaintext highlighter-rouge">Sphere::test</code> function, we reduce the intersection points to the roots of a quadratic equation. We check whether the determinant is less than 0, noting that if so, this meant that the ray missed the sphere, and as such, we could immediately return false. We calculate the determinant by determining
+Namely, within the <code class="language-plaintext highlighter-rouge">Sphere::test</code> function, we reduce the intersection points to the roots of a quadratic equation. We check whether the discriminant is less than 0, noting that if so, this meant that the ray missed the sphere, and as such, we could immediately return false. We calculate the discriminant by determining
 1. the difference between the ray's origin and the origin of the sphere
 2. the dot product between the ray's direction with itself
 3. two times the dot product of the difference between the ray's origin and the origin of the sphere with the direction of the ray
 4. and finally the dot product between the difference between the ray's origin and the origin of the sphere and itself subtracted by the radius of the sphere, squared
 
-From here, we calculate the determinant by taking 
+From here, we calculate the discriminant by taking 
 {% highlight js %}
 (3)^2 - 4 * (2) * (4)
 {% endhighlight %}
 
-If the determinant is negative, we know that the ray and the sphere do not intersect, and we can return false. If the determinant is non-negative, we take the square root of the determinant and select the closest <code class="language-plaintext highlighter-rouge">t</code> that still lies between <code class="language-plaintext highlighter-rouge">min_t</code> and <code class="language-plaintext highlighter-rouge">max_t</code>, using the quadratic formula to determine the candidate's time of intersection.
+If the discriminant is negative, we know that the ray and the sphere do not intersect, and we can return false. If the discriminant is non-negative, we take the square root of the discriminant and select the closest <code class="language-plaintext highlighter-rouge">t</code> that still lies between <code class="language-plaintext highlighter-rouge">min_t</code> and <code class="language-plaintext highlighter-rouge">max_t</code>, using the quadratic formula to determine the candidate's time of intersection.
 
 After calculating and ensuring that the minimally valid <code class="language-plaintext highlighter-rouge">t</code> candidate was selected (by ensuring that only intersections of <code class="language-plaintext highlighter-rouge">0</code> $\leq$ <code class="language-plaintext highlighter-rouge">min_t</code> $\leq$ <code class="language-plaintext highlighter-rouge">t</code> $\leq$ <code class="language-plaintext highlighter-rouge">max_t</code> are valid), we update <code class="language-plaintext highlighter-rouge">max_t</code> like desired to be the chosen candidate.
 
