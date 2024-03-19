@@ -19,22 +19,22 @@ GitHub repository for this website: [hw-webpages-sp24-ashmchiu](https://github.c
   </colgroup>
     <tr>
       <td align="center">
-        <a href="../hw1.md"><img src="../assets/hw1/example_image.png" width="75%"/></a>
-        <figcaption><strong><a href="../hw1.md">homework 1: rasterizer</a></strong></figcaption>
+        <a href="/hw-webpages-sp24-ashmchiu/hw1.md"><img src="/hw-webpages-sp24-ashmchiu/assets/hw1/example_image.png" width="75%"/></a>
+        <figcaption><strong><a href="/hw-webpages-sp24-ashmchiu/hw1.md">homework 1: rasterizer</a></strong></figcaption>
       </td>
       <td align="center">
-        <a href="../hw2.md"><img src="../assets/hw2/example_image.png" width="75%"/></a>
-        <figcaption><strong><a href="../hw2.md">homework 2: meshedit</a></strong></figcaption>
+        <a href="/hw-webpages-sp24-ashmchiu/hw2.md"><img src="/hw-webpages-sp24-ashmchiu/assets/hw2/example_image.png" width="75%"/></a>
+        <figcaption><strong><a href="/hw-webpages-sp24-ashmchiu/hw2.md">homework 2: meshedit</a></strong></figcaption>
       </td>
     </tr>
     <tr>
       <td align="center">
-        <a href="../hw3.md"><img src="../assets/hw3/example_image.png" width="75%"/></a>
-        <figcaption><strong><a href="../hw3.md">homework 3: pathtracer</a></strong></figcaption>
+        <a href="/hw-webpages-sp24-ashmchiu/hw3.md"><img src="/hw-webpages-sp24-ashmchiu/assets/hw3/example_image.png" width="75%"/></a>
+        <figcaption><strong><a href="/hw-webpages-sp24-ashmchiu/hw3.md">homework 3: pathtracer</a></strong></figcaption>
       </td>
       <td align="center">
-        <a href="../hw4.md"><img src="../assets/hw3/example_image.png" width="75%"/></a>
-        <figcaption><strong><a href="../hw4.md">homework 4: clothsim</a></strong></figcaption>
+        <a href="/hw-webpages-sp24-ashmchiu/hw4.md"><img src="/hw-webpages-sp24-ashmchiu/assets/hw3/example_image.png" width="75%"/></a>
+        <figcaption><strong><a href="/hw-webpages-sp24-ashmchiu/hw4.md">homework 4: clothsim</a></strong></figcaption>
       </td>
     </tr>
   </table>
