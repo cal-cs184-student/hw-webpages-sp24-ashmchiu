@@ -33,7 +33,7 @@ GitHub repository for this website: [hw-webpages-sp24-ashmchiu](https://github.c
         <figcaption><strong><a href="/hw-webpages-sp24-ashmchiu/hw3">homework 3: pathtracer</a></strong></figcaption>
       </td>
       <td align="center">
-        <a href="/hw-webpages-sp24-ashmchiu/hw4"><img src="/hw-webpages-sp24-ashmchiu/assets/hw3/example_image.png" width="75%"/></a>
+        <a href="/hw-webpages-sp24-ashmchiu/hw4"><img src="/hw-webpages-sp24-ashmchiu/assets/hw4/example_image.png" width="75%"/></a>
         <figcaption><strong><a href="/hw-webpages-sp24-ashmchiu/hw4">homework 4: clothsim</a></strong></figcaption>
       </td>
     </tr>
