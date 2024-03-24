@@ -98,16 +98,150 @@ Finally, to keep springs from being unreasonably deformed, we used the [SIGGRAPH
 - If both of the point masses were pinned, we did nothing (because they couldn't be moved :')).
 
 ### Experimenting with parameters
-TODO
+In our cloth simulator, we have the ability to change the spring constant <code class="language-plaintext highlighter-rouge">ks</code>, the <code class="language-plaintext highlighter-rouge">density</code>, and <code class="language-plaintext highlighter-rouge">damping</code> constants. We'll describe how the cloth differs when changing these to the default parameters. Below is the wireframe and normal appearance of <code class="language-plaintext highlighter-rouge">./clothsim -f ../scene/pinned2.json</code> to show default parameters (<code class="language-plaintext highlighter-rouge">ks = 5000 N/m</code>, <code class="language-plaintext highlighter-rouge">density = 15 g/cm^2</code>, <code class="language-plaintext highlighter-rouge">damping = 0.200000%</code>).
+
+<div align="center">
+  <table style="width:100%">
+  <colgroup>
+      <col width="50%" />
+      <col width="50%" />
+  </colgroup>
+  <tr>
+    <td align="center">
+      <img src="../assets/hw4/part2/pinned2_wireframe.png" width="100%"/>
+      <figcaption>../scene/pinned2.json, at rest, wireframe <br> default parameters</figcaption>
+    </td>
+    <td align="center">
+      <img src="../assets/hw4/part2/pinned2_normal.png" width="100%"/>
+      <figcaption>../scene/pinned2.json, at rest, normal <br> default parameters</figcaption>
+    </td>
+  </tr>
+  </table>
+</div>
 
 #### Changing <code class="language-plaintext highlighter-rouge">ks</code>
-TODO
+While maintaining the default <code class="language-plaintext highlighter-rouge">density = 15 g/cm^2</code> and <code class="language-plaintext highlighter-rouge">damping = 0.200000%</code>, let's show ../scene/pinned2.json with <code class="language-plaintext highlighter-rouge">ks = 50 N/m</code>, <code class="language-plaintext highlighter-rouge">ks = 500 N/m</code>, and <code class="language-plaintext highlighter-rouge">ks = 50000 N/m</code>.
+
+<div align="center">
+  <table style="width:100%">
+  <colgroup>
+      <col width="50%" />
+      <col width="50%" />
+  </colgroup>
+  <tr>
+    <td align="center">
+      <img src="../assets/hw4/part2/ks/pinned2_wireframe_ks50.png" width="100%"/>
+      <figcaption>../scene/pinned2.json, at rest, wireframe <br> <code class="language-plaintext highlighter-rouge">ks = 50 N/m</code>, default <code class="language-plaintext highlighter-rouge">density</code> and <code class="language-plaintext highlighter-rouge">damping</code></figcaption>
+    </td>
+    <td align="center">
+      <img src="../assets/hw4/part2/ks/pinned2_normal_ks50.png" width="100%"/>
+      <figcaption>../scene/pinned2.json, at rest, normal <br><code class="language-plaintext highlighter-rouge">ks = 50 N/m</code>, default <code class="language-plaintext highlighter-rouge">density</code> and <code class="language-plaintext highlighter-rouge">damping</code></figcaption>
+    </td>
+  </tr>
+  <tr>
+    <td align="center">
+      <img src="../assets/hw4/part2/ks/pinned2_wireframe_ks500.png" width="100%"/>
+      <figcaption>../scene/pinned2.json, at rest, wireframe <br> <code class="language-plaintext highlighter-rouge">ks = 500 N/m</code>, default <code class="language-plaintext highlighter-rouge">density</code> and <code class="language-plaintext highlighter-rouge">damping</code></figcaption>
+    </td>
+    <td align="center">
+      <img src="../assets/hw4/part2/ks/pinned2_normal_ks500.png" width="100%"/>
+      <figcaption>../scene/pinned2.json, at rest, normal <br> <code class="language-plaintext highlighter-rouge">ks = 500 N/m</code>, default <code class="language-plaintext highlighter-rouge">density</code> and <code class="language-plaintext highlighter-rouge">damping</code></figcaption>
+    </td>
+  </tr>
+  <tr>
+    <td align="center">
+      <img src="../assets/hw4/part2/ks/pinned2_wireframe_ks50000.png" width="100%"/>
+      <figcaption>../scene/pinned2.json, at rest, wireframe <br> <code class="language-plaintext highlighter-rouge">ks = 50,000 N/m</code>, default <code class="language-plaintext highlighter-rouge">density</code> and <code class="language-plaintext highlighter-rouge">damping</code></figcaption>
+    </td>
+    <td align="center">
+      <img src="../assets/hw4/part2/ks/pinned2_normal_ks50000.png" width="100%"/>
+      <figcaption>../scene/pinned2.json, at rest, normal <br> <code class="language-plaintext highlighter-rouge">ks = 50,000 N/m</code>, default <code class="language-plaintext highlighter-rouge">density</code> and <code class="language-plaintext highlighter-rouge">damping</code></figcaption>
+    </td>
+  </tr>
+  </table>
+</div>
 
 #### Changing <code class="language-plaintext highlighter-rouge">density</code>
-TODO
+While maintaining the default <code class="language-plaintext highlighter-rouge">ks = 5000 N/m</code> and <code class="language-plaintext highlighter-rouge">damping = 0.200000%</code>, let's show ../scene/pinned2.json with <code class="language-plaintext highlighter-rouge">density = 1 g/cm^2</code>, <code class="language-plaintext highlighter-rouge">density = 50 g/cm^2</code>, <code class="language-plaintext highlighter-rouge">density = 500 g/cm^2</code>, and <code class="language-plaintext highlighter-rouge">density = 5,000 g/cm^2</code>.
+
+<div align="center">
+  <table style="width:100%">
+  <colgroup>
+      <col width="50%" />
+      <col width="50%" />
+  </colgroup>
+  <tr>
+    <td align="center">
+      <img src="../assets/hw4/part2/density/pinned2_wireframe_density1.png" width="100%"/>
+      <figcaption>../scene/pinned2.json, at rest, wireframe <br> <code class="language-plaintext highlighter-rouge">density = 1 g/cm^2</code>, default <code class="language-plaintext highlighter-rouge">ks</code> and <code class="language-plaintext highlighter-rouge">damping</code></figcaption>
+    </td>
+    <td align="center">
+      <img src="../assets/hw4/part2/density/pinned2_normal_density1.png" width="100%"/>
+      <figcaption>../scene/pinned2.json, at rest, normal <br><code class="language-plaintext highlighter-rouge">density = 1 g/cm^2</code>, default <code class="language-plaintext highlighter-rouge">ks</code> and <code class="language-plaintext highlighter-rouge">damping</code></figcaption>
+    </td>
+  </tr>
+  <tr>
+    <td align="center">
+      <img src="../assets/hw4/part2/density/pinned2_wireframe_density50.png" width="100%"/>
+      <figcaption>../scene/pinned2.json, at rest, wireframe <br> <code class="language-plaintext highlighter-rouge">density = 50 g/cm^2</code>, default <code class="language-plaintext highlighter-rouge">ks</code> and <code class="language-plaintext highlighter-rouge">damping</code></figcaption>
+    </td>
+    <td align="center">
+      <img src="../assets/hw4/part2/density/pinned2_normal_density50.png" width="100%"/>
+      <figcaption>../scene/pinned2.json, at rest, normal <br><code class="language-plaintext highlighter-rouge">density = 50 g/cm^2</code>, default <code class="language-plaintext highlighter-rouge">ks</code> and <code class="language-plaintext highlighter-rouge">damping</code></figcaption>
+    </td>
+  </tr>
+  <tr>
+    <td align="center">
+      <img src="../assets/hw4/part2/density/pinned2_wireframe_density500.png" width="100%"/>
+      <figcaption>../scene/pinned2.json, at rest, wireframe <br> <code class="language-plaintext highlighter-rouge">density = 500 g/cm^2</code>, default <code class="language-plaintext highlighter-rouge">ks</code> and <code class="language-plaintext highlighter-rouge">damping</code></figcaption>
+    </td>
+    <td align="center">
+      <img src="../assets/hw4/part2/density/pinned2_normal_density500.png" width="100%"/>
+      <figcaption>../scene/pinned2.json, at rest, normal <br> <code class="language-plaintext highlighter-rouge">density = 500 g/cm^2</code>, default <code class="language-plaintext highlighter-rouge">ks</code> and <code class="language-plaintext highlighter-rouge">damping</code></figcaption>
+    </td>
+  </tr>
+  <tr>
+    <td align="center">
+      <img src="../assets/hw4/part2/density/pinned2_wireframe_density5000.png" width="100%"/>
+      <figcaption>../scene/pinned2.json, at rest, wireframe <br> <code class="language-plaintext highlighter-rouge">density = 5,000 g/cm^2</code>, default <code class="language-plaintext highlighter-rouge">ks</code> and <code class="language-plaintext highlighter-rouge">damping</code></figcaption>
+    </td>
+    <td align="center">
+      <img src="../assets/hw4/part2/density/pinned2_normal_density5000.png" width="100%"/>
+      <figcaption>../scene/pinned2.json, at rest, normal <br> <code class="language-plaintext highlighter-rouge">density = 5,000 g/cm^2</code>, default <code class="language-plaintext highlighter-rouge">ks</code> and <code class="language-plaintext highlighter-rouge">damping</code></figcaption>
+    </td>
+  </tr>
+  </table>
+</div>
 
 #### Changing <code class="language-plaintext highlighter-rouge">damping</code>
-TODO
+<div align="center">
+  <table style="width:100%">
+  <colgroup>
+      <col width="50%" />
+      <col width="50%" />
+  </colgroup>
+  <tr>
+    <td align="center">
+      <img src="../assets/hw4/part2/damping/wireframe_low_damping.gif" width="100%"/>
+      <figcaption>../scene/pinned2.json, at rest, wireframe <br> <code class="language-plaintext highlighter-rouge">damping = 0%</code>, default <code class="language-plaintext highlighter-rouge">ks</code> and <code class="language-plaintext highlighter-rouge">density</code></figcaption>
+    </td>
+    <td align="center">
+      <img src="../assets/hw4/part2/damping/normal_low_damping.gif" width="100%"/>
+      <figcaption>../scene/pinned2.json, at rest, normal <br><code class="language-plaintext highlighter-rouge">damping = 0%</code>, default <code class="language-plaintext highlighter-rouge">ks</code> and <code class="language-plaintext highlighter-rouge">density</code></figcaption>
+    </td>
+  </tr>
+  <tr>
+    <td align="center">
+      <img src="../assets/hw4/part2/damping/wireframe_high_damping.gif" width="100%"/>
+      <figcaption>../scene/pinned2.json, at rest, wireframe <br> <code class="language-plaintext highlighter-rouge">damping = 1%</code>, default <code class="language-plaintext highlighter-rouge">ks</code> and <code class="language-plaintext highlighter-rouge">density</code></figcaption>
+    </td>
+    <td align="center">
+      <img src="../assets/hw4/part2/damping/normal_high_damping.gif" width="100%"/>
+      <figcaption>../scene/pinned2.json, at rest, normal <br><code class="language-plaintext highlighter-rouge">damping = 1%</code>, default <code class="language-plaintext highlighter-rouge">ks</code> and <code class="language-plaintext highlighter-rouge">density</code></figcaption>
+    </td>
+  </tr>
+  </table>
+</div>
 
 Below, we've included screenshots of <code class="language-plaintext highlighter-rouge">./clothsim -f ../scene/pinned4.json</code> with default parameters, with both the wireframe normal appearance.
 
@@ -232,15 +366,11 @@ In [Part 3](/hw4.md#part-3-handling-collisions-with-other-objects), we handled c
   </colgroup>
     <tr>
       <td align="center">
-        <video controls="controls" width="100%" name="Before Self-Collisions">
-            <source src="../assets/hw4/part4/pre_self_collision.mov">
-        </video>
+        <img src="../assets/hw4/part4/pre_self_collision.gif" width="100%"/>
         <figcaption>A very send help moment.</figcaption>
       </td>
       <td align="center">
-        <video controls="controls" width="100%" name="After Self-Collisions">
-            <source src="../assets/hw4/part4/self_collision.mov">
-        </video>
+        <img src="../assets/hw4/part4/self_collision.gif">
         <figcaption>Help was sent.</figcaption>
       </td>
     </tr>
@@ -313,4 +443,5 @@ TODO
 
 ## Contributors
 Edward Park, Ashley Chiu
-TODO
+
+TODO: We are best friends !
