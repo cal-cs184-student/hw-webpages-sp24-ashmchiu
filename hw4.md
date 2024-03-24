@@ -450,12 +450,170 @@ Below are 6 screenshots of <code class="language-plaintext highlighter-rouge">./
 TODO
 
 ## Part 5: Shaders
+TODO: Explain in your own words what is a shader program and how vertex and fragment shaders work together to create lighting and material effects.
+
+### Task 1: Diffuse Shading
+Implementing the <code class="language-plaintext highlighter-rouge">main</code> method of <code class="language-plaintext highlighter-rouge">Diffuse.frag</code>, our main goal was to recreate diffuse lighting using the formula
+
+$$
+L_d = k_d (I/r^2)\max(0, n \cdot l)
+$$
+
+We did this by calculating the radius from the light position to the vertex, calculating the normalized normal vector, and normalizing the light vector. From there, we set the <code class="language-plaintext highlighter-rouge">out_color</code>, noting that we are given $$k_d = 1$$ to $$L_d$$ as given in the diffuse lighting formula.
+
+Below is a screenshot of running <code class="language-plaintext highlighter-rouge">./clothsim -f ../scene/sphere.json</code> with diffuse shading.
+<div align="center">
+  <table style="width:100%">
+    <tr>
+      <td align="center">
+        <img src="../assets/hw4/part5/diffuse.png" width="400px"/>
+        <figcaption>../scene/sphere.json, diffuse shading</figcaption>
+      </td>
+    </tr>
+  </table>
+</div>
+
+### Task 2: Blinn-Phong Shading
+From lecture, we know that Blinn-Phong shading outputs a light with the equation
+
+$$
+L = k_a I_a + k_d (I/r^2) \max(0, n \cdot l) + k_s (I/r^2) \max(0, n \cdot h)^p
+$$
+
+effectively, the addition of ambient, diffuse, and specular lighting (which reflect each of the three terms in the equation above). We note that ambient lighting is shading that doesn't depend on anything (it is constant). As a whole, Blinn-Phong shading allows us to account for not only the angle between each vertex and a light source (diffuse), but also from what perspective and viewing angle the camera is from (specular). Namely, the coolest part of Blinn-Phong shading (in our opinion), is that in specular shading, it uses the half-vector between the viewing direction and the light source, which is used to approximate where the maximum specular reflection (the greatest intensity reflection) is. Blinn-Phong is faster than the methods we took in [Part 3](/hw3.md) to light up scenes.
+
+Building off our work in  <code class="language-plaintext highlighter-rouge">Diffuse.frag</code>, we also now need to compute ambient and specular shading.
+
+For ambient shading, we choose <code class="language-plaintext highlighter-rouge">k_a = 1</code> and  <code class="language-plaintext highlighter-rouge">I_a = vec(1/61, 1/161, 1/61)</code>. Since the formula is $$L_a = k_a I_a$$, this is all we need! With only purely ambient shading, running <code class="language-plaintext highlighter-rouge">./clothsim -f ../scene/sphere.json</code> gives
+
+<div align="center">
+  <table style="width:100%">
+    <tr>
+      <td align="center">
+        <img src="../assets/hw4/part5/phong_ambient.png" width="400px"/>
+        <figcaption>../scene/sphere.json, ambient shading</figcaption>
+      </td>
+    </tr>
+  </table>
+</div>
+
+Then, we reused our code from <code class="language-plaintext highlighter-rouge">Diffuse.frag</code> for diffuse shading, $$L_d$$. With only purely diffuse shading, running <code class="language-plaintext highlighter-rouge">./clothsim -f ../scene/sphere.json</code> gives
+
+<div align="center">
+  <table style="width:100%">
+    <tr>
+      <td align="center">
+        <img src="../assets/hw4/part5/phong_diffuse.png" width="400px"/>
+        <figcaption>../scene/sphere.json, diffuse shading</figcaption>
+      </td>
+    </tr>
+  </table>
+</div>
+
+Finally, we add our specular highlights! To do so, we calculate the viewing vector <code class="language-plaintext highlighter-rouge">v</code> as the difference between the camera position and the vertex position. We then calculate the half-vector between <code class="language-plaintext highlighter-rouge">v</code> and the normal vector, normalizing the half-vector. Finally, we calculate our specular shading using the formula $$L_s = k_s (I / r^2) * \max(0, n \cdot h)^p$$. We use $$k_s = 1$$ and $$p = 161$$. With only purely specular shading, running <code class="language-plaintext highlighter-rouge">./clothsim -f ../scene/sphere.json</code> gives
+
+<div align="center">
+  <table style="width:100%">
+    <tr>
+      <td align="center">
+        <img src="../assets/hw4/part5/phong_specular.png" width="400px"/>
+        <figcaption>../scene/sphere.json, specular shading</figcaption>
+      </td>
+    </tr>
+  </table>
+</div>
+
+We see the main specular point near the center and front of the sphere.
+
+Now, let's put it all together. We know that Blinn-Phong reflections are just a summation of ambient, diffuse, and specular shading. Therefore, we get our resulting $$L = L_a + L_d + L_s$$, which when running <code class="language-plaintext highlighter-rouge">./clothsim -f ../scene/sphere.json</code>, gives
+
+<div align="center">
+  <table style="width:100%">
+    <tr>
+      <td align="center">
+        <img src="../assets/hw4/part5/phong.png" width="400px"/>
+        <figcaption>../scene/sphere.json, entire Blinn-Phong model</figcaption>
+      </td>
+    </tr>
+  </table>
+</div>
+
+### Task 3: Texture Mapping
+Modifying <code class="language-plaintext highlighter-rouge">Texture.frag</code>, we set the output single-4 dimensional vector to be a call to the built-in function <code class="language-plaintext highlighter-rouge">texture(sampler2D tex, vec2 uv)</code>, passing in the texture map provided and the texture space coordinate <code class="language-plaintext highlighter-rouge">v_uv</code>.
+
+Below, we include screenshots of running <code class="language-plaintext highlighter-rouge">./clothsim -f ../scene/sphere.json</code> with the default Campanile texture map and :eddie-proctor-vidoe:, one of our favorite Slackmojis.
+
+<div align="center">
+  <table style="width:100%">
+  <colgroup>
+      <col width="50%" />
+      <col width="50%" />
+  </colgroup>
+  <tr>
+    <td align="center">
+      <img src="../assets/hw4/part5/texture.png" width="100%"/>
+      <figcaption>../scene/sphere.json, default Campanile texture</figcaption>
+    </td>
+    <td align="center">
+      <img src="../assets/hw4/part5/texture_eddie_proctor_vidoe.png" width="100%"/>
+      <figcaption>../scene/sphere.json, custom texture</figcaption>
+    </td>
+  </tr>
+  </table>
+</div>
+
+For reference, here is :eddie_proctor_vidoe: (yes, the spelling is correct) in all its glory:
+<div align="center">
+  <table style="width:100%">
+    <tr>
+      <td align="center">
+        <img src="../assets/hw4/part5/eddie_proctor_vidoe.png" width="350px"/>
+        <figcaption>:eddie_proctor_vidoe:</figcaption>
+      </td>
+    </tr>
+  </table>
+</div>
+
+### Task 4: Displacement and Bump Mapping
 TODO
+
+### Task 5: Environment-mapped Reflections
+Our job in this task is to update <code class="language-plaintext highlighter-rouge">Mirror.frag</code>. We first calculate the outgoing eye-ray, $$w_o$$ by subtracting the camera's position, <code class="language-plaintext highlighter-rouge">u_cam_pos</code> from the fragment's position, <code class="language-plaintext highlighter-rouge">v_position</code>. Then, using the surface normal vector, we calculate the incoming $$w_i$$ by calculating $$w_o - 2 (w_o \cdot n) * n$$. Finally, we sample the <code class="language-plaintext highlighter-rouge">texture</code> for the incoming direction $$w_i$$ calculated.
+
+Below is a screenshot of running <code class="language-plaintext highlighter-rouge">./clothsim -f ../scene/sphere.json</code> with environment-mapped reflections.
+<div align="center">
+<table style="width:100%">
+  <colgroup>
+      <col width="50%" />
+      <col width="50%" />
+  </colgroup>
+  <tr>
+    <td align="center">
+      <img src="../assets/hw4/part5/mirror_sphere.png" width="100%"/>
+      <figcaption>../scene/sphere.json, mirror shader on sphere</figcaption>
+    </td>
+    <td align="center">
+      <img src="../assets/hw4/part5/mirror_sphere_with_cloth.png" width="100%"/>
+      <figcaption>../scene/sphere.json, mirror shader on sphere and cloth</figcaption>
+    </td>
+  </tr>
+  <tr>
+      <td colspan="2" align="center">
+        <img src="../assets/hw4/part5/mirror_sphere_cloth.png" width="350px"/>
+        <figcaption>../scene/sphere.json, mirror shader with cloth over sphere</figcaption>
+      </td>
+    </tr>
+  </table>
+</div>
+
+Our custom shader is described more in depth in Part 6. 
+TODO: link when done.
 
 ## Part 6: Extra credit
 TODO
 
 ### Whoosh! (wind)
+TODO
 
 ## Contributors
 Edward Park, Ashley Chiu
