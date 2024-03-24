@@ -606,13 +606,15 @@ Below is a screenshot of running <code class="language-plaintext highlighter-rou
   </table>
 </div>
 
-Our custom shader is described more in depth in Part 6. 
-TODO: link when done.
+Our custom shader is described more in depth in [Part 6](/hw4.md#custom-shader). 
 
 ## Part 6: Extra credit
 TODO
 
 ### Whoosh! (wind)
+TODO
+
+### Custom Shader
 TODO
 
 ## Contributors
