@@ -8,7 +8,7 @@ This assignment has not been completed yet.
 </p>
 
 ## Overview
-Todo
+TODO
 
 ## Part 1: Masses and springs
 In this part, our main goal was creating a grid of point masses and springs. To do so, we iterated through <code class="language-plaintext highlighter-rouge">num_height_points</code> and an inner loop of <code class="language-plaintext highlighter-rouge">num_width_points</code> to generate our point masses in row major order. Depending on whether the orientation was horizontal or vertical, we either varied across the <code class="language-plaintext highlighter-rouge">xz</code> plane or the <code class="language-plaintext highlighter-rouge">xy</code> plane. Furthermore, if the point mass's <code class="language-plaintext highlighter-rouge">(x, y)</code> index was within the cloth's <code class="language-plaintext highlighter-rouge">pinned</code> vector, then we set their <code class="language-plaintext highlighter-rouge">pinned</code> boolean to <code class="language-plaintext highlighter-rouge">true</code> (which we'll see at the corners of ../scene/pinned4.json).
@@ -97,6 +97,27 @@ Finally, to keep springs from being unreasonably deformed, we used the [SIGGRAPH
 - If one of the point masses was pinned, we corrected fully by the other point mass.
 - If both of the point masses were pinned, we did nothing (because they couldn't be moved :')).
 
+Below, we've included screenshots of <code class="language-plaintext highlighter-rouge">./clothsim -f ../scene/pinned4.json</code> with default parameters, with both the wireframe normal appearance.
+
+<div align="center">
+  <table style="width:100%">
+  <colgroup>
+      <col width="50%" />
+      <col width="50%" />
+  </colgroup>
+  <tr>
+    <td align="center">
+      <img src="../assets/hw4/part2/wireframe.png" width="100%"/>
+      <figcaption>../scene/pinned4.json, final resting state, wireframe</figcaption>
+    </td>
+    <td align="center">
+      <img src="../assets/hw4/part2/normal.png" width="100%"/>
+      <figcaption>../scene/pinned4.json, final resting state, normal</figcaption>
+    </td>
+  </tr>
+  </table>
+</div>
+
 ### Experimenting with parameters
 In our cloth simulator, we have the ability to change the spring constant <code class="language-plaintext highlighter-rouge">ks</code>, the <code class="language-plaintext highlighter-rouge">density</code>, and <code class="language-plaintext highlighter-rouge">damping</code> constants. We'll describe how the cloth differs when changing these to the default parameters. Below is the wireframe and normal appearance of <code class="language-plaintext highlighter-rouge">./clothsim -f ../scene/pinned2.json</code> to show default parameters (<code class="language-plaintext highlighter-rouge">ks = 5000 N/m</code>, <code class="language-plaintext highlighter-rouge">density = 15 g/cm^2</code>, <code class="language-plaintext highlighter-rouge">damping = 0.200000%</code>).
 
@@ -161,6 +182,10 @@ While maintaining the default <code class="language-plaintext highlighter-rouge"
   </table>
 </div>
 
+As <code class="language-plaintext highlighter-rouge">ks</code> increases, we see that the strength of the springs increase, which means that they bend much less and stay much flatter than when <code class="language-plaintext highlighter-rouge">ks</code> is smaller. Namely, this means that at our highest example of <code class="language-plaintext highlighter-rouge">ks = 50,000 N/m</code>, when the cloth is resting, there is little creasing (beyond to account for the pinning). Yet, in contrast, we see that when <code class="language-plaintext highlighter-rouge">ks</code> is smaller, the cloth is much more free and has many creases and folds at rest position. Since it's much more free to move, even at rest position, with <code class="language-plaintext highlighter-rouge">ks = 50 N/m</code>, it is loose and wiggles: it doesn't stay completely still.
+
+When comparing how the cloth behaves as it moves from start to rest, we note that at lower <code class="language-plaintext highlighter-rouge">ks</code> values, because the spring constant is much less, the springs are less tight, so the cloth is a lot more flexible and waves as it swings down. In comparison, with higher <code class="language-plaintext highlighter-rouge">ks</code> values, the cloth is much more rigid and stays relatively flat as it swings down to rest position.
+
 #### Changing <code class="language-plaintext highlighter-rouge">density</code>
 While maintaining the default <code class="language-plaintext highlighter-rouge">ks = 5000 N/m</code> and <code class="language-plaintext highlighter-rouge">damping = 0.200000%</code>, let's show ../scene/pinned2.json with <code class="language-plaintext highlighter-rouge">density = 1 g/cm^2</code>, <code class="language-plaintext highlighter-rouge">density = 50 g/cm^2</code>, <code class="language-plaintext highlighter-rouge">density = 500 g/cm^2</code>, and <code class="language-plaintext highlighter-rouge">density = 5,000 g/cm^2</code>.
 
@@ -213,7 +238,15 @@ While maintaining the default <code class="language-plaintext highlighter-rouge"
   </table>
 </div>
 
+We see that <code class="language-plaintext highlighter-rouge">density</code> operates almost inversely to <code class="language-plaintext highlighter-rouge">ks</code>. Namely, at the lowest <code class="language-plaintext highlighter-rouge">density = 1 g/cm^2</code>, we see the most rigid cloth, where there are less deformations in the cloth. Because at lower densities, the cloths will have lower mass, this means that the forces (that we accumulate) at each point masss will be less, and thus, means that there's less forces pulling the cloth down, causing less wrinkles. In contrast, at our highest <code class="language-plaintext highlighter-rouge">density = 5,000 g/cm^2</code>, there are larger external forces working on the point masses (due to Newton's 2nd Law). This means that the cloth weighs more, and thus, has many more wrinkles, which we can visibly see in the normal appearance with <code class="language-plaintext highlighter-rouge">density = 5,000 g/cm^2</code>.
+
+When discussing how the cloth behaves as it moves from start to rest, we note that lower <code class="language-plaintext highlighter-rouge">density</code> values, the cloth weighs less, and as such, stays relatively flat as the forces acting against it aren't as strong. This differs from using higher <code class="language-plaintext highlighter-rouge">density</code> values as the forces acting on the cloth are now stronger, and thus, the cloth deforms more, which causes more waves and wrinkles as it swings down.
+
 #### Changing <code class="language-plaintext highlighter-rouge">damping</code>
+While maintaining the default <code class="language-plaintext highlighter-rouge">ks = 5000 N/m</code> and <code class="language-plaintext highlighter-rouge">density = 15 g/cm^2</code>, let's show ../scene/pinned2.json with <code class="language-plaintext highlighter-rouge">damping = 0%</code> and <code class="language-plaintext highlighter-rouge">damping = 1%</code>.
+
+Here, we've included .gif depictions because what we believ to be more important is demonstrating the speed and flexibility at which the cloth moves. 
+
 <div align="center">
   <table style="width:100%">
   <colgroup>
@@ -243,26 +276,7 @@ While maintaining the default <code class="language-plaintext highlighter-rouge"
   </table>
 </div>
 
-Below, we've included screenshots of <code class="language-plaintext highlighter-rouge">./clothsim -f ../scene/pinned4.json</code> with default parameters, with both the wireframe normal appearance.
-
-<div align="center">
-  <table style="width:100%">
-  <colgroup>
-      <col width="50%" />
-      <col width="50%" />
-  </colgroup>
-  <tr>
-    <td align="center">
-      <img src="../assets/hw4/part2/wireframe.png" width="100%"/>
-      <figcaption>../scene/pinned4.json, final resting state, wireframe</figcaption>
-    </td>
-    <td align="center">
-      <img src="../assets/hw4/part2/normal.png" width="100%"/>
-      <figcaption>../scene/pinned4.json, final resting state, normal</figcaption>
-    </td>
-  </tr>
-  </table>
-</div>
+Finally, we compare what happens when we mess with  <code class="language-plaintext highlighter-rouge">damping</code>. At the lowest possible <code class="language-plaintext highlighter-rouge">damping = 0%</code> provided, we see that the cloth swings quiet quickly back and forth. In contrast, at the highest possible  <code class="language-plaintext highlighter-rouge">damping = 1%</code>, the cloth moves really quickly and seemingly stops at the rest position (that matches the rest position with default parameters). Since we know that damping messes with the velocity term in Verlet integration, with no damping, this means there is no loss of energy due to friction, heat loss, or any other force. Therefore, the cloth just swings back and forth, with wrinkling and no rigid structure because there is no loss of energy. However, with the highest damping, the cloth falls much slower and holds its structure a bit better. The expalanation for this is that the forces acting on it (namely, gravity) are now dampened, which means that the positions of the point masses don't move as quickly. This reflects a state in which there is a loss of energy, so not all the forces that are thrust upon the cloth actually convert into energy that moves the cloth--some is lost or dissipated.
 
 ## Part 3: Handling collisions with other objects
 Throughout this part, we are colliding a cloth with [spheres](/hw4.md#task-1-handling-collisions-with-spheres) and [planes](/hw4.md#task-2-handling-collisions-with-planes). We want to make the cloth collide in a realstic manner--which we will later elevate in [Part 4](/hw4.md#part-4-handling-self-collisions) with self collisions!
@@ -432,12 +446,14 @@ Below are 6 screenshots of <code class="language-plaintext highlighter-rouge">./
   </table>
 </div>
 
-### Experiemnting with <code class="language-plaintext highlighter-rouge">density</code> and <code class="language-plaintext highlighter-rouge">ks</code>
+### Experimenting with <code class="language-plaintext highlighter-rouge">density</code> and <code class="language-plaintext highlighter-rouge">ks</code>
 TODO
 
 ## Part 5: Shaders
+TODO
 
 ## Part 6: Extra credit
+TODO
 
 ### Whoosh! (wind)
 
