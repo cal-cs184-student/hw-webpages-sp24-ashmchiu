@@ -74,10 +74,148 @@ Now, here are some screenshots of ../scene/pinned2.json without any shearing con
   </table>
 </div>
 
-
 ## Part 2: Simulation via numerical integration
+Our main goal in this part is completing the <code class="language-plaintext highlighter-rouge">Cloth::simulate</code> method that runs one time step of time length <code class="language-plaintext highlighter-rouge">delta_t</code> and applies all <code class="language-plaintext highlighter-rouge">accelerations</code> uniformly to all point masses in the cloth.
+
+### Task 1: Compute total force acting on each point mass
+First, we calculated all the external forces based on the <code class="language-plaintext highlighter-rouge">external_accelerations</code>, which just contains <code class="language-plaintext highlighter-rouge">gravity</code> as of now (see our [wind](/hw4.md#whoosh-wind) simulations for an updated <code class="language-plaintext highlighter-rouge">external_accelerations</code>). Since we're applying all accelerations uniformly, we can just sum them once, using Newton's 2nd Law. $$F = ma$$ (noting that the $$m$$, mass, is constant). Then, we set each point mass's <code class="language-plaintext highlighter-rouge">forces</code> to a <code class="language-plaintext highlighter-rouge">Vector3D</code> of our summed external forces.
+
+Then, we needed to apply spring correction forces (based on our work in [Part 1](/hw4.md#part-1-masses-and-springs) in assigning spring constraints). We used Hooke's law, $$F_s = k_s * (\vert\vert p_a - p_b\vert\vert - l)$$, such that for each spring, we would apply $$F_s$$ force to the point mass on one end, and then an equal, but opposite (negated) force to the other. For bending constraints, we set $$F_s$$ to $$0.2$$x compared to shearing and structural constraints since they're normally weaker.
+
+### Task 2: Use Verlet integration to compute new point mass positions
+Next, we then computed a point mass's new position since we now know the force acting on each point mass at a specific time step. For this, we use Verlet integration on all un-pinned vertices, calculating updated positions via
+
+$$
+x_{t + dt} = x_t + (1 - d) * (x_t - x_{t - dt}) + a_t * dt^2
+$$
+
+noting that $$d$$ serves as a <code class="language-plaintext highlighter-rouge">damping</code> term given by the <code class="language-plaintext highlighter-rouge">ClothParameters</code>. We made sure in this step to also update the point mass's <code class="language-plaintext highlighter-rouge">last_position</code> to track positions through time.
+
+### Task 3: Constrain position updates
+Finally, to keep springs from being unreasonably deformed, we used the [SIGGRAPH 1995 Provot paper](https://www.cs.rpi.edu/~cutler/classes/advancedgraphics/S14/papers/provot_cloth_simulation_96.pdf) to prevent springs from extending past than 10% of their <code class="language-plaintext highlighter-rouge">rest_length</code> at the end of any time step. If they did, we would correct the positions of the spring's point masses:
+- If neither of the point masses were pinned, then we would performed half of the correct to each point mass.
+- If one of the point masses was pinned, we corrected fully by the other point mass.
+- If both of the point masses were pinned, we did nothing (because they couldn't be moved :')).
+
+### Experimenting with parameters
+
+#### Changing <code class="language-plaintext highlighter-rouge">ks</code>
+
+#### Changing <code class="language-plaintext highlighter-rouge">density</code>
+
+#### Changing <code class="language-plaintext highlighter-rouge">damping</code>
+
+Below, we've included screenshots of <code class="language-plaintext highlighter-rouge">./clothsim -f ../scene/pinned4.json</code> with default parameters, with both the wireframe normal appearance.
+
+<div align="center">
+  <table style="width:100%">
+  <colgroup>
+      <col width="50%" />
+      <col width="50%" />
+  </colgroup>
+  <tr>
+    <td align="center">
+      <img src="../assets/hw4/part2/wireframe.png" width="100%"/>
+      <figcaption>../scene/pinned4.json, final resting state, wireframe</figcaption>
+    </td>
+    <td align="center">
+      <img src="../assets/hw4/part2/normal.png" width="100%"/>
+      <figcaption>../scene/pinned4.json, final resting state, normal</figcaption>
+    </td>
+  </tr>
+  </table>
+</div>
 
 ## Part 3: Handling collisions with other objects
+Throughout this part, we are colliding a cloth with [spheres](/hw4.md#task-1-handling-collisions-with-spheres) and [planes](/hw4.md#task-2-handling-collisions-with-planes). We want to make the cloth collide in a realstic manner--which we will later elevate in [Part 4](/hw4.md#part-4-handling-self-collisions) with self collisions!
+
+### Task 1: Handling collisions with spheres
+In handling sphere collisions, we implemented <code class="language-plaintext highlighter-rouge">Sphere::collide</code>, noting that if the position of the point mass would be within the sphere, we would "bump" it to the surface of the sphere. To do so, we first used Euclidean distances to check whether the point mass was inside the sphere, returning if it wasn't. Then, we computed the tangent point along the sphere where the collision would have occurred, using this to compute the correction vector and applying that correction vector to the point mass's <code class="language-plaintext highlighter-rouge">last_position</code>, scaled by <code class="language-plaintext highlighter-rouge">1 - f</code> where <code class="language-plaintext highlighter-rouge">f</code> is friction.
+
+We also updated <code class="language-plaintext highlighter-rouge">Cloth::simulate</code>, checking for collisions between every <code class="language-plaintext highlighter-rouge">PointMass</code> and every possible <code class="language-plaintext highlighter-rouge">CollisionObject</code>, of which <code class="language-plaintext highlighter-rouge">Sphere</code> was a type.
+
+Below, we've included screenshots of <code class="language-plaintext highlighter-rouge">./clothsim -f ../scene/sphere.json</code> in its final resting state, using the default <code class="language-plaintext highlighter-rouge">ks = 5000</code>, as well as <code class="language-plaintext highlighter-rouge">ks = 500</code> and <code class="language-plaintext highlighter-rouge">ks = 50000</code>.
+
+<div align="center">
+  <table style="width:100%">
+  <colgroup>
+      <col width="50%" />
+      <col width="50%" />
+  </colgroup>
+  <tr>
+    <td align="center">
+      <img src="../assets/hw4/part3/sphere_wireframe.png" width="100%"/>
+      <figcaption>../scene/sphere.json, final resting state, wireframe, <br>default <code class="language-plaintext highlighter-rouge">ks = 5000</code></figcaption>
+    </td>
+    <td align="center">
+      <img src="../assets/hw4/part3/sphere_normal.png" width="100%"/>
+      <figcaption>../scene/sphere.json, final resting state, normal, <br>default <code class="language-plaintext highlighter-rouge">ks = 5000</code></figcaption>
+    </td>
+  </tr>
+  <tr>
+    <td align="center">
+      <img src="../assets/hw4/part3/sphere_wireframe_500.png" width="100%"/>
+      <figcaption>../scene/sphere.json, final resting state, wireframe, <br><code class="language-plaintext highlighter-rouge">ks = 500</code></figcaption>
+    </td>
+    <td align="center">
+      <img src="../assets/hw4/part3/sphere_normal_500.png" width="100%"/>
+      <figcaption>../scene/sphere.json, final resting state, normal, <br><code class="language-plaintext highlighter-rouge">ks = 500</code></figcaption>
+    </td>
+  </tr>
+  <tr>
+    <td align="center">
+      <img src="../assets/hw4/part3/sphere_wireframe_50000.png" width="100%"/>
+      <figcaption>../scene/sphere.json, final resting state, wireframe, <br><code class="language-plaintext highlighter-rouge">ks = 50000</code></figcaption>
+    </td>
+    <td align="center">
+      <img src="../assets/hw4/part3/sphere_normal_50000.png" width="100%"/>
+      <figcaption>../scene/sphere.json, final resting state, normal, <br><code class="language-plaintext highlighter-rouge">ks = 5000</code></figcaption>
+    </td>
+  </tr>
+  </table>
+</div>
+
+We see that when <code class="language-plaintext highlighter-rouge">ks</code> increases, the cloth becomes more rigid and the folds structured and hence, there are also less folds. In contrast, when <code class="language-plaintext highlighter-rouge">ks</code> decreases, the cloth becomes much more flexible, and we can see that the folds around the sphere increase as the cloth as able to mold to the sphere more. We can see that at lower <code class="language-plaintext highlighter-rouge">ks</code> values, the cloth drapes more willingly, so we can see the spherical structure more whereas at the highest <code class="language-plaintext highlighter-rouge">ks</code> value, the creasing at the top obscures the sphere's smoothness around the sides.
+
+In discussion regarding the purpose of <code class="language-plaintext highlighter-rouge">ks</code>, this does make sense as a stronger/larger spring constant means that the spring is stronger, so the cloth holds shape stronger (and vice versa for the smaller <code class="language-plaintext highlighter-rouge">ks</code>).
+
+### Task 2: Handling collisions with planes
+To handle collisions with planes, we implemented the <code class="language-plaintext highlighter-rouge">Plane::collide</code> method. Similarly, we first checked whether a point had crossed the plane by checking whether the dot product between the normal vector of the plane and the point mass's <code class="language-plaintext highlighter-rouge">last_position</code> and <code class="language-plaintext highlighter-rouge">position</code> had different signs. If the signs were the same, this meant that the point mass had not passed the plane, so we directly returned.
+
+Otherwise, we again calcualted the tangent point at which the collision between the point mass and the plane would have occurred, using that to compute the correction vector (in which we factored in the <code class="language-plaintext highlighter-rouge">SURFACE_OFFSET</code> by the <code class="language-plaintext highlighter-rouge">normal</code> vector of the <code class="language-plaintext highlighter-rouge">Plane</code>). Then, similarly to <code class="language-plaintext highlighter-rouge">Sphere::collide</code>, we applied the correction vector to the point mass's <code class="language-plaintext highlighter-rouge">last_position</code>, scaled by <code class="language-plaintext highlighter-rouge">1 - f</code> where <code class="language-plaintext highlighter-rouge">f</code> is friction.
+
+We also updated <code class="language-plaintext highlighter-rouge">Cloth::simulate</code>, checking for collisions between every <code class="language-plaintext highlighter-rouge">PointMass</code> and every possible <code class="language-plaintext highlighter-rouge">CollisionObject</code>, of which <code class="language-plaintext highlighter-rouge">Plane</code> was a type.
+
+Here's a few screenshots of <code class="language-plaintext highlighter-rouge">./clothsim -f ../scene/plane.json</code>, lying peacefully at rest on the plane. (We are kalm -- no panic!)
+
+<div align="center">
+  <table style="width:100%">
+  <colgroup>
+      <col width="50%" />
+      <col width="50%" />
+  </colgroup>
+  <tr>
+    <td align="center">
+      <img src="../assets/hw4/part3/plane_wireframe.png" width="100%"/>
+      <figcaption>../scene/plane.json, final resting state, wireframe</figcaption>
+    </td>
+    <td align="center">
+      <img src="../assets/hw4/part3/plane_normal.png" width="100%"/>
+      <figcaption>../scene/plane.json, final resting state, normal</figcaption>
+    </td>
+  </tr>
+  <tr>
+    <td align="center">
+      <img src="../assets/hw4/part3/plane_mirror.png" width="100%"/>
+      <figcaption>../scene/plane.json, final resting state, mirror</figcaption>
+    </td>
+    <td align="center">
+      <img src="../assets/hw4/part3/plane_eddie_proctor_vidoe.png" width="100%"/>
+      <figcaption>../scene/plane.json, final resting state, custom texture (eddie)</figcaption>
+    </td>
+  </tr>
+  </table>
+</div>
 
 ## Part 4: Handling self-collisions
 <div align="center">
@@ -106,6 +244,8 @@ Now, here are some screenshots of ../scene/pinned2.json without any shearing con
 ## Part 5: Shaders
 
 ## Part 6: Extra credit
+
+### Whoosh! (wind)
 
 ## Contributors
 Edward Park, Ashley Chiu
