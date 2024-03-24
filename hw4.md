@@ -98,12 +98,16 @@ Finally, to keep springs from being unreasonably deformed, we used the [SIGGRAPH
 - If both of the point masses were pinned, we did nothing (because they couldn't be moved :')).
 
 ### Experimenting with parameters
+TODO
 
 #### Changing <code class="language-plaintext highlighter-rouge">ks</code>
+TODO
 
 #### Changing <code class="language-plaintext highlighter-rouge">density</code>
+TODO
 
 #### Changing <code class="language-plaintext highlighter-rouge">damping</code>
+TODO
 
 Below, we've included screenshots of <code class="language-plaintext highlighter-rouge">./clothsim -f ../scene/pinned4.json</code> with default parameters, with both the wireframe normal appearance.
 
@@ -218,6 +222,8 @@ Here's a few screenshots of <code class="language-plaintext highlighter-rouge">.
 </div>
 
 ## Part 4: Handling self-collisions
+In [Part 3](/hw4.md#part-3-handling-collisions-with-other-objects), we handled collisions between a cloth and other objects, however, if a cloth were to collide with itself right now, it would have no comprehension of that collision (and just clip through itself). What we aim to implement (and what we did!) was prevent this clipping, ensuring that if the cloth fell on itself, it would fold. Below, we run <code class="language-plaintext highlighter-rouge">./clothsim -f ../scene/selfCollision.json</code> prior to implementing Task 4 and after. To the left, you can see the clipping, particularly the glitching after the cloth is fully on the plane (no longer resting--this is a panic!). To the right, you can see the cloth folding over itself and resting in a much more peaceful way.
+
 <div align="center">
   <table style="width:100%">
   <colgroup>
@@ -226,20 +232,78 @@ Here's a few screenshots of <code class="language-plaintext highlighter-rouge">.
   </colgroup>
     <tr>
       <td align="center">
-        <video controls="controls" width="100%" name="Video Name">
+        <video controls="controls" width="100%" name="Before Self-Collisions">
             <source src="../assets/hw4/part4/pre_self_collision.mov">
         </video>
-        <figcaption>send help</figcaption>
+        <figcaption>A very send help moment.</figcaption>
       </td>
       <td align="center">
-        <video controls="controls" width="100%" name="Video Name">
-            <source src="../assets/hw4/part4/vid.mov">
+        <video controls="controls" width="100%" name="After Self-Collisions">
+            <source src="../assets/hw4/part4/self_collision.mov">
         </video>
-        <figcaption>send help</figcaption>
+        <figcaption>Help was sent.</figcaption>
       </td>
     </tr>
   </table>
 </div>
+
+To perform this task, we implemented spatial hashing, mapping floats to a <code class="language-plaintext highlighter-rouge">vector<PointMass *></code>, where each float uniquely represented a 3D box volume in the scene and the <code class="language-plaintext highlighter-rouge">vector<PointMass *></code> was a vector containing all the point masses in that 3D box volume. Using this hash table, we would apply a repulsive collision force if any pair of point masses in the same 3D box volume got too close to one another.
+
+### Task 1: <code class="language-plaintext highlighter-rouge">Cloth::hash_position</code>
+First, we implemented <code class="language-plaintext highlighter-rouge">Cloth::hash_position</code> to take in a point mass's position and to effectively calculate its 3D box volume's index in our spatial hash table. To do so, we calculated a <code class="language-plaintext highlighter-rouge">(w, h, t)</code> such that <code class="language-plaintext highlighter-rouge">w = 3 * width / num_width_points</code>, <code class="language-plaintext highlighter-rouge">h = 3 * height / num_height_points</code>, and <code class="language-plaintext highlighter-rouge">t = max(w, h)</code>. From here, we determined what 3D box the point was in by calculating <code class="language-plaintext highlighter-rouge">x = floor(pos.x / w) * w</code>, and similarly for the <code class="language-plaintext highlighter-rouge">y</code> and <code class="language-plaintext highlighter-rouge">z</code> axes. Knowing this, we transformed this 3D position into a 1D position by using a formmulation similar to how we determined indices for supersampled points in [Homework 1](/hw1.md#resizing-the-sample-buffer), returning this value.
+
+### Task 2: <code class="language-plaintext highlighter-rouge">Cloth::build_spatial_map</code>
+Now, since we had a way of calculating each point mass's hash position, we can now construct our spatial map. To do so, we iterated over all <code class="language-plaintext highlighter-rouge">point_masses</code> in the cloth and found its [<code class="language-plaintext highlighter-rouge">hash_position</code>](/hw4.md#task-1-clothhash_position). Then, since at each key-value pair in the map, our value is a <code class="language-plaintext highlighter-rouge">vector<PointMass *></code>, we initialize a new <code class="language-plaintext highlighter-rouge">vector<PointMass *></code> if there isn't already one at the hash position, and then we <code class="language-plaintext highlighter-rouge">push_back</code> the current point mass.
+
+### Task 3: <code class="language-plaintext highlighter-rouge">Cloth::self_collide</code>
+Finally, we implemented our full self-collision method. For the passed in point mass, we check whether the normalized distance between it and all candidate point masses is less than $$2 * thickness$$, and also whether it's normalized distancen is greater than 0 (to prevent a point mass from colliding with itself). Then, we would calculate the final correction to be unit distance between the two point masses multipled by the correction to ensure that the pair would be $$2 * thickness$$ distance apart.
+
+Then, we updated <code class="language-plaintext highlighter-rouge">Cloth::simulate</code>, first to call our <code class="language-plaintext highlighter-rouge">build_spatial_map</code> function. Then, we iterated through all <code class="language-plaintext highlighter-rouge">point_masses</code>, calling <code class="language-plaintext highlighter-rouge">self_collide</code> on it.
+
+Below are 6 screenshots of <code class="language-plaintext highlighter-rouge">./clothsim -f ../scene/selfCollision.json
+</code> to show how the cloth falls and folds on itself.
+
+<div align="center">
+  <table style="width:100%">
+  <colgroup>
+      <col width="50%" />
+      <col width="50%" />
+  </colgroup>
+  <tr>
+    <td align="center">
+      <img src="../assets/hw4/part4/1early.png" width="100%"/>
+      <figcaption>../scene/plane.json, early, initial self-collision</figcaption>
+    </td>
+    <td align="center">
+      <img src="../assets/hw4/part4/2middle.png" width="100%"/>
+      <figcaption>../scene/selfCollision.json, continuing folding over itself</figcaption>
+    </td>
+  </tr>
+  <tr>
+    <td align="center">
+      <img src="../assets/hw4/part4/3squid.png" width="100%"/>
+      <figcaption>../scene/selfCollision.json, deep into self-collisions</figcaption>
+    </td>
+    <td align="center">
+      <img src="../assets/hw4/part4/4flattening.png" width="100%"/>
+      <figcaption>../scene/selfCollision.json, beginning to flatten out</figcaption>
+    </td>
+  </tr>
+  <tr>
+    <td align="center">
+      <img src="../assets/hw4/part4/5unfurl.png" width="100%"/>
+      <figcaption>../scene/selfCollision.json, smoothing out</figcaption>
+    </td>
+    <td align="center">
+      <img src="../assets/hw4/part4/6flatish.png" width="100%"/>
+      <figcaption>../scene/selfCollision.json, final resting state</figcaption>
+    </td>
+  </tr>
+  </table>
+</div>
+
+### Experiemnting with <code class="language-plaintext highlighter-rouge">density</code> and <code class="language-plaintext highlighter-rouge">ks</code>
+TODO
 
 ## Part 5: Shaders
 
