@@ -2,10 +2,13 @@
 layout: page
 title: 'Homework 4: Clothsim'
 has_right_toc: true
+usemathjax: true
 ---
 <p class="warning-message">
 This assignment has not been completed yet.
 </p>
+
+site: [https://cal-cs184-student.github.io/hw-webpages-sp24-ashmchiu/hw4/](https://cal-cs184-student.github.io/hw-webpages-sp24-ashmchiu/hw4/)
 
 ## Overview
 TODO
@@ -247,6 +250,8 @@ While maintaining the default <code class="language-plaintext highlighter-rouge"
 
 Here, we've included .gif depictions because what we believ to be more important is demonstrating the speed and flexibility at which the cloth moves. 
 
+TODO: also include pngs
+
 <div align="center">
   <table style="width:100%">
   <colgroup>
@@ -449,6 +454,53 @@ Below are 6 screenshots of <code class="language-plaintext highlighter-rouge">./
 ### Experimenting with <code class="language-plaintext highlighter-rouge">density</code> and <code class="language-plaintext highlighter-rouge">ks</code>
 TODO
 
+Here is a .gif of the self-collision in <code class="language-plaintext highlighter-rouge">./clothsim -f ../scene/selfCollision.json</code> with default <code class="language-plaintext highlighter-rouge">ks = 5000 N/m</code> and <code class="language-plaintext highlighter-rouge">density = 15 g/cm^2</code>.
+
+<div align="center">
+  <table style="width:100%">
+    <tr>
+      <td align="center">
+        <img src="../assets/hw4/part4/self_collision_default.gif" width="400px"/>
+        <figcaption>../scene/selfCollision.json, <br>default <code class="language-plaintext highlighter-rouge">ks = 5000 N/m</code>, <code class="language-plaintext highlighter-rouge">density = 15 g/cm^2</code></figcaption>
+      </td>
+    </tr>
+  </table>
+</div>
+
+#### <code class="language-plaintext highlighter-rouge">ks</code>
+Here are .gif files of the self-collision in <code class="language-plaintext highlighter-rouge">./clothsim -f ../scene/selfCollision.json</code> with default <code class="language-plaintext highlighter-rouge">density = 15 g/cm^2</code>, but varying <code class="language-plaintext highlighter-rouge">ks</code> with a low <code class="language-plaintext highlighter-rouge">ks = 50 N/m</code> and a high <code class="language-plaintext highlighter-rouge">ks = 50,000 N/m</code>.
+<div>
+<table>
+  <tr>
+      <td align="center">
+        <img src="../assets/hw4/part4/self_collision_low_ks.gif" width="100%"/>
+        <figcaption>../scene/selfCollision.json, low <code class="language-plaintext highlighter-rouge">ks = 50 N/m</code></figcaption>
+      </td>
+      <td align="center">
+        <img src="../assets/hw4/part4/self_collision_high_ks.gif" width="100%"/>
+        <figcaption>../scene/selfCollision.json, high <code class="language-plaintext highlighter-rouge">ks = 50,000 N/m</code></figcaption>
+      </td>
+    </tr>
+  </table>
+</div>
+
+#### <code class="language-plaintext highlighter-rouge">density</code>
+Here are .gif files of the self-collision in <code class="language-plaintext highlighter-rouge">./clothsim -f ../scene/selfCollision.json</code> with default <code class="language-plaintext highlighter-rouge">ks = 5000 N/m</code>, but varying <code class="language-plaintext highlighter-rouge">density</code> with a low <code class="language-plaintext highlighter-rouge">density = 1 g/cm^2</code> and a high <code class="language-plaintext highlighter-rouge">density = 50 g/cm^2</code>.
+<div>
+<table>
+  <tr>
+      <td align="center">
+        <img src="../assets/hw4/part4/self_collision_low_density.gif" width="100%"/>
+        <figcaption>../scene/selfCollision.json, low <code class="language-plaintext highlighter-rouge">density = 1 g/cm^2</code></figcaption>
+      </td>
+      <td align="center">
+        <img src="../assets/hw4/part4/self_collision_high_density.gif" width="100%"/>
+        <figcaption>../scene/selfCollision.json, high <code class="language-plaintext highlighter-rouge">density = 50 g/cm^2</code></figcaption>
+      </td>
+    </tr>
+  </table>
+</div>
+
 ## Part 5: Shaders
 TODO: Explain in your own words what is a shader program and how vertex and fragment shaders work together to create lighting and material effects.
 
@@ -575,12 +627,141 @@ For reference, here is :eddie_proctor_vidoe: (yes, the spelling is correct) in a
 </div>
 
 ### Task 4: Displacement and Bump Mapping
-TODO
+For bump mapping, in <code class="language-plaintext highlighter-rouge">Bump.frag</code>, we implemented our <code class="language-plaintext highlighter-rouge">h(vec2 uv)</code> function to return the r-value of the return of calling <code class="language-plaintext highlighter-rouge">texture</code>. We also used the provided <code class="language-plaintext highlighter-rouge">normal</code> and <code class="language-plaintext highlighter-rouge">tangent</code> to calculate the <code class="language-plaintext highlighter-rouge">bitangent = cross(normal, tangent)</code> to create the <code class="language-plaintext highlighter-rouge">TBN</code> matrix. 
+
+Utilizing this <code class="language-plaintext highlighter-rouge">TBN</code>, we calculate <code class="language-plaintext highlighter-rouge">dU</code> and <code class="language-plaintext highlighter-rouge">dV</code> with the following equations
+- <code class="language-plaintext highlighter-rouge">dU</code>: $$dU = (h(u + 1 / w, v) - h(u, v)) * k_h * k_n$$
+- <code class="language-plaintext highlighter-rouge">dV</code>: $$dV = (h(u, v + 1 / h) - h(u, v)) * k_h * k_n$$
+
+to get $$n_o = (-dU, -dV, 1)$$, the local space normal. From here, we calculate the displaced model space normal as $$n_d = TBN n_o$$, and reuse our code from <code class="language-plaintext highlighter-rouge">Phong.frag</code> as our shading calculations, replacing our <code class="language-plaintext highlighter-rouge">normal</code> vector with our calculated $$n_d$$.
+
+Below are screenshots of running <code class="language-plaintext highlighter-rouge">./clothsim -f ../scene/sphere.json</code> with bump mapping, setting the normal to 100 and height to 0.061. We use <code class="language-plaintext highlighter-rouge">texture3.png</code>.
+
+<div align="center">
+<table style="width:100%">
+  <colgroup>
+      <col width="50%" />
+      <col width="50%" />
+  </colgroup>
+  <tr>
+    <td align="center">
+      <img src="../assets/hw4/part5/bump_sphere.png" width="100%"/>
+      <figcaption>../scene/sphere.json, bump mapping on sphere</figcaption>
+    </td>
+    <td align="center">
+      <img src="../assets/hw4/part5/bump.png" width="100%"/>
+      <figcaption>../scene/sphere.json, bump mapping on sphere and cloth</figcaption>
+    </td>
+  </tr>
+  <tr>
+      <td colspan="2" align="center">
+        <img src="../assets/hw4/part5/bump_cloth_sphere.png" width="350px"/>
+        <figcaption>../scene/sphere.json, bump mapping with cloth over sphere</figcaption>
+      </td>
+    </tr>
+  </table>
+</div>
+
+For displacement mapping, we copied over the work we did in <code class="language-plaintext highlighter-rouge">Bump.frag</code> into <code class="language-plaintext highlighter-rouge">Displacement.frag</code>. Then, we updated <code class="language-plaintext highlighter-rouge">Displacement.vert</code> to calculate <code class="language-plaintext highlighter-rouge">v_position</code> as the old position <code class="language-plaintext highlighter-rouge">u_model * in_position</code> summed with the original model space vertex normal <code class="language-plaintext highlighter-rouge">normalize(u_model * in_normal)</code> scaled by <code class="language-plaintext highlighter-rouge">h(in_uv) * u_height_scaling</code>. Because <code class="language-plaintext highlighter-rouge">gl_position</code> represents the screen space position, we also modified this to reflect the new position.
+
+Below are screenshots of running <code class="language-plaintext highlighter-rouge">./clothsim -f ../scene/sphere.json</code> with displacement mapping, setting the normal to 100 and height to 0.061. We use <code class="language-plaintext highlighter-rouge">texture3.png</code>.
+
+<div align="center">
+<table style="width:100%">
+  <colgroup>
+      <col width="50%" />
+      <col width="50%" />
+  </colgroup>
+  <tr>
+    <td align="center">
+      <img src="../assets/hw4/part5/displacement_sphere.png" width="100%"/>
+      <figcaption>../scene/sphere.json, displacement mapping on sphere</figcaption>
+    </td>
+    <td align="center">
+      <img src="../assets/hw4/part5/displacement.png" width="100%"/>
+      <figcaption>../scene/sphere.json, displacement mapping on sphere and cloth</figcaption>
+    </td>
+  </tr>
+  <tr>
+      <td colspan="2" align="center">
+        <img src="../assets/hw4/part5/displacement_cloth_sphere.png" width="350px"/>
+        <figcaption>../scene/sphere.json, displacement mapping with cloth over sphere</figcaption>
+      </td>
+    </tr>
+  </table>
+</div>
+
+#### Comparing Bump and Displacement Mapping
+<div align="center">
+<table style="width:100%">
+  <colgroup>
+      <col width="50%" />
+      <col width="50%" />
+  </colgroup>
+  <tr>
+    <td align="center">
+      <img src="../assets/hw4/part5/bump_sphere.png" width="100%"/>
+      <figcaption>../scene/sphere.json, bump mapping on sphere</figcaption>
+    </td>
+    <td align="center">
+      <img src="../assets/hw4/part5/displacement_sphere.png" width="100%"/>
+      <figcaption>../scene/sphere.json, displacement mapping on sphere</figcaption>
+    </td>
+  </tr>
+  <tr>
+    <td align="center">
+      <img src="../assets/hw4/part5/bump_cloth_sphere.png" width="100%"/>
+      <figcaption>../scene/sphere.json, bump mapping with cloth over sphere</figcaption>
+    </td>
+    <td align="center">
+      <img src="../assets/hw4/part5/displacement_cloth_sphere.png" width="100%"/>
+      <figcaption>../scene/sphere.json, displacement mapping with cloth over sphere</figcaption>
+    </td>
+  </tr>
+  </table>
+</div>
+
+Looking at these images where the only difference is using bump mapping versus displacement mapping, we see that bump mapping maintains the smoothness of the sphere while displacement mapping, while actually changing the location of each vertex, no longer is smooth. Namely, we see that bump mapping mainly modifies the fragments, not the locations of the vertices themselves across screen space, so it gives an illusion of bumps and highlights and indentations, by creating highlights where the brick highlights would be through the reuse of [Phong shading](/hw4.md#task-2-blinn-phong-shading). On the other hand, we see that displacement mapping actually moves around the vertices of the sphere based on the texture map , matching the roughness of the bricks, deforming from the perfect smooth texture the sphere had.
+
+Playing around with coarseness, here are screenshots of running <code class="language-plaintext highlighter-rouge">./clothsim -f ../scene/sphere.json</code> with bump displacement mapping, setting the normal to 100 and height to 0.061. We use <code class="language-plaintext highlighter-rouge">texture3.png</code>. On the top row, we use <code class="language-plaintext highlighter-rouge">./clothsim -f ../scene/sphere.json -o 16 -a 16</code> for lower resolution and on the bottom row, we use <code class="language-plaintext highlighter-rouge">./clothsim -f ../scene/sphere.json -o 128 -a 128</code> for higher resolution.
+
+<div align="center">
+<table style="width:100%">
+  <colgroup>
+      <col width="50%" />
+      <col width="50%" />
+  </colgroup>
+  <tr>
+    <td align="center">
+      <img src="../assets/hw4/part5/bump_o16_a16.png" width="100%"/>
+      <figcaption>../scene/sphere.json, bump mapping <br><code class="language-plaintext highlighter-rouge">-o 16 -a 16</code></figcaption>
+    </td>
+    <td align="center">
+      <img src="../assets/hw4/part5/displacement_o16_a16.png" width="100%"/>
+      <figcaption>../scene/sphere.json, displacement mapping <br><code class="language-plaintext highlighter-rouge">-o 16 -a 16</code></figcaption>
+    </td>
+  </tr>
+  <tr>
+    <td align="center">
+      <img src="../assets/hw4/part5/bump_o128_a128.png" width="100%"/>
+      <figcaption>../scene/sphere.json, bump mapping <br><code class="language-plaintext highlighter-rouge">-o 128 -a 128</code></figcaption>
+    </td>
+    <td align="center">
+      <img src="../assets/hw4/part5/displacement_o128_a128.png" width="100%"/>
+      <figcaption>../scene/sphere.json, displacement mapping <br><code class="language-plaintext highlighter-rouge">-o 128 -a 128</code></figcaption>
+    </td>
+  </tr>
+  </table>
+</div>
+
+Now, when we compare the coarseness of the sphere while changing the resolution of the image, the displacement mapping affects the coarseness of the sphere more than bump mapping does. Namely, we see that for the smaller resolution image (lower coarseness), there's less sampling points across the sphere for the displacement map to change the vertices of, so we can clearly see the jumps across different vertices (there are extreme jagged edges across the sphere and it is more spikey than it is smooth). In contrast, at a higher resolution, the coarseness is higher, and the surface texture of the sphere is much sharper with displacement mapping. More vertices have modified positions due to the displacement mapping so the texture seems more realistic and reflects the texture of the brick better. Because there are more vertices whose positions are displaced, although the displacement mapping sphere is still spikey, the overall roundness of the sphere is maintained.
+
+While displacement mapping has large differences across different resolutions, bump mapping does not. Because bump mapping doesn't actually change the position of vertices (thus, changing the shape of the sphere), and instead just maps the texture points onto the sphere, the surface of the sphere doesn't change with changing resolutions. 
 
 ### Task 5: Environment-mapped Reflections
 Our job in this task is to update <code class="language-plaintext highlighter-rouge">Mirror.frag</code>. We first calculate the outgoing eye-ray, $$w_o$$ by subtracting the camera's position, <code class="language-plaintext highlighter-rouge">u_cam_pos</code> from the fragment's position, <code class="language-plaintext highlighter-rouge">v_position</code>. Then, using the surface normal vector, we calculate the incoming $$w_i$$ by calculating $$w_o - 2 (w_o \cdot n) * n$$. Finally, we sample the <code class="language-plaintext highlighter-rouge">texture</code> for the incoming direction $$w_i$$ calculated.
 
-Below is a screenshot of running <code class="language-plaintext highlighter-rouge">./clothsim -f ../scene/sphere.json</code> with environment-mapped reflections.
+Below are screenshots of running <code class="language-plaintext highlighter-rouge">./clothsim -f ../scene/sphere.json</code> with environment-mapped reflections.
 <div align="center">
 <table style="width:100%">
   <colgroup>
@@ -611,7 +792,7 @@ Our custom shader is described more in depth in [Part 6](/hw4.md#custom-shader).
 ## Part 6: Extra credit
 TODO
 
-### Whoosh! (wind)
+### Whoosh! (It's windy out here)
 TODO
 
 ### Custom Shader
