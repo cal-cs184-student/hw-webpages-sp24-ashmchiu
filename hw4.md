@@ -246,11 +246,39 @@ We see that <code class="language-plaintext highlighter-rouge">density</code> op
 When discussing how the cloth behaves as it moves from start to rest, we note that lower <code class="language-plaintext highlighter-rouge">density</code> values, the cloth weighs less, and as such, stays relatively flat as the forces acting against it aren't as strong. This differs from using higher <code class="language-plaintext highlighter-rouge">density</code> values as the forces acting on the cloth are now stronger, and thus, the cloth deforms more, which causes more waves and wrinkles as it swings down.
 
 #### Changing <code class="language-plaintext highlighter-rouge">damping</code>
+
 While maintaining the default <code class="language-plaintext highlighter-rouge">ks = 5000 N/m</code> and <code class="language-plaintext highlighter-rouge">density = 15 g/cm^2</code>, let's show ../scene/pinned2.json with <code class="language-plaintext highlighter-rouge">damping = 0%</code> and <code class="language-plaintext highlighter-rouge">damping = 1%</code>.
 
-Here, we've included .gif depictions because what we believ to be more important is demonstrating the speed and flexibility at which the cloth moves. 
+<div align="center">
+  <table style="width:100%">
+  <colgroup>
+      <col width="50%" />
+      <col width="50%" />
+  </colgroup>
+  <tr>
+    <td align="center">
+      <img src="../assets/hw4/part2/damping/pinned2_wireframe_damping0.png" width="100%"/>
+      <figcaption>../scene/pinned2.json, moving, wireframe <br> <code class="language-plaintext highlighter-rouge">damping = 0%</code>, default <code class="language-plaintext highlighter-rouge">ks</code> and <code class="language-plaintext highlighter-rouge">density</code></figcaption>
+    </td>
+    <td align="center">
+      <img src="../assets/hw4/part2/damping/pinned2_normal_damping0.png" width="100%"/>
+      <figcaption>../scene/pinned2.json, moving, normal <br><code class="language-plaintext highlighter-rouge">damping = 0%</code>, default <code class="language-plaintext highlighter-rouge">ks</code> and <code class="language-plaintext highlighter-rouge">density</code></figcaption>
+    </td>
+  </tr>
+  <tr>
+    <td align="center">
+      <img src="../assets/hw4/part2/damping/pinned2_wireframe_damping1.png" width="100%"/>
+      <figcaption>../scene/pinned2.json, moving, wireframe <br> <code class="language-plaintext highlighter-rouge">damping - 1%</code>, default <code class="language-plaintext highlighter-rouge">ks</code> and <code class="language-plaintext highlighter-rouge">density</code></figcaption>
+    </td>
+    <td align="center">
+      <img src="../assets/hw4/part2/damping/pinned2_normal_damping1.png" width="100%"/>
+      <figcaption>../scene/pinned2.json, moving, normal <br><code class="language-plaintext highlighter-rouge">damping = 1%</code>, default <code class="language-plaintext highlighter-rouge">ks</code> and <code class="language-plaintext highlighter-rouge">density</code></figcaption>
+    </td>
+  </tr>
+  </table>
+</div>
 
-TODO: also include pngs
+Here, we've opted to also include .gif depictions because what we believe to be more important is demonstrating the speed and flexibility at which the cloth moves. 
 
 <div align="center">
   <table style="width:100%">
@@ -451,10 +479,7 @@ Below are 6 screenshots of <code class="language-plaintext highlighter-rouge">./
   </table>
 </div>
 
-### Experimenting with <code class="language-plaintext highlighter-rouge">density</code> and <code class="language-plaintext highlighter-rouge">ks</code>
-TODO
-
-Here is a .gif of the self-collision in <code class="language-plaintext highlighter-rouge">./clothsim -f ../scene/selfCollision.json</code> with default <code class="language-plaintext highlighter-rouge">ks = 5000 N/m</code> and <code class="language-plaintext highlighter-rouge">density = 15 g/cm^2</code>.
+Now, we're going to be experimenting with <code class="language-plaintext highlighter-rouge">ks</code> and <code class="language-plaintext highlighter-rouge">density</code> values. As a reference, here is a .gif of the self-collision in <code class="language-plaintext highlighter-rouge">./clothsim -f ../scene/selfCollision.json</code> with default <code class="language-plaintext highlighter-rouge">ks = 5000 N/m</code> and <code class="language-plaintext highlighter-rouge">density = 15 g/cm^2</code>.
 
 <div align="center">
   <table style="width:100%">
@@ -467,7 +492,8 @@ Here is a .gif of the self-collision in <code class="language-plaintext highligh
   </table>
 </div>
 
-#### <code class="language-plaintext highlighter-rouge">ks</code>
+### Experimenting with <code class="language-plaintext highlighter-rouge">ks</code>
+
 Here are .gif files of the self-collision in <code class="language-plaintext highlighter-rouge">./clothsim -f ../scene/selfCollision.json</code> with default <code class="language-plaintext highlighter-rouge">density = 15 g/cm^2</code>, but varying <code class="language-plaintext highlighter-rouge">ks</code> with a low <code class="language-plaintext highlighter-rouge">ks = 50 N/m</code> and a high <code class="language-plaintext highlighter-rouge">ks = 50,000 N/m</code>.
 <div>
 <table>
@@ -484,7 +510,61 @@ Here are .gif files of the self-collision in <code class="language-plaintext hig
   </table>
 </div>
 
-#### <code class="language-plaintext highlighter-rouge">density</code>
+We can see through these .gif files and the below screenshots that at smaller <code class="language-plaintext highlighter-rouge">ks</code> values, such as the <code class="language-plaintext highlighter-rouge">ks = 50 N/m</code> provided, the cloth folds in a much more rippling fashion, with each fold being smaller. This allows overall for more self-collisions, because at a lower spring constant, the cloth doesn't hold as much rigid structure, so it is flexible to fold a lot. In contrast, with a higher <code class="language-plaintext highlighter-rouge">ks = 50,000 N/m</code>, we see that since the spring constant is higher, the cloth is tighter and more rigid, holding its structure, which means that it folds a lot less against itself, so there are less self-collisions and overall, less wrinkles. There are gaps between the layers of the cloth as it lays on top of other parts of itself, which we can see more in the second and third screenshots for <code class="language-plaintext highlighter-rouge">ks = 50,000 N/m</code>.
+
+To the left, we've included screenshots of how the cloth behaves with <code class="language-plaintext highlighter-rouge">ks = 50 N/m</code> as it falls on itself while on the right are screenshots of how the cloth behaves with <code class="language-plaintext highlighter-rouge">ks = 50,000 N/m</code>.
+
+<div align="center">
+<table style="width:100%">
+  <colgroup>
+      <col width="50%" />
+      <col width="50%" />
+  </colgroup>
+  <tr>
+    <td align="center">
+      <img src="../assets/hw4/part4/ks_50_1.png" width="100%"/>
+      <figcaption>../scene/selfCollision.json, <br><code class="language-plaintext highlighter-rouge">ks = 50 N/m</code>, beginning to ripple</figcaption>
+    </td>
+    <td align="center">
+      <img src="../assets/hw4/part4/ks_50000_1.png" width="100%"/>
+      <figcaption>../scene/selfCollision.json, <br><code class="language-plaintext highlighter-rouge">ks = 50,000 N/m</code>, small waves</figcaption>
+    </td>
+  </tr>
+  <tr>
+    <td align="center">
+      <img src="../assets/hw4/part4/ks_50_2.png" width="100%"/>
+      <figcaption>../scene/selfCollision.json, <br><code class="language-plaintext highlighter-rouge">ks = 50 N/m</code>, rippling more</figcaption>
+    </td>
+    <td align="center">
+      <img src="../assets/hw4/part4/ks_50000_2.png" width="100%"/>
+      <figcaption>../scene/selfCollision.json, <code class="language-plaintext highlighter-rouge">ks = 50,000 N/m</code>, more small waves</figcaption>
+    </td>
+  </tr>
+  <tr>
+    <td align="center">
+      <img src="../assets/hw4/part4/ks_50_3.png" width="100%"/>
+      <figcaption>../scene/selfCollision.json, <br><code class="language-plaintext highlighter-rouge">ks = 50 N/m</code>, beginning to settle</figcaption>
+    </td>
+    <td align="center">
+      <img src="../assets/hw4/part4/ks_50000_3.png" width="100%"/>
+      <figcaption>../scene/selfCollision.json, <code class="language-plaintext highlighter-rouge">ks = 50,000 N/m</code>, beginning to settle</figcaption>
+    </td>
+  </tr>
+  <tr>
+    <td align="center">
+      <img src="../assets/hw4/part4/ks_50_4.png" width="100%"/>
+      <figcaption>../scene/selfCollision.json, <br><code class="language-plaintext highlighter-rouge">ks = 50 N/m</code>, resting state</figcaption>
+    </td>
+    <td align="center">
+      <img src="../assets/hw4/part4/ks_50000_4.png" width="100%"/>
+      <figcaption>../scene/selfCollision.json, <code class="language-plaintext highlighter-rouge">ks = 50,000 N/m</code>, resting state</figcaption>
+    </td>
+  </tr>
+  </table>
+</div>
+
+### Experimenting with <code class="language-plaintext highlighter-rouge">density</code>
+
 Here are .gif files of the self-collision in <code class="language-plaintext highlighter-rouge">./clothsim -f ../scene/selfCollision.json</code> with default <code class="language-plaintext highlighter-rouge">ks = 5000 N/m</code>, but varying <code class="language-plaintext highlighter-rouge">density</code> with a low <code class="language-plaintext highlighter-rouge">density = 1 g/cm^2</code> and a high <code class="language-plaintext highlighter-rouge">density = 50 g/cm^2</code>.
 <div>
 <table>
@@ -498,6 +578,59 @@ Here are .gif files of the self-collision in <code class="language-plaintext hig
         <figcaption>../scene/selfCollision.json, high <code class="language-plaintext highlighter-rouge">density = 50 g/cm^2</code></figcaption>
       </td>
     </tr>
+  </table>
+</div>
+
+We can see through these .gif files and the below screenshots that at smaller <code class="language-plaintext highlighter-rouge">density</code> values, such as the <code class="language-plaintext highlighter-rouge">density = 1 g/cm^2</code> provided, the cloth almost seems bouncier, holding its structure and making larger waves. This means there are less self-collisions: this makes sense because at a lower density, this means that the mass is less, so the overall force applied to the cloth is less, making it collide less. In contrast, with a higher <code class="language-plaintext highlighter-rouge">density = 50 g/cm^2</code>, we see that the cloth folds a lot more, rippling as it falls on itself. Compared to smaller densities, each fold in the cloth is smaller. At a higher density, this makes sense because larger density means larger mass, and as such, there is a larger force applied to it, allowing for more self-collisions.
+
+To the left, we've included screenshots of how the cloth behaves with <code class="language-plaintext highlighter-rouge">density = 1 g/cm^2</code> as it falls on itself while on the right are screenshots of how the cloth behaves with <code class="language-plaintext highlighter-rouge">density = 50 g/cm^2</code>.
+
+<div align="center">
+<table style="width:100%">
+  <colgroup>
+      <col width="50%" />
+      <col width="50%" />
+  </colgroup>
+  <tr>
+    <td align="center">
+      <img src="../assets/hw4/part4/density_1_1.png" width="100%"/>
+      <figcaption>../scene/selfCollision.json, <br><code class="language-plaintext highlighter-rouge">density = 1 g/cm^2</code>, beginning to ripple</figcaption>
+    </td>
+    <td align="center">
+      <img src="../assets/hw4/part4/density_50_1.png" width="100%"/>
+      <figcaption>../scene/selfCollision.json, <br><code class="language-plaintext highlighter-rouge">density = 50 g/cm^2</code>, small waves</figcaption>
+    </td>
+  </tr>
+  <tr>
+    <td align="center">
+      <img src="../assets/hw4/part4/density_1_2.png" width="100%"/>
+      <figcaption>../scene/selfCollision.json, <br><code class="language-plaintext highlighter-rouge">density = 1 g/cm^2</code>, rippling more</figcaption>
+    </td>
+    <td align="center">
+      <img src="../assets/hw4/part4/density_50_2.png" width="100%"/>
+      <figcaption>../scene/selfCollision.json, <code class="language-plaintext highlighter-rouge">density = 50 g/cm^2</code>, more small waves</figcaption>
+    </td>
+  </tr>
+  <tr>
+    <td align="center">
+      <img src="../assets/hw4/part4/density_1_3.png" width="100%"/>
+      <figcaption>../scene/selfCollision.json, <br><code class="language-plaintext highlighter-rouge">density = 1 g/cm^2</code>, beginning to settle</figcaption>
+    </td>
+    <td align="center">
+      <img src="../assets/hw4/part4/density_50_3.png" width="100%"/>
+      <figcaption>../scene/selfCollision.json, <code class="language-plaintext highlighter-rouge">density = 50 g/cm^2</code>, beginning to settle</figcaption>
+    </td>
+  </tr>
+  <tr>
+    <td align="center">
+      <img src="../assets/hw4/part4/density_1_4.png" width="100%"/>
+      <figcaption>../scene/selfCollision.json, <br><code class="language-plaintext highlighter-rouge">density = 1 g/cm^2</code>, resting state</figcaption>
+    </td>
+    <td align="center">
+      <img src="../assets/hw4/part4/density_50_4.png" width="100%"/>
+      <figcaption>../scene/selfCollision.json, <code class="language-plaintext highlighter-rouge">density = 50 g/cm^2</code>, resting state</figcaption>
+    </td>
+  </tr>
   </table>
 </div>
 
