@@ -2,6 +2,7 @@
 layout: page
 title: 'Homework 4: Clothsim'
 has_right_toc: true
+usemathjax: true
 ---
 <p class="warning-message">
 This assignment has not been completed yet.
@@ -11,14 +12,14 @@ This assignment has not been completed yet.
 TODO
 
 ## Part 1: Masses and springs
-In this part, our main goal was creating a grid of point masses and springs. To do so, we iterated through <code class="language-plaintext highlighter-rouge">num_height_points</code> and an inner loop of <code class="language-plaintext highlighter-rouge">num_width_points</code> to generate our point masses in row major order. Depending on whether the orientation was horizontal or vertical, we either varied across the <code class="language-plaintext highlighter-rouge">xz</code> plane or the <code class="language-plaintext highlighter-rouge">xy</code> plane. Furthermore, if the point mass's <code class="language-plaintext highlighter-rouge">(x, y)</code> index was within the cloth's <code class="language-plaintext highlighter-rouge">pinned</code> vector, then we set their <code class="language-plaintext highlighter-rouge">pinned</code> boolean to <code class="language-plaintext highlighter-rouge">true</code> (which we'll see at the corners of ../scene/pinned4.json).
+In this part, our main goal was creating a grid of point masses and springs. To do so, we iterated through <code class="language-plaintext highlighter-rouge">num_height_points</code> and an inner loop of <code class="language-plaintext highlighter-rouge">num_width_points</code> to generate our point masses in row-major order. Depending on whether the orientation was horizontal or vertical, we either varied across the <code class="language-plaintext highlighter-rouge">xz</code> plane or the <code class="language-plaintext highlighter-rouge">xy</code> plane. Furthermore, if the point mass's <code class="language-plaintext highlighter-rouge">(x, y)</code> index was within the cloth's <code class="language-plaintext highlighter-rouge">pinned</code> vector, then we set their <code class="language-plaintext highlighter-rouge">pinned</code> boolean to <code class="language-plaintext highlighter-rouge">true</code> (which we'll see at the corners of ../scene/pinned4.json).
 
 Now that we've created our grid of point masses, we then created our springs with structural, shearing, and bending constraints. We note that
 - structural constraints were applied between a point mass and the point masses to its left and directly above it (if they existed)
 - shearing constraints were applied between a point mass and the point masses to its diagonal upper left and right (if they existed)
 - bending constraints were applied between a point mass and the point masses two to the left and two above it (if they existed it).
 
-Below, we've included several screenshots of <code class="language-plaintext highlighter-rouge">./clothsim -f ../scene/pinned2.json</code> from viewing angles to show the wireframe and structure of point masses and springs.
+Below, we've included several screenshots of <code class="language-plaintext highlighter-rouge">./clothsim -f ../scene/pinned2.json</code> from various viewing angles to show the wireframe and structure of point masses and springs.
 <div align="center">
   <table style="width:100%">
   <colgroup>
@@ -78,7 +79,7 @@ Now, here are some screenshots of ../scene/pinned2.json without any shearing con
 Our main goal in this part is completing the <code class="language-plaintext highlighter-rouge">Cloth::simulate</code> method that runs one time step of time length <code class="language-plaintext highlighter-rouge">delta_t</code> and applies all <code class="language-plaintext highlighter-rouge">accelerations</code> uniformly to all point masses in the cloth.
 
 ### Task 1: Compute total force acting on each point mass
-First, we calculated all the external forces based on the <code class="language-plaintext highlighter-rouge">external_accelerations</code>, which just contains <code class="language-plaintext highlighter-rouge">gravity</code> as of now (see our [wind](/hw4.md#whoosh-wind) simulations for an updated <code class="language-plaintext highlighter-rouge">external_accelerations</code>). Since we're applying all accelerations uniformly, we can just sum them once, using Newton's 2nd Law. $$F = ma$$ (noting that the $$m$$, mass, is constant). Then, we set each point mass's <code class="language-plaintext highlighter-rouge">forces</code> to a <code class="language-plaintext highlighter-rouge">Vector3D</code> of our summed external forces.
+First, we calculated all the external forces based on the <code class="language-plaintext highlighter-rouge">external_accelerations</code>, which just contains <code class="language-plaintext highlighter-rouge">gravity</code> as of now (see our [wind](/hw4.md#whoosh-wind) simulations for an updated <code class="language-plaintext highlighter-rouge">external_accelerations</code>). Since we're applying all accelerations uniformly, we can just sum them once, using Newton's 2nd Law, $$F = ma$$ (noting that the $$m$$, mass, is constant). Then, we set each point mass's <code class="language-plaintext highlighter-rouge">forces</code> to a <code class="language-plaintext highlighter-rouge">Vector3D</code> of our summed external forces.
 
 Then, we needed to apply spring correction forces (based on our work in [Part 1](/hw4.md#part-1-masses-and-springs) in assigning spring constraints). We used Hooke's law, $$F_s = k_s * (\vert\vert p_a - p_b\vert\vert - l)$$, such that for each spring, we would apply $$F_s$$ force to the point mass on one end, and then an equal, but opposite (negated) force to the other. For bending constraints, we set $$F_s$$ to $$0.2$$x compared to shearing and structural constraints since they're normally weaker.
 
@@ -238,7 +239,7 @@ While maintaining the default <code class="language-plaintext highlighter-rouge"
   </table>
 </div>
 
-We see that <code class="language-plaintext highlighter-rouge">density</code> operates almost inversely to <code class="language-plaintext highlighter-rouge">ks</code>. Namely, at the lowest <code class="language-plaintext highlighter-rouge">density = 1 g/cm^2</code>, we see the most rigid cloth, where there are less deformations in the cloth. Because at lower densities, the cloths will have lower mass, this means that the forces (that we accumulate) at each point masss will be less, and thus, means that there's less forces pulling the cloth down, causing less wrinkles. In contrast, at our highest <code class="language-plaintext highlighter-rouge">density = 5,000 g/cm^2</code>, there are larger external forces working on the point masses (due to Newton's 2nd Law). This means that the cloth weighs more, and thus, has many more wrinkles, which we can visibly see in the normal appearance with <code class="language-plaintext highlighter-rouge">density = 5,000 g/cm^2</code>.
+We see that <code class="language-plaintext highlighter-rouge">density</code> operates almost inversely to <code class="language-plaintext highlighter-rouge">ks</code>. Namely, at the lowest <code class="language-plaintext highlighter-rouge">density = 1 g/cm^2</code>, we see the most rigid cloth, where there are less deformations in the cloth. Because at lower densities, the cloths will have lower mass, this means that the forces (that we accumulate) at each point mass will be less, and thus, means that there's less forces pulling the cloth down, causing less wrinkles. In contrast, at our highest <code class="language-plaintext highlighter-rouge">density = 5,000 g/cm^2</code>, there are larger external forces working on the point masses (due to Newton's 2nd Law). This means that the cloth weighs more, and thus, has many more wrinkles, which we can visibly see in the normal appearance with <code class="language-plaintext highlighter-rouge">density = 5,000 g/cm^2</code>.
 
 When discussing how the cloth behaves as it moves from start to rest, we note that lower <code class="language-plaintext highlighter-rouge">density</code> values, the cloth weighs less, and as such, stays relatively flat as the forces acting against it aren't as strong. This differs from using higher <code class="language-plaintext highlighter-rouge">density</code> values as the forces acting on the cloth are now stronger, and thus, the cloth deforms more, which causes more waves and wrinkles as it swings down.
 
@@ -276,7 +277,7 @@ Here, we've included .gif depictions because what we believ to be more important
   </table>
 </div>
 
-Finally, we compare what happens when we mess with  <code class="language-plaintext highlighter-rouge">damping</code>. At the lowest possible <code class="language-plaintext highlighter-rouge">damping = 0%</code> provided, we see that the cloth swings quiet quickly back and forth. In contrast, at the highest possible  <code class="language-plaintext highlighter-rouge">damping = 1%</code>, the cloth moves really quickly and seemingly stops at the rest position (that matches the rest position with default parameters). Since we know that damping messes with the velocity term in Verlet integration, with no damping, this means there is no loss of energy due to friction, heat loss, or any other force. Therefore, the cloth just swings back and forth, with wrinkling and no rigid structure because there is no loss of energy. However, with the highest damping, the cloth falls much slower and holds its structure a bit better. The expalanation for this is that the forces acting on it (namely, gravity) are now dampened, which means that the positions of the point masses don't move as quickly. This reflects a state in which there is a loss of energy, so not all the forces that are thrust upon the cloth actually convert into energy that moves the cloth--some is lost or dissipated.
+Finally, we compare what happens when we mess with  <code class="language-plaintext highlighter-rouge">damping</code>. At the lowest possible <code class="language-plaintext highlighter-rouge">damping = 0%</code> provided, we see that the cloth swings quite quickly back and forth. In contrast, at the highest possible  <code class="language-plaintext highlighter-rouge">damping = 1%</code>, the cloth moves really quickly and seemingly stops at the rest position (that matches the rest position with default parameters). Since we know that damping messes with the velocity term in Verlet integration, with no damping, this means there is no loss of energy due to friction, heat loss, or any other force. Therefore, the cloth just swings back and forth, with wrinkling and no rigid structure because there is no loss of energy. However, with the highest damping, the cloth falls much slower and holds its structure a bit better. The expalanation for this is that the forces acting on it (namely, gravity) are now dampened, which means that the positions of the point masses don't move as quickly. This reflects a state in which there is a loss of energy, so not all the forces that are thrust upon the cloth actually convert into energy that moves the cloth--some is lost or dissipated.
 
 ## Part 3: Handling collisions with other objects
 Throughout this part, we are colliding a cloth with [spheres](/hw4.md#task-1-handling-collisions-with-spheres) and [planes](/hw4.md#task-2-handling-collisions-with-planes). We want to make the cloth collide in a realstic manner--which we will later elevate in [Part 4](/hw4.md#part-4-handling-self-collisions) with self collisions!
@@ -400,7 +401,7 @@ First, we implemented <code class="language-plaintext highlighter-rouge">Cloth::
 Now, since we had a way of calculating each point mass's hash position, we can now construct our spatial map. To do so, we iterated over all <code class="language-plaintext highlighter-rouge">point_masses</code> in the cloth and found its [<code class="language-plaintext highlighter-rouge">hash_position</code>](/hw4.md#task-1-clothhash_position). Then, since at each key-value pair in the map, our value is a <code class="language-plaintext highlighter-rouge">vector<PointMass *></code>, we initialize a new <code class="language-plaintext highlighter-rouge">vector<PointMass *></code> if there isn't already one at the hash position, and then we <code class="language-plaintext highlighter-rouge">push_back</code> the current point mass.
 
 ### Task 3: <code class="language-plaintext highlighter-rouge">Cloth::self_collide</code>
-Finally, we implemented our full self-collision method. For the passed in point mass, we check whether the normalized distance between it and all candidate point masses is less than $$2 * thickness$$, and also whether it's normalized distancen is greater than 0 (to prevent a point mass from colliding with itself). Then, we would calculate the final correction to be unit distance between the two point masses multipled by the correction to ensure that the pair would be $$2 * thickness$$ distance apart.
+Finally, we implemented our full self-collision method. For the passed in point mass, we check whether the normalized distance between it and all candidate point masses is less than $$2 * thickness$$, and also whether it's normalized distance is greater than 0 (to prevent a point mass from colliding with itself). Then, we would calculate the final correction to be unit distance between the two point masses multipled by the correction to ensure that the pair would be $$2 * thickness$$ distance apart.
 
 Then, we updated <code class="language-plaintext highlighter-rouge">Cloth::simulate</code>, first to call our <code class="language-plaintext highlighter-rouge">build_spatial_map</code> function. Then, we iterated through all <code class="language-plaintext highlighter-rouge">point_masses</code>, calling <code class="language-plaintext highlighter-rouge">self_collide</code> on it.
 
@@ -575,7 +576,25 @@ For reference, here is :eddie_proctor_vidoe: (yes, the spelling is correct) in a
 </div>
 
 ### Task 4: Displacement and Bump Mapping
-TODO
+In this task, we implement both displacement and bump mapping, two different ways of representing surface roughness. The first part of this task is bump mapping, where the texture map stores height information. The height information gleaned from the texture map is used to calculate the displaced model space normal $n_d$ from the original normal vector inside <code class="language-plaintext highlighter-rouge">Bump.frag</code>.
+
+The displaced model space normal is calculated by first calculating the differential height via
+
+$$dU = (h(u + \frac{1}{w}, v) - h(u, v)) \times k_h \times k_n$$
+
+$$dV = (h(u, v + \frac{1}{h}) - h(u, v) \times k_h \times k_n)$$
+
+where $k_h$ and $k_n$ are height and normal scaling factors, respectively, and $h$ is a function that returns the value of the texture map at the passed in coordinates.
+
+Then, we calculate a $TBN$ matrix 
+
+$$TBN = \begin{bmatrix}t & b & n\end{bmatrix}$$
+
+where $t$ and $n$ are the given tangent and normal vectors, and $b$ is the bitangent vector calculated with $b = n \times t$. Finally, we can apply the TBN matrix to the local normal $n_o$ to get $n_d$. This result is like calculating the normal vector to the object had its surface been displaced by the texture map height location. Importantly, though, the surface is not displaced in bump mapping, and the object maintains its original geometry.
+
+TODO images of bump mapping
+
+TODO For displacement mapping, 
 
 ### Task 5: Environment-mapped Reflections
 Our job in this task is to update <code class="language-plaintext highlighter-rouge">Mirror.frag</code>. We first calculate the outgoing eye-ray, $$w_o$$ by subtracting the camera's position, <code class="language-plaintext highlighter-rouge">u_cam_pos</code> from the fragment's position, <code class="language-plaintext highlighter-rouge">v_position</code>. Then, using the surface normal vector, we calculate the incoming $$w_i$$ by calculating $$w_o - 2 (w_o \cdot n) * n$$. Finally, we sample the <code class="language-plaintext highlighter-rouge">texture</code> for the incoming direction $$w_i$$ calculated.
