@@ -63,7 +63,7 @@ Here's the completed Bezier curve constructed from running de Casteljau's algori
   <table style="width:100%">
     <tr>
       <td align="center">
-        <img src="../assets/hw2/task1/task1_7.png" width="400px"/>
+        <img src="../assets/hw2/task1/task1_7.png" width="50%"/>
         <figcaption>Completed Bezier curve</figcaption>
       </td>
     </tr>
@@ -76,7 +76,7 @@ We can also drag and move the original control points that we've shown above to 
   <table style="width:100%">
     <tr>
       <td align="center">
-        <img src="../assets/hw2/task1/task1_8.png" width="400px"/>
+        <img src="../assets/hw2/task1/task1_8.png" width="50%"/>
         <figcaption>Moving original points to create a slightly different Bezier curve</figcaption>
       </td>
     </tr>
@@ -121,7 +121,7 @@ In conjunction, the three methods abstract away what the previous did: evaluatin
   <table style="width:100%">
     <tr>
       <td align="center">
-        <img src="../assets/hw2/task2/task2.png" width="400px"/>
+        <img src="../assets/hw2/task2/task2.png" width="50%"/>
         <figcaption>bez/teapot.bez evaluated by de Casteljau</figcaption>
       </td>
     </tr>
@@ -309,7 +309,7 @@ Here is a diagram of dae/beetle.dae before any boundary edge splitting. Notice t
   <table style="width:100%">
     <tr>
       <td align="center">
-        <img src="../assets/hw2/task5/task5_extracredit1.png" width="400px"/>
+        <img src="../assets/hw2/task5/task5_extracredit1.png" width="50%"/>
         <figcaption>dae/beetle.dae, highlighting a boundary edge</figcaption>
       </td>
     </tr>
@@ -430,7 +430,7 @@ From a front-on angle, we can really see the impact of the pre-splitting.
   <table style="width:100%">
     <tr>
       <td align="center">
-        <img src="../assets/hw2/task6/task6_17.png" width="400px"/>
+        <img src="../assets/hw2/task6/task6_17.png" width="50%"/>
         <figcaption>dae/cube.dae, highlighting vertex sharpness</figcaption>
       </td>
     </tr>

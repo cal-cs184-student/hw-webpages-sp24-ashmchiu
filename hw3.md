@@ -61,7 +61,7 @@ After completing Task 3, our output for <code class="language-plaintext highligh
   <table style="width:100%">
     <tr>
       <td align="center">
-        <img src="../assets/hw3/part1/task3_1.png" width="400px"/>
+        <img src="../assets/hw3/part1/task3_1.png" width="50%"/>
         <figcaption>../dae/sky/CBempty.dae with normal shading</figcaption>
       </td>
     </tr>
@@ -95,7 +95,7 @@ After completing Task 4, our output for <code class="language-plaintext highligh
   <table style="width:100%">
     <tr>
       <td align="center">
-        <img src="../assets/hw3/part1/task4_1.png" width="400px"/>
+        <img src="../assets/hw3/part1/task4_1.png" width="50%"/>
         <figcaption>../dae/sky/CBspheres_lambertian.dae with normal shading</figcaption>
       </td>
     </tr>
@@ -342,17 +342,17 @@ In this task, we needed to implement <code class="language-plaintext highlighter
   <table style="width:100%">
     <tr>
       <td align="center">
-        <img src="../assets/hw3/part3/task1_refl.png" width="400px"/>
+        <img src="../assets/hw3/part3/task1_refl.png" width="50%"/>
         <figcaption>../dae/sky/CBbunny.dae,<br> using <code class="language-plaintext highlighter-rouge">f</code> = reflectance</figcaption>
       </td>
       <td align="center">
-        <img src="../assets/hw3/part3/task1_2pi.png" width="400px"/>
+        <img src="../assets/hw3/part3/task1_2pi.png" width="50%"/>
         <figcaption>../dae/sky/CBbunny.dae,<br> using <code class="language-plaintext highlighter-rouge">f</code>= reflectance / (2 * PI)</figcaption>
       </td>
     </tr>
     <tr>
       <td colspan="2" align="center">
-        <img src="../assets/hw3/part3/task1_pi.png" width="400px"/>
+        <img src="../assets/hw3/part3/task1_pi.png" width="50%"/>
         <figcaption>../dae/sky/CBbunny.dae,<br> using <code class="language-plaintext highlighter-rouge">f</code> = reflectance / PI</figcaption>
       </td>
     </tr>
@@ -373,7 +373,7 @@ We then updated <code class="language-plaintext highlighter-rouge">est_radiance_
   <table style="width:100%">
     <tr>
       <td align="center">
-        <img src="../assets/hw3/part3/task2.png" width="400px"/>
+        <img src="../assets/hw3/part3/task2.png" width="50%"/>
         <figcaption>../dae/sky/CBbunny.dae, zero-bounce illumination</figcaption>
       </td>
     </tr>
@@ -400,11 +400,11 @@ Running <code class="language-plaintext highlighter-rouge">./pathtracer -t 8 -s 
   <table style="width:100%">
     <tr>
       <td align="center">
-        <img src="../assets/hw3/part3/task3_1.png" width="400px"/>
+        <img src="../assets/hw3/part3/task3_1.png" width="50%"/>
         <figcaption>../dae/sky/CBbunny.dae</figcaption>
       </td>
       <td align="center">
-        <img src="../assets/hw3/part3/task3_2.png" width="400px"/>
+        <img src="../assets/hw3/part3/task3_2.png" width="50%"/>
         <figcaption>../dae/sky/CBspheres_lambertian.dae</figcaption>
       </td>
     </tr>
@@ -438,7 +438,7 @@ While working on this task, we ran into an interesting debugging problem where t
   <table style="width:100%">
     <tr>
       <td align="center">
-        <img src="../assets/hw3/part3/task4_shadow.png" width="400px"/>
+        <img src="../assets/hw3/part3/task4_shadow.png" width="50%"/>
         <figcaption>../dae/sky/CBbunny.dae with inverted shadows</figcaption>
       </td>
     </tr>
@@ -452,17 +452,17 @@ Running <code class="language-plaintext highlighter-rouge">./pathtracer -t 8 -s 
   <table style="width:100%">
     <tr>
       <td align="center">
-        <img src="../assets/hw3/part3/task4_1.png" width="400px"/>
+        <img src="../assets/hw3/part3/task4_1.png" width="50%"/>
         <figcaption>../dae/sky/CBbunny.dae</figcaption>
       </td>
       <td align="center">
-        <img src="../assets/hw3/part3/task4_2.png" width="400px"/>
+        <img src="../assets/hw3/part3/task4_2.png" width="50%"/>
         <figcaption>../dae/sky/CBspheres_lambertian.dae</figcaption>
       </td>
     </tr>
     <tr>
       <td colspan="2" align="center">
-        <img src="../assets/hw3/part3/task4_3.png" width="400px"/>
+        <img src="../assets/hw3/part3/task4_3.png" width="50%"/>
         <figcaption>../dae/sky/dragon.dae</figcaption>
       </td>
     </tr>
@@ -743,7 +743,7 @@ Next, we render ../dae/sky/CBbunny.dae at 4 light rays with various sample-per-p
   </tr>
   <tr>
       <td colspan="2" align="center">
-        <img src="../assets/hw3/part4/task2_bunny_s1024l4.png" width="400px"/>
+        <img src="../assets/hw3/part4/task2_bunny_s1024l4.png" width="50%"/>
         <figcaption>../dae/sky/CBbunny.dae, 1024 samples per pixel, 4 light rays</figcaption>
       </td>
     </tr>

@@ -70,7 +70,7 @@ Now, here are some screenshots of ../scene/pinned2.json without any shearing con
   </tr>
   <tr>
       <td colspan="2" align="center">
-        <img src="../assets/hw4/part1/all.png" width="400px"/>
+        <img src="../assets/hw4/part1/all.png" width="50%"/>
         <figcaption>../scene/pinned2.json, with all constraints</figcaption>
     </td>
     </tr>
@@ -485,7 +485,7 @@ Now, we're going to be experimenting with <code class="language-plaintext highli
   <table style="width:100%">
     <tr>
       <td align="center">
-        <img src="../assets/hw4/part4/self_collision_default.gif" width="400px"/>
+        <img src="../assets/hw4/part4/self_collision_default.gif" width="50%"/>
         <figcaption>../scene/selfCollision.json, <br>default <code class="language-plaintext highlighter-rouge">ks = 5000 N/m</code>, <code class="language-plaintext highlighter-rouge">density = 15 g/cm^2</code></figcaption>
       </td>
     </tr>
@@ -651,7 +651,7 @@ Below is a screenshot of running <code class="language-plaintext highlighter-rou
   <table style="width:100%">
     <tr>
       <td align="center">
-        <img src="../assets/hw4/part5/diffuse.png" width="400px"/>
+        <img src="../assets/hw4/part5/diffuse.png" width="50%"/>
         <figcaption>../scene/sphere.json, diffuse shading</figcaption>
       </td>
     </tr>
@@ -675,7 +675,7 @@ For ambient shading, we choose <code class="language-plaintext highlighter-rouge
   <table style="width:100%">
     <tr>
       <td align="center">
-        <img src="../assets/hw4/part5/phong_ambient.png" width="400px"/>
+        <img src="../assets/hw4/part5/phong_ambient.png" width="50%"/>
         <figcaption>../scene/sphere.json, ambient shading</figcaption>
       </td>
     </tr>
@@ -688,7 +688,7 @@ Then, we reused our code from <code class="language-plaintext highlighter-rouge"
   <table style="width:100%">
     <tr>
       <td align="center">
-        <img src="../assets/hw4/part5/phong_diffuse.png" width="400px"/>
+        <img src="../assets/hw4/part5/phong_diffuse.png" width="50%"/>
         <figcaption>../scene/sphere.json, diffuse shading</figcaption>
       </td>
     </tr>
@@ -701,7 +701,7 @@ Finally, we add our specular highlights! To do so, we calculate the viewing vect
   <table style="width:100%">
     <tr>
       <td align="center">
-        <img src="../assets/hw4/part5/phong_specular.png" width="400px"/>
+        <img src="../assets/hw4/part5/phong_specular.png" width="50%"/>
         <figcaption>../scene/sphere.json, specular shading</figcaption>
       </td>
     </tr>
@@ -716,7 +716,7 @@ Now, let's put it all together. We know that Blinn-Phong reflections are just a 
   <table style="width:100%">
     <tr>
       <td align="center">
-        <img src="../assets/hw4/part5/phong.png" width="400px"/>
+        <img src="../assets/hw4/part5/phong.png" width="50%"/>
         <figcaption>../scene/sphere.json, entire Blinn-Phong model</figcaption>
       </td>
     </tr>
@@ -796,7 +796,7 @@ Below are screenshots of running <code class="language-plaintext highlighter-rou
   </tr>
   <tr>
       <td colspan="2" align="center">
-        <img src="../assets/hw4/part5/bump_cloth_sphere.png" width="350px"/>
+        <img src="../assets/hw4/part5/bump_cloth_sphere.png" width="50%"/>
         <figcaption>../scene/sphere.json, bump mapping with cloth over sphere</figcaption>
       </td>
     </tr>
@@ -825,7 +825,7 @@ Below are screenshots of running <code class="language-plaintext highlighter-rou
   </tr>
   <tr>
       <td colspan="2" align="center">
-        <img src="../assets/hw4/part5/displacement_cloth_sphere.png" width="350px"/>
+        <img src="../assets/hw4/part5/displacement_cloth_sphere.png" width="50%"/>
         <figcaption>../scene/sphere.json, displacement mapping with cloth over sphere</figcaption>
       </td>
     </tr>
@@ -922,7 +922,7 @@ Below are screenshots of running <code class="language-plaintext highlighter-rou
   </tr>
   <tr>
       <td colspan="2" align="center">
-        <img src="../assets/hw4/part5/mirror_sphere_cloth.png" width="350px"/>
+        <img src="../assets/hw4/part5/mirror_sphere_cloth.png" width="50%"/>
         <figcaption>../scene/sphere.json, mirror shader with cloth over sphere</figcaption>
       </td>
     </tr>
