@@ -19,7 +19,7 @@ In this part, our main goal was creating a grid of point masses and springs. To 
 Now that we've created our grid of point masses, we then created our springs with structural, shearing, and bending constraints. We note that
 - structural constraints were applied between a point mass and the point masses to its left and directly above it (if they existed)
 - shearing constraints were applied between a point mass and the point masses to its diagonal upper left and right (if they existed)
-- bending constraints were applied between a point mass and the point masses two to the left and two above it (if they existed it).
+- bending constraints were applied between a point mass and the point masses two to the left and two above it (if they existed).
 
 Below, we've included several screenshots of <code class="language-plaintext highlighter-rouge">./clothsim -f ../scene/pinned2.json</code> from various viewing angles to show the wireframe and structure of point masses and springs.
 <div align="center">
@@ -774,7 +774,7 @@ $$dV = (h(u, v + \frac{1}{h}) - h(u, v) \times k_h \times k_n)$$
 
 where $k_h$ and $k_n$ are height and normal scaling factors, respectively, and $h$ is a function that returns the value of the texture map at the passed in coordinates.
 
-where $t$ and $n$ are the given tangent and normal vectors, and $b$ is the bitangent vector calculated with $b = n \times t$. Finally, we can apply the TBN matrix to the local space normal $n_o = (-dU, -dV, 1)$ to get $n_d$. This result is like calculating the normal vector to the object had its surface been displaced by the texture map height location. Importantly, though, the surface is not displaced in bump mapping, and the object maintains its original geometry. We reuse our code from <code class="language-plaintext highlighter-rouge">Phong.frag</code> as our shading calculations, replacing our <code class="language-plaintext highlighter-rouge">normal</code> vector with our calculated $$n_d$$.
+Finally, we can apply the TBN matrix to the local space normal $n_o = (-dU, -dV, 1)$ to get $n_d$. This result is like calculating the normal vector to the object had its surface been displaced by the texture map height location. Importantly, though, the surface is not displaced in bump mapping, and the object maintains its original geometry. We reuse our code from <code class="language-plaintext highlighter-rouge">Phong.frag</code> as our shading calculations, replacing our <code class="language-plaintext highlighter-rouge">normal</code> vector with our calculated $$n_d$$.
 
 Below are screenshots of running <code class="language-plaintext highlighter-rouge">./clothsim -f ../scene/sphere.json</code> with bump mapping, setting the normal to 100 and height to 0.061. We use <code class="language-plaintext highlighter-rouge">texture3.png</code>.
 
