@@ -11,7 +11,7 @@ This assignment has not been completed yet.
 site: [https://cal-cs184-student.github.io/hw-webpages-sp24-ashmchiu/hw4/](https://cal-cs184-student.github.io/hw-webpages-sp24-ashmchiu/hw4/)
 
 ## Overview
-TODO
+In this assignment, we create a physical simulation of a cloth. The cloth is able to maintain its shape and behavior through internal spring forces. It is also able to collide with external objects and itself. We also explore different shading options for the cloth, which includes diffuse and Phong shading, texture mapping, bump and displacement mapping, and ideal specular (mirror-like) environment mapping using cubemaps. Finally, we implement a few extra features, such as time-varying wind forces. TODO and maybe bubbles
 
 ## Part 1: Masses and springs
 In this part, our main goal was creating a grid of point masses and springs. To do so, we iterated through <code class="language-plaintext highlighter-rouge">num_height_points</code> and an inner loop of <code class="language-plaintext highlighter-rouge">num_width_points</code> to generate our point masses in row-major order. Depending on whether the orientation was horizontal or vertical, we either varied across the <code class="language-plaintext highlighter-rouge">xz</code> plane or the <code class="language-plaintext highlighter-rouge">xy</code> plane. Furthermore, if the point mass's <code class="language-plaintext highlighter-rouge">(x, y)</code> index was within the cloth's <code class="language-plaintext highlighter-rouge">pinned</code> vector, then we set their <code class="language-plaintext highlighter-rouge">pinned</code> boolean to <code class="language-plaintext highlighter-rouge">true</code> (which we'll see at the corners of ../scene/pinned4.json).
@@ -935,7 +935,14 @@ Our custom shader is described more in depth in [Part 6](/hw4.md#custom-shader).
 TODO
 
 ### Whoosh! (It's windy out here)
-TODO
+We decided to add wind to our simulation by adding it into the `external_accelerations`, much like gravity. However unlike gravity, we wanted our wind to be variable at different timesteps in the simulation, as some static wind force would cause the cloth to settle into some equilibrium position and appear unnatural.
+
+We tried a few approaches in order to simulate this behavior, the first of which was to try and simulate osciallation with sine and cosine functions. However, we found this to be too predictable and did not feel like natural wind behavior.
+
+The next approach we used, which ended up being our final result, was empirically found and relied heavily on randomness. The idea is that the wind value is limited between 0 and a certain max value. If the current value for wind acceleration is near the mean value of the range, on the next iteration it would be encouraged to move towards the extremities. If the current value is near the extremities of the range, it would be encouraged to move towards the middle of the range. Of course, this is all probabilistic, with a certain degree of randomness injected into every calculation.
+
+TODO 
+
 
 ### Custom Shader
 TODO
