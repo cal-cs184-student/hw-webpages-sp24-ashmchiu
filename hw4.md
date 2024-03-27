@@ -11,7 +11,11 @@ This assignment has not been completed yet.
 site: [https://cal-cs184-student.github.io/hw-webpages-sp24-ashmchiu/hw4/](https://cal-cs184-student.github.io/hw-webpages-sp24-ashmchiu/hw4/)
 
 ## Overview
-In this assignment, we create a physical simulation of a cloth. The cloth is able to maintain its shape and behavior through internal spring forces. It is also able to collide with external objects and itself. We also explore different shading options for the cloth, which includes diffuse and Phong shading, texture mapping, bump and displacement mapping, and ideal specular (mirror-like) environment mapping using cubemaps. Finally, we implement a few extra features, such as time-varying wind forces. TODO and maybe bubbles
+In this assignment, we create a physical simulation of a cloth. The cloth is able to maintain its shape and behavior through internal spring forces. It is also able to collide with external objects and itself. We also explore different shading options for the cloth, which includes diffuse and Phong shading, texture mapping, bump and displacement mapping, and ideal specular (mirror-like) environment mapping using cubemaps. Finally, we implement a few extra features, such as time-varying wind forces, a transparent blue-tinted shader, and TODO
+
+What we found interesting TODO
+
+Debugging journey TODO
 
 ## Part 1: Masses and springs
 In this part, our main goal was creating a grid of point masses and springs. To do so, we iterated through <code class="language-plaintext highlighter-rouge">num_height_points</code> and an inner loop of <code class="language-plaintext highlighter-rouge">num_width_points</code> to generate our point masses in row-major order. Depending on whether the orientation was horizontal or vertical, we either varied across the <code class="language-plaintext highlighter-rouge">xz</code> plane or the <code class="language-plaintext highlighter-rouge">xy</code> plane. Furthermore, if the point mass's <code class="language-plaintext highlighter-rouge">(x, y)</code> index was within the cloth's <code class="language-plaintext highlighter-rouge">pinned</code> vector, then we set their <code class="language-plaintext highlighter-rouge">pinned</code> boolean to <code class="language-plaintext highlighter-rouge">true</code> (which we'll see at the corners of ../scene/pinned4.json).
@@ -929,7 +933,7 @@ Below are screenshots of running <code class="language-plaintext highlighter-rou
   </table>
 </div>
 
-Our custom shader is described more in depth in [Part 6](/hw4.md#custom-shader). 
+Our custom shader is described in depth in [Part 6](/hw4.md#custom-shader-jerover-blue-so-true). 
 
 ## Part 6: Extra credit
 TODO
@@ -941,11 +945,55 @@ We tried a few approaches in order to simulate this behavior, the first of which
 
 The next approach we used, which ended up being our final result, was empirically found and relied heavily on randomness. The idea is that the wind value is limited between 0 and a certain max value. If the current value for wind acceleration is near the mean value of the range, on the next iteration it would be encouraged to move towards the extremities. If the current value is near the extremities of the range, it would be encouraged to move towards the middle of the range. Of course, this is all probabilistic, with a certain degree of randomness injected into every calculation.
 
-TODO 
+Below are screenshots of running <code class="language-plaintext highlighter-rouge">./clothsim -f ../scene/pinned2.json</code> while changing the wind value.
+<div align="center">
+<table style="width:100%">
+  <colgroup>
+      <col width="50%" />
+      <col width="50%" />
+  </colgroup>
+  <tr>
+    <td align="center">
+      <img src="../assets/hw4/ec/wind/positive_wind.png" width="100%"/>
+      <figcaption>../scene/pinned2.json, positive wind value</figcaption>
+    </td>
+    <td align="center">
+      <img src="../assets/hw4/ec/wind/negative_wind.png" width="100%"/>
+      <figcaption>../scene/sphere.json, negative wind value</figcaption>
+    </td>
+  </tr>
+  </table>
+</div>
 
+and you can see here that negative wind pushes the cloth towards the right while positive wind pushes it to the left.
 
-### Custom Shader
+We also include here a .gif of dynamically updating the wind values and its effect on a pinned cloth.
+<div align="center">
+  <table style="width:100%">
+    <tr>
+      <td align="center">
+        <img src="../assets/hw4/ec/wind/windy.gif" width="350px"/>
+        <figcaption>whoosh!</figcaption>
+      </td>
+    </tr>
+  </table>
+</div>
+
+### Custom Shader: Jerover Blue, So True
 TODO
+
+
+Here, we've combined our wind and custom shader in the following .gif of running <code class="language-plaintext highlighter-rouge">./clothsim -f ../scene/pinned2.json</code>.
+<div align="center">
+  <table style="width:100%">
+    <tr>
+      <td align="center">
+        <img src="../assets/hw4/ec/shade_and_wind.gif" width="350px"/>
+        <figcaption>jerover whoosh!</figcaption>
+      </td>
+    </tr>
+  </table>
+</div>
 
 ## Contributors
 Edward Park, Ashley Chiu
