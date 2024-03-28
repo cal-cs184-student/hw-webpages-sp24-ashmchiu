@@ -980,10 +980,55 @@ We also include here a .gif of dynamically updating the wind values and its effe
 </div>
 
 ### Custom Shader: Jerover Blue, So True
-TODO
+We then implemented a custom shader in `Custom.frag` that was a hybrid between [mirror](/hw4.md#task-5-environment-mapped-reflections) and [phong](/hw4.md#task-2-blinn-phong-shading) shading. We added an extra interpolation between the color from mirror shading and interpolated that with the color [Jerover Blue](https://colornames.org/color/020f61), interpolating with an alpha value using [Schlick's approximation](https://en.wikipedia.org/wiki/Schlick%27s_approximation). Finally, in the `out_color`, we set $$\alpha$$ to be 0.5 to create a transparent output.
+
+The resulting shader creates a blue-tinted transparent plastic material, shown by the images of <code class="language-plaintext highlighter-rouge">./clothsim -f ../scene/sphere.json</code> below.
+<div align="center">
+<table style="width:100%">
+  <colgroup>
+      <col width="50%" />
+      <col width="50%" />
+  </colgroup>
+  <tr>
+    <td align="center">
+      <img src="../assets/hw4/ec/shader/jeroverblue.png" width="100%"/>
+      <figcaption>../scene/sphere.json, double reflected bridge</figcaption>
+    </td>
+    <td align="center">
+      <img src="../assets/hw4/ec/shader/jeroverblue2.png" width="100%"/>
+      <figcaption>../scene/sphere.json, mirror and phong combination</figcaption>
+    </td>
+  </tr>
+  <tr>
+    <td align="center">
+      <img src="../assets/hw4/ec/shader/missing_sphere.png" width="100%"/>
+      <figcaption>../scene/sphere.json, where did the sphere go?</figcaption>
+    </td>
+    <td align="center">
+      <img src="../assets/hw4/ec/shader/transparent.png" width="100%"/>
+      <figcaption>../scene/sphere.json, the sphere is still here</figcaption>
+    </td>
+  </tr>
+  </table>
+</div>
+
+The transparency that we mimicked in this shader almost makes it look like the sphere is missing when the cloth is put over it! However, when looking from the underside, we can see the sphere almost like a crystal orb.
+
+Building on this, we also modified `Custom.vert` to displace the vertices of the sphere to simulate a bouncy/non-uniform sphere. We used a [random-number generator](https://stackoverflow.com/questions/4200224/random-noise-functions-for-glsl), making oscillating displacements using a combination of `sin` and `cos` to displace each vertex at each axis.
+
+<div align="center">
+  <table style="width:100%">
+    <tr>
+      <td align="center">
+        <img src="../assets/hw4/ec/shader/bouncy.gif" width="350px"/>
+        <figcaption>bouncy wheeeee!</figcaption>
+      </td>
+    </tr>
+  </table>
+</div>
 
 
-Here, we've combined our wind and custom shader in the following .gif of running <code class="language-plaintext highlighter-rouge">./clothsim -f ../scene/pinned2.json</code>.
+Here, we've combined our wind and custom fragment shader (not including the vertex shifts) in the following .gif of running <code class="language-plaintext highlighter-rouge">./clothsim -f ../scene/sphere.json</code>.
 <div align="center">
   <table style="width:100%">
     <tr>
