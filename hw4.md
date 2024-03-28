@@ -933,52 +933,6 @@ Below are screenshots of running <code class="language-plaintext highlighter-rou
   </table>
 </div>
 
-Our custom shader is described in depth in [Part 6](/hw4.md#custom-shader-jerover-blue-so-true). 
-
-## Part 6: Extra credit
-For extra credit, we implemented [wind](/hw4.md#whoosh-its-windy-out-here), a [custom shader](/hw4.md#custom-shader-jerover-blue-so-true), and [collisions with cubes](/hw4.md#collisions-with-cubes).
-
-### Whoosh! (It's windy out here)
-We decided to add wind to our simulation by adding it into the `external_accelerations`, much like gravity. However unlike gravity, we wanted our wind to be variable at different timesteps in the simulation, as some static wind force would cause the cloth to settle into some equilibrium position and appear unnatural.
-
-We tried a few approaches in order to simulate this behavior, the first of which was to try and simulate osciallation with sine and cosine functions. However, we found this to be too predictable and did not feel like natural wind behavior.
-
-The next approach we used, which ended up being our final result, was empirically found and relied heavily on randomness. The idea is that the wind value is limited between 0 and a certain max value. If the current value for wind acceleration is near the mean value of the range, on the next iteration it would be encouraged to move towards the extremities. If the current value is near the extremities of the range, it would be encouraged to move towards the middle of the range. Of course, this is all probabilistic, with a certain degree of randomness injected into every calculation.
-
-Below are screenshots of running <code class="language-plaintext highlighter-rouge">./clothsim -f ../scene/pinned2.json</code> while changing the wind value.
-<div align="center">
-<table style="width:100%">
-  <colgroup>
-      <col width="50%" />
-      <col width="50%" />
-  </colgroup>
-  <tr>
-    <td align="center">
-      <img src="../assets/hw4/ec/wind/positive_wind.png" width="100%"/>
-      <figcaption>../scene/pinned2.json, positive wind value</figcaption>
-    </td>
-    <td align="center">
-      <img src="../assets/hw4/ec/wind/negative_wind.png" width="100%"/>
-      <figcaption>../scene/sphere.json, negative wind value</figcaption>
-    </td>
-  </tr>
-  </table>
-</div>
-
-and you can see here that negative wind pushes the cloth towards the right while positive wind pushes it to the left.
-
-We also include here a .gif of dynamically updating the wind values and its effect on a pinned cloth.
-<div align="center">
-  <table style="width:100%">
-    <tr>
-      <td align="center">
-        <img src="../assets/hw4/ec/wind/windy.gif" width="50%"/>
-        <figcaption>whoosh!</figcaption>
-      </td>
-    </tr>
-  </table>
-</div>
-
 ### Custom Shader: Jerover Blue, So True
 We then implemented a custom shader in `Custom.frag` that was a hybrid between [mirror](/hw4.md#task-5-environment-mapped-reflections) and [phong](/hw4.md#task-2-blinn-phong-shading) shading. We added an extra interpolation between the color from mirror shading and interpolated that with the color [Jerover Blue](https://colornames.org/color/020f61), interpolating with an alpha value using [Schlick's approximation](https://en.wikipedia.org/wiki/Schlick%27s_approximation). Finally, in the `out_color`, we set $$\alpha$$ to be 0.5 to create a transparent output.
 
@@ -1027,6 +981,53 @@ Building on this, we also modified `Custom.vert` to displace the vertices of the
   </table>
 </div>
 
+## Part 6: Extra credit
+For extra credit, we implemented [wind](/hw4.md#whoosh-its-windy-out-here), a [custom shader](/hw4.md#custom-shader-jerover-blue-so-true), and [collisions with cubes](/hw4.md#collisions-with-cubes).
+
+### Whoosh! (It's windy out here)
+We decided to add wind to our simulation by adding it into the `external_accelerations`, much like gravity. However unlike gravity, we wanted our wind to be variable at different timesteps in the simulation, as some static wind force would cause the cloth to settle into some equilibrium position and appear unnatural.
+
+We tried a few approaches in order to simulate this behavior, the first of which was to try and simulate osciallation with sine and cosine functions. However, we found this to be too predictable and did not feel like natural wind behavior.
+
+The next approach we used, which ended up being our final result, was empirically found and relied heavily on randomness. The idea is that the wind value is limited between 0 and a certain max value. If the current value for wind acceleration is near the mean value of the range, on the next iteration it would be encouraged to move towards the extremities. If the current value is near the extremities of the range, it would be encouraged to move towards the middle of the range. Of course, this is all probabilistic, with a certain degree of randomness injected into every calculation.
+
+Below are screenshots of running <code class="language-plaintext highlighter-rouge">./clothsim -f ../scene/pinned2.json</code> while changing the wind value.
+<div align="center">
+<table style="width:100%">
+  <colgroup>
+      <col width="50%" />
+      <col width="50%" />
+  </colgroup>
+  <tr>
+    <td align="center">
+      <img src="../assets/hw4/ec/wind/positive_wind.png" width="100%"/>
+      <figcaption>../scene/pinned2.json, positive wind value</figcaption>
+    </td>
+    <td align="center">
+      <img src="../assets/hw4/ec/wind/negative_wind.png" width="100%"/>
+      <figcaption>../scene/sphere.json, negative wind value</figcaption>
+    </td>
+  </tr>
+  </table>
+</div>
+
+and you can see here that negative wind pushes the cloth towards the right while positive wind pushes it to the left.
+
+We also include here a .gif of dynamically updating the wind values and its effect on a pinned cloth.
+<div align="center">
+  <table style="width:100%">
+    <tr>
+      <td align="center">
+        <img src="../assets/hw4/ec/wind/windy.gif" width="50%"/>
+        <figcaption>whoosh!</figcaption>
+      </td>
+    </tr>
+  </table>
+</div>
+
+
+### Custom Shader
+Our custom shader is described in [Part 5](/hw4.md#custom-shader-jerover-blue-so-true).
 
 Here, we've combined our wind and custom fragment shader (not including the vertex shifts) in the following .gif of running <code class="language-plaintext highlighter-rouge">./clothsim -f ../scene/sphere.json</code>.
 <div align="center">
