@@ -4,9 +4,6 @@ title: 'Homework 4: Clothsim'
 has_right_toc: true
 usemathjax: true
 ---
-<p class="warning-message">
-This assignment has not been completed yet.
-</p>
 
 site: [https://cal-cs184-student.github.io/hw-webpages-sp24-ashmchiu/hw4/](https://cal-cs184-student.github.io/hw-webpages-sp24-ashmchiu/hw4/)
 
@@ -104,7 +101,7 @@ Finally, to keep springs from being unreasonably deformed, we used the [SIGGRAPH
 - If one of the point masses was pinned, we corrected fully by the other point mass.
 - If both of the point masses were pinned, we did nothing (because they couldn't be moved :')).
 
-Below, we've included screenshots of <code class="language-plaintext highlighter-rouge">./clothsim -f ../scene/pinned4.json</code> with default parameters, with both the wireframe normal appearance.
+Below, we've included screenshots of <code class="language-plaintext highlighter-rouge">./clothsim -f ../scene/pinned4.json</code> with default parameters, with both the wireframe and normal appearance.
 
 <div align="center">
   <table style="width:100%">
@@ -358,7 +355,7 @@ Below, we've included screenshots of <code class="language-plaintext highlighter
     </td>
     <td align="center">
       <img src="../assets/hw4/part3/sphere_normal_50000.png" width="100%"/>
-      <figcaption>../scene/sphere.json, final resting state, normal, <br><code class="language-plaintext highlighter-rouge">ks = 5000</code></figcaption>
+      <figcaption>../scene/sphere.json, final resting state, normal, <br><code class="language-plaintext highlighter-rouge">ks = 50000</code></figcaption>
     </td>
   </tr>
   </table>
@@ -639,7 +636,9 @@ To the left, we've included screenshots of how the cloth behaves with <code clas
 </div>
 
 ## Part 5: Shaders
-TODO: Explain in your own words what is a shader program and how vertex and fragment shaders work together to create lighting and material effects.
+A shader is a program that we can use in order to speed up our rendering processes by moving the workload of rendering from the CPU to the GPU. While we did not use any advanced GPU functionality in this homework, the GLSL shaders that we used in this homework was able to speed up the rendering process tremendously, being able to quickly calculate the effects of different lighting conditions and materials.
+
+The vertex shader works by applying transforms to vertices, which is useful for displacement mapping and other types of transforms where vertex positions need to be manipulated. The vertex shader produces fragments, which are then used as the input for the fragment shader. On the other hand, the fragment shader takes in the fragments generated from the vertex shader and outputs a single 4D vector for each pixel, namely an RGBA value. The fragment shader accounts for how different material types and geometries interact with light. Using both the vertex shader and the fragment shader, the CPU is able to offload a large chunk of the graphics pipeline onto the GPU, where it can be parallelized and computed quickly for real-time rendering.
 
 ### Task 1: Diffuse Shading
 Implementing the <code class="language-plaintext highlighter-rouge">main</code> method of <code class="language-plaintext highlighter-rouge">Diffuse.frag</code>, our main goal was to recreate diffuse lighting using the formula
@@ -794,15 +793,19 @@ Below are screenshots of running <code class="language-plaintext highlighter-rou
       <figcaption>../scene/sphere.json, bump mapping on sphere</figcaption>
     </td>
     <td align="center">
-      <img src="../assets/hw4/part5/bump.png" width="100%"/>
-      <figcaption>../scene/sphere.json, bump mapping on sphere and cloth</figcaption>
+      <img src="../assets/hw4/part5/bump_cloth.png" width="100%"/>
+      <figcaption>../scene/sphere.json, bump mapping on cloth</figcaption>
     </td>
   </tr>
   <tr>
-      <td colspan="2" align="center">
-        <img src="../assets/hw4/part5/bump_cloth_sphere.png" width="50%"/>
-        <figcaption>../scene/sphere.json, bump mapping with cloth over sphere</figcaption>
-      </td>
+    <td align="center">
+      <img src="../assets/hw4/part5/bump.png" width="100%"/>
+      <figcaption>../scene/sphere.json, bump mapping on sphere and cloth</figcaption>
+    </td>
+    <td align="center">
+      <img src="../assets/hw4/part5/bump_cloth_sphere.png" width="100%"/>
+      <figcaption>../scene/sphere.json, bump mapping with cloth over sphere</figcaption>
+    </td>
     </tr>
   </table>
 </div>
@@ -823,15 +826,19 @@ Below are screenshots of running <code class="language-plaintext highlighter-rou
       <figcaption>../scene/sphere.json, displacement mapping on sphere</figcaption>
     </td>
     <td align="center">
-      <img src="../assets/hw4/part5/displacement.png" width="100%"/>
-      <figcaption>../scene/sphere.json, displacement mapping on sphere and cloth</figcaption>
+      <img src="../assets/hw4/part5/displacement_cloth.png" width="100%"/>
+      <figcaption>../scene/sphere.json, displacement mapping on cloth</figcaption>
     </td>
   </tr>
   <tr>
-      <td colspan="2" align="center">
-        <img src="../assets/hw4/part5/displacement_cloth_sphere.png" width="50%"/>
-        <figcaption>../scene/sphere.json, displacement mapping with cloth over sphere</figcaption>
-      </td>
+    <td align="center">
+      <img src="../assets/hw4/part5/displacement.png" width="100%"/>
+      <figcaption>../scene/sphere.json, displacement mapping on sphere and cloth</figcaption>
+    </td>
+    <td colspan="2" align="center">
+      <img src="../assets/hw4/part5/displacement_cloth_sphere.png" width="100%"/>
+      <figcaption>../scene/sphere.json, displacement mapping with cloth over sphere</figcaption>
+    </td>
     </tr>
   </table>
 </div>
@@ -920,13 +927,17 @@ Below are screenshots of running <code class="language-plaintext highlighter-rou
       <figcaption>../scene/sphere.json, mirror shader on sphere</figcaption>
     </td>
     <td align="center">
-      <img src="../assets/hw4/part5/mirror_sphere_with_cloth.png" width="100%"/>
-      <figcaption>../scene/sphere.json, mirror shader on sphere and cloth</figcaption>
+      <img src="../assets/hw4/part5/mirror_cloth.png" width="100%"/>
+      <figcaption>../scene/sphere.json, mirror shader on cloth</figcaption>
     </td>
   </tr>
   <tr>
-      <td colspan="2" align="center">
-        <img src="../assets/hw4/part5/mirror_sphere_cloth.png" width="50%"/>
+    <td align="center">
+        <img src="../assets/hw4/part5/mirror_sphere_with_cloth.png" width="100%"/>
+        <figcaption>../scene/sphere.json, mirror shader on sphere and cloth</figcaption>
+      </td>
+      <td align="center">
+        <img src="../assets/hw4/part5/mirror_sphere_cloth.png" width="100%"/>
         <figcaption>../scene/sphere.json, mirror shader with cloth over sphere</figcaption>
       </td>
     </tr>
@@ -1042,11 +1053,37 @@ Here, we've combined our wind and custom fragment shader (not including the vert
 </div>
 
 ### Collisions with Cubes
-TODO
+We implemented a methodology of colliding a cloth with cubes. To do so, we originally actually created a new `cube.h` and `cube.cpp` file, but struggled with defining all 36 vertices (and 12 triangles) in a way that made sense for surface normals, so we opted instead to add to `plane.h` to create two new attributes called `scale` and `axis_aligned` to constrain the plane (rather than let it be infinite) and constructed our cube out of six planes. This allowed us to define each `Plane`'s `normal` (since this was already a part of the `Plane` struct), and we effectively just collided the cloth with each of the size `Plane`s that constructed this cube.
+
+To actually perform the collision, we needed to modify `Plane::collide`, checking whether we were in a cube setting before setting extra constraints that if the current position of the `PointMass` was outside the finite plane, then we could just exit as no collision has occurred. We also modified `Plane::render` to account for the size of the cube (since we allowed in the .json files for customization of the size of the cube).
+
+Here, we show a collision between our cube and the cloth.
+<div align="center">
+  <table style="width:100%">
+    <tr>
+      <td align="center">
+        <img src="../assets/hw4/ec/cube/cube.png" width="50%"/>
+        <figcaption>../scene/cube.json, collision with a cube</figcaption>
+      </td>
+    </tr>
+  </table>
+</div>
+
+We also have a scene here with our cube, a sphere, and a plane. We can see the cloth colliding with all three in this image.
+<div align="center">
+  <table style="width:100%">
+    <tr>
+      <td align="center">
+        <img src="../assets/hw4/ec/cube/cube_and_sphere.png" width="50%"/>
+        <figcaption>../scene/cubesphereplane.json, collision with a cube, sphere, and plane</figcaption>
+      </td>
+    </tr>
+  </table>
+</div>
+
+In both these images, we can see that the cloth slips through the edges of the cube. The reasoning for this is because only the `PointMass`es on the cloth are actually colliding with the cube, rather than the `Spring`s connecting the `PointMass`es, and hence, the `Spring`s do cut into the cube unnaturally, but the `PointMass`es clearly do not.
 
 ## Contributors
 Edward Park, Ashley Chiu
-
-TODO: We are best friends !
 
 We really enjoyed working on this project :) We worked mainly together in person for Parts 1-5. Then spring break started, so we worked asynchronously, keeping each other up on what progress we made (specifically since we only had extra credit left). For extra credit, we split it up so Eddie worked on wind while Ashley worked on the custom shader, and then we worked together on collisions with cubes. In general, we collaborated well because we were able to work through a bulk of the project together in person, which mitigated any miscommuncations, and when we worked asynchronously, we were able to discuss and debug harder problems. 
