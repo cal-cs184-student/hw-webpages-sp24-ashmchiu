@@ -11,11 +11,11 @@ This assignment has not been completed yet.
 site: [https://cal-cs184-student.github.io/hw-webpages-sp24-ashmchiu/hw4/](https://cal-cs184-student.github.io/hw-webpages-sp24-ashmchiu/hw4/)
 
 ## Overview
-In this assignment, we create a physical simulation of a cloth. The cloth is able to maintain its shape and behavior through internal spring forces. It is also able to collide with external objects and itself. We also explore different shading options for the cloth, which includes diffuse and Phong shading, texture mapping, bump and displacement mapping, and ideal specular (mirror-like) environment mapping using cubemaps. Finally, we implement a few extra features, such as time-varying wind forces, a transparent blue-tinted shader, and TODO
+In this assignment, we create a physical simulation of a cloth. The cloth is able to maintain its shape and behavior through internal spring forces. It is also able to collide with external objects and itself. We also explore different shading options for the cloth, which includes diffuse and Phong shading, texture mapping, bump and displacement mapping, and ideal specular (mirror-like) environment mapping using cubemaps. Finally, we implement a few extra features, such as time-varying wind forces, a transparent blue-tinted shader and oscillating vertex shifter (to mimic a bouncing ball), and collisions with a new 3D primitive: cubes.
 
-What we found interesting TODO
+What we found interesting was the differing techniques for intersecting cloths with different primitives. In hindsight, it makes sense why we needed to perform collisions with them in different ways. It was fun to see all the different shaders in [Part 5](/hw4.md#part-5-shaders) come together--specifically, the texture map was really fun to add new textures into! It was also fun to see how this homework related back to [Homework 2](/hw2.md) with Phong shading.
 
-Debugging journey TODO
+We actually didn't have difficult debugging journeys in this homework. Namely, something we were stuck on for a long time was [bump and displacement mapping](/hw4.md#task-4-displacement-and-bump-mapping) because our renders had much softer bumps and displacements than the references. However, we realized that this is because the default `normal` was `2` and `height` was `0.1` and when we updated this to be a `normal` of `100` and a `height` of `0.061`, we could more clearly see the bumps and displacements.
 
 ## Part 1: Masses and springs
 In this part, our main goal was creating a grid of point masses and springs. To do so, we iterated through <code class="language-plaintext highlighter-rouge">num_height_points</code> and an inner loop of <code class="language-plaintext highlighter-rouge">num_width_points</code> to generate our point masses in row-major order. Depending on whether the orientation was horizontal or vertical, we either varied across the <code class="language-plaintext highlighter-rouge">xz</code> plane or the <code class="language-plaintext highlighter-rouge">xy</code> plane. Furthermore, if the point mass's <code class="language-plaintext highlighter-rouge">(x, y)</code> index was within the cloth's <code class="language-plaintext highlighter-rouge">pinned</code> vector, then we set their <code class="language-plaintext highlighter-rouge">pinned</code> boolean to <code class="language-plaintext highlighter-rouge">true</code> (which we'll see at the corners of ../scene/pinned4.json).
@@ -936,7 +936,7 @@ Below are screenshots of running <code class="language-plaintext highlighter-rou
 Our custom shader is described in depth in [Part 6](/hw4.md#custom-shader-jerover-blue-so-true). 
 
 ## Part 6: Extra credit
-TODO
+For extra credit, we implemented [wind](/hw4.md#whoosh-its-windy-out-here), a [custom shader](/hw4.md#custom-shader-jerover-blue-so-true), and [collisions with cubes](/hw4.md#collisions-with-cubes).
 
 ### Whoosh! (It's windy out here)
 We decided to add wind to our simulation by adding it into the `external_accelerations`, much like gravity. However unlike gravity, we wanted our wind to be variable at different timesteps in the simulation, as some static wind force would cause the cloth to settle into some equilibrium position and appear unnatural.
@@ -972,7 +972,7 @@ We also include here a .gif of dynamically updating the wind values and its effe
   <table style="width:100%">
     <tr>
       <td align="center">
-        <img src="../assets/hw4/ec/wind/windy.gif" width="350px"/>
+        <img src="../assets/hw4/ec/wind/windy.gif" width="50%"/>
         <figcaption>whoosh!</figcaption>
       </td>
     </tr>
@@ -1014,13 +1014,13 @@ The resulting shader creates a blue-tinted transparent plastic material, shown b
 
 The transparency that we mimicked in this shader almost makes it look like the sphere is missing when the cloth is put over it! However, when looking from the underside, we can see the sphere almost like a crystal orb.
 
-Building on this, we also modified `Custom.vert` to displace the vertices of the sphere to simulate a bouncy/non-uniform sphere. We used a [random-number generator](https://stackoverflow.com/questions/4200224/random-noise-functions-for-glsl), making oscillating displacements using a combination of `sin` and `cos` to displace each vertex at each axis.
+Building on this, we also modified `Custom.vert` to displace the vertices of the sphere to simulate a bouncy/non-uniform sphere. We used a [random-number generator](https://stackoverflow.com/questions/4200224/random-noise-functions-for-glsl), making oscillating displacements using a combination of `sin` and `cos` to displace each vertex at each axis. We also used a few magic numbers in our displacement calculations, fit to our liking for bounciness.
 
 <div align="center">
   <table style="width:100%">
     <tr>
       <td align="center">
-        <img src="../assets/hw4/ec/shader/bouncy.gif" width="350px"/>
+        <img src="../assets/hw4/ec/shader/bouncy.gif" width="50%"/>
         <figcaption>bouncy wheeeee!</figcaption>
       </td>
     </tr>
@@ -1033,14 +1033,19 @@ Here, we've combined our wind and custom fragment shader (not including the vert
   <table style="width:100%">
     <tr>
       <td align="center">
-        <img src="../assets/hw4/ec/shade_and_wind.gif" width="350px"/>
+        <img src="../assets/hw4/ec/shade_and_wind.gif" width="50%"/>
         <figcaption>jerover whoosh!</figcaption>
       </td>
     </tr>
   </table>
 </div>
 
+### Collisions with Cubes
+TODO
+
 ## Contributors
 Edward Park, Ashley Chiu
 
 TODO: We are best friends !
+
+We really enjoyed working on this project :) We worked mainly together in person for Parts 1-5. Then spring break started, so we worked asynchronously, keeping each other up on what progress we made (specifically since we only had extra credit left). For extra credit, we split it up so Eddie worked on wind while Ashley worked on the custom shader, and then we worked together on collisions with cubes. In general, we collaborated well because we were able to work through a bulk of the project together in person, which mitigated any miscommuncations, and when we worked asynchronously, we were able to discuss and debug harder problems. 
